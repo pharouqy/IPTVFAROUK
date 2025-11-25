@@ -1,0 +1,300 @@
+@import "tailwindcss";
+
+/* Styles pour Video.js */
+@import "video.js/dist/video-js.css";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== VIDEO PLAYER - CONTROLES VISIBLES ===== */
+
+/* Reset de base */
+.video-js {
+  width: 100% !important;
+  height: 100% !important;
+  font-size: 14px;
+  background-color: #000;
+}
+
+.video-js * {
+  box-sizing: border-box;
+}
+
+.video-js video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Big Play Button - VISIBLE */
+.video-js .vjs-big-play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2em;
+  height: 1.5em;
+  font-size: 3.5em;
+  line-height: 1.5em;
+  border: 2px solid #fff;
+  border-radius: 0.8em;
+  background-color: rgba(37, 99, 235, 0.9);
+  z-index: 100;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.video-js:hover .vjs-big-play-button,
+.video-js .vjs-big-play-button:hover {
+  background-color: rgba(37, 99, 235, 1);
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 0 40px rgba(37, 99, 235, 0.8);
+}
+
+.video-js .vjs-big-play-button .vjs-icon-placeholder:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== BARRE DE CONTROLE - TOUJOURS VISIBLE ===== */
+.video-js .vjs-control-bar {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3.5em;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95),
+    rgba(0, 0, 0, 0.75),
+    transparent
+  ) !important;
+  backdrop-filter: blur(10px);
+  z-index: 50 !important;
+  pointer-events: auto !important;
+}
+
+/* FORCER la visibilité même en mode user-inactive */
+.video-js.vjs-user-inactive .vjs-control-bar,
+.video-js.vjs-user-inactive.vjs-playing .vjs-control-bar {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+/* Tous les boutons VISIBLES */
+.video-js .vjs-control {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 3em;
+  height: 3.5em;
+  color: #fff;
+  cursor: pointer;
+}
+
+.video-js .vjs-button > .vjs-icon-placeholder:before {
+  font-size: 2em;
+  line-height: 1.75;
+}
+
+.video-js .vjs-control:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Bouton Play/Pause - TRÈS VISIBLE */
+.video-js .vjs-play-control {
+  display: flex !important;
+  order: 1;
+}
+
+.video-js .vjs-play-control .vjs-icon-placeholder:before {
+  font-size: 2.2em !important;
+}
+
+/* Temps */
+.video-js .vjs-time-control {
+  display: flex !important;
+  align-items: center;
+  font-size: 1.1em;
+  padding: 0 0.5em;
+  color: #fff;
+  min-width: auto;
+}
+
+.video-js .vjs-current-time {
+  order: 2;
+}
+
+.video-js .vjs-time-divider {
+  order: 3;
+  padding: 0 0.3em;
+}
+
+.video-js .vjs-duration {
+  order: 4;
+}
+
+/* Progress Control */
+.video-js .vjs-progress-control {
+  display: flex !important;
+  order: 5;
+  flex: 1;
+  position: relative;
+  height: 100%;
+  align-items: center;
+}
+
+.video-js .vjs-progress-holder {
+  flex: 1;
+  height: 0.5em;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 0.25em;
+  cursor: pointer;
+}
+
+.video-js:hover .vjs-progress-holder {
+  height: 0.7em;
+}
+
+.video-js .vjs-play-progress {
+  background-color: #2563eb;
+  border-radius: 0.25em;
+}
+
+.video-js .vjs-play-progress:before {
+  color: #2563eb;
+  font-size: 1em;
+  top: -0.3em;
+}
+
+.video-js .vjs-load-progress {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 0.25em;
+}
+
+/* Volume */
+.video-js .vjs-volume-panel {
+  display: flex !important;
+  order: 6;
+  width: auto;
+}
+
+.video-js .vjs-mute-control {
+  display: flex !important;
+}
+
+.video-js .vjs-volume-control {
+  width: 4em;
+  opacity: 1 !important;
+}
+
+/* Fullscreen */
+.video-js .vjs-fullscreen-control {
+  display: flex !important;
+  order: 7;
+}
+
+/* Mode Fullscreen */
+.video-js.vjs-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999;
+}
+
+/* Loading Spinner */
+.vjs-loading-spinner {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -2.5em 0 0 -2.5em;
+  width: 5em;
+  height: 5em;
+  border: 0.5em solid rgba(37, 99, 235, 0.3);
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: vjs-spinner-spin 1s linear infinite;
+  z-index: 20;
+}
+
+@keyframes vjs-spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error Display */
+.vjs-error-display {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 100;
+}
+
+.vjs-error-display .vjs-modal-dialog-content {
+  color: #fff;
+  font-size: 1.2em;
+  text-align: center;
+  padding: 2em;
+}
+
+/* Cacher les éléments non nécessaires */
+.video-js .vjs-text-track-display {
+  pointer-events: none;
+}
+
+.vjs-hidden {
+  display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .video-js .vjs-control-bar {
+    height: 3em;
+  }
+
+  .video-js .vjs-button > .vjs-icon-placeholder:before {
+    font-size: 1.6em;
+  }
+
+  .video-js .vjs-big-play-button {
+    font-size: 2.5em;
+  }
+}
+
+/* kbd style */
+kbd {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-family: monospace;
+  color: #e5e7eb;
+  background-color: #374151;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+}

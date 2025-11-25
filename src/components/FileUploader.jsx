@@ -4,7 +4,7 @@ import { Upload, Link, Loader } from "lucide-react";
 const FileUploader = ({ onPlaylistLoaded }) => {
   const [loading, setLoading] = useState(false);
   const [urlInput, setUrlInput] = useState(
-    "https://iptv-org.github.io/iptv/index.m3u"
+    "https://iptv-org.github.io/iptv/languages/fra.m3u"
   );
   const [error, setError] = useState("");
 

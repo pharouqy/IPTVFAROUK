@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import FileUploader from "./components/FileUploader";
 import VideoPlayer from "./components/VideoPlayer";
 import SearchBar from "./components/SearchBar";
 import ChannelList from "./components/ChannelList";
 import Sidebar from "./components/Sidebar";
 import InfiniteScroll from "./components/InfiniteScroll";
-import Pagination from "./components/Pagination";
 import PaginationControls from "./components/PaginationControls";
 import { usePagination } from "./hooks/usePagination";
 import {
@@ -23,7 +21,8 @@ import {
   addToHistory,
   getHistory,
 } from "./services/storage";
-import { Loader } from "lucide-react";
+import { IPTV_CONFIG } from "./config/iptv";
+import { Loader, RefreshCw, AlertCircle } from "lucide-react";
 
 function App() {
   // États principaux
@@ -40,11 +39,11 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
+  const [initialLoadDone, setInitialLoadDone] = useState(false);
 
   // Options de pagination
   const [itemsPerPage, setItemsPerPage] = useState(24);
-  const [paginationType, setPaginationType] = useState("infinite"); // 'infinite' ou 'classic'
-  const [viewMode, setViewMode] = useState("grid"); // 'grid' ou 'list'
+  const [viewMode, setViewMode] = useState("grid");
 
   // Hook de pagination
   const {
@@ -57,25 +56,32 @@ function App() {
     totalItems,
   } = usePagination(filteredChannels, itemsPerPage);
 
-  // Chargement initial depuis IndexedDB
+  // Chargement initial automatique
   useEffect(() => {
-    loadSavedData();
+    loadInitialPlaylist();
   }, []);
+
+  // Fermer le lecteur avec ESC
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && currentChannel) {
+        setCurrentChannel(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentChannel]);
 
   // Filtrage des chaînes
   useEffect(() => {
     let result = channels;
 
-    // Filtre favoris
     if (showFavorites) {
       result = channels.filter((ch) => favorites.includes(ch.id));
-    }
-    // Filtre groupe
-    else if (selectedGroup !== "Toutes") {
+    } else if (selectedGroup !== "Toutes") {
       result = filterByGroup(channels, selectedGroup);
     }
 
-    // Recherche
     if (searchQuery) {
       result = searchChannels(result, searchQuery);
     }
@@ -83,50 +89,50 @@ function App() {
     setFilteredChannels(result);
   }, [channels, selectedGroup, searchQuery, showFavorites, favorites]);
 
-  // Fermer le lecteur avec la touche ESC
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape" && currentChannel) {
-        setCurrentChannel(null);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentChannel]);
-
-  // Charger les données sauvegardées
-  const loadSavedData = async () => {
+  // Charger la playlist initiale
+  const loadInitialPlaylist = async () => {
     try {
       setLoading(true);
+      setError("");
+
+      console.log("🚀 Chargement de la playlist par défaut...");
+      console.log("📡 URL:", IPTV_CONFIG.defaultPlaylistUrl);
+
+      // Vérifier si on a déjà des chaînes en cache
       const savedChannels = await getAllChannels();
       const savedFavorites = await getFavorites();
       const savedHistory = await getHistory();
 
-      if (savedChannels.length > 0) {
+      if (savedChannels.length > 0 && !IPTV_CONFIG.autoLoad) {
+        // Charger depuis le cache
+        console.log("💾 Chargement depuis le cache");
         setChannels(savedChannels);
         const uniqueGroups = [
           ...new Set(savedChannels.map((ch) => ch.group)),
         ].sort();
         setGroups(uniqueGroups);
+        setFavorites(savedFavorites);
+        setHistory(savedHistory);
+        setInitialLoadDone(true);
+      } else {
+        // Charger depuis l'URL
+        await loadPlaylistFromUrl(IPTV_CONFIG.defaultPlaylistUrl);
       }
-
-      setFavorites(savedFavorites);
-      setHistory(savedHistory);
     } catch (err) {
-      console.error("Erreur chargement données:", err);
+      console.error("❌ Erreur chargement initial:", err);
+      setError("Impossible de charger la playlist");
     } finally {
       setLoading(false);
     }
   };
 
-  // Charger une playlist
-  const handlePlaylistLoaded = async (source) => {
+  // Charger une playlist depuis une URL
+  const loadPlaylistFromUrl = async (url) => {
     try {
       setLoading(true);
       setError("");
 
-      const result = await parseM3U(source);
+      const result = await parseM3U(url);
 
       if (!result.success) {
         setError(result.error);
@@ -141,8 +147,15 @@ function App() {
       setGroups(result.groups);
       setSelectedGroup("Toutes");
       setSearchQuery("");
+      setInitialLoadDone(true);
 
-      console.log(`✅ ${result.total} chaînes chargées`);
+      // Charger favoris et historique
+      const savedFavorites = await getFavorites();
+      const savedHistory = await getHistory();
+      setFavorites(savedFavorites);
+      setHistory(savedHistory);
+
+      console.log(`✅ ${result.total} chaînes chargées avec succès`);
     } catch (err) {
       setError("Erreur lors du chargement de la playlist");
       console.error(err);
@@ -151,11 +164,14 @@ function App() {
     }
   };
 
+  // Recharger la playlist
+  const handleReload = async () => {
+    await loadPlaylistFromUrl(IPTV_CONFIG.defaultPlaylistUrl);
+  };
+
   // Lire une chaîne
   const handleChannelClick = async (channel) => {
     setCurrentChannel(channel);
-
-    // Ajouter à l'historique
     await addToHistory(channel);
     const updatedHistory = await getHistory();
     setHistory(updatedHistory);
@@ -168,7 +184,6 @@ function App() {
     } else {
       await addToFavorites(channelId);
     }
-
     const updatedFavorites = await getFavorites();
     setFavorites(updatedFavorites);
   };
@@ -178,25 +193,60 @@ function App() {
     const channelsToExport = showFavorites
       ? channels.filter((ch) => favorites.includes(ch.id))
       : filteredChannels;
-
     downloadM3U(channelsToExport, "ma-playlist.m3u");
   };
 
-  // Charger plus (pour infinite scroll)
+  // Charger plus (infinite scroll)
   const handleLoadMore = async () => {
     setLoadingMore(true);
-    // Simulation d'un petit délai pour l'effet visuel
     setTimeout(() => {
       loadMore();
       setLoadingMore(false);
     }, 500);
   };
 
-  // Affichage si aucune chaîne
-  if (!loading && channels.length === 0) {
+  // Affichage pendant le chargement initial
+  if (loading && !initialLoadDone) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <FileUploader onPlaylistLoaded={handlePlaylistLoaded} />
+        <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full text-center">
+          <Loader className="w-16 h-16 animate-spin text-blue-600 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Chargement de la playlist...
+          </h2>
+          <p className="text-gray-600 mb-4">{IPTV_CONFIG.playlistName}</p>
+          <div className="bg-blue-50 rounded-lg p-3 text-sm text-gray-700">
+            <p className="break-all">{IPTV_CONFIG.defaultPlaylistUrl}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Affichage si erreur critique
+  if (error && !initialLoadDone) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-100 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
+          <AlertCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">
+            Erreur de chargement
+          </h2>
+          <p className="text-gray-600 mb-4 text-center">{error}</p>
+          <div className="bg-red-50 rounded-lg p-3 text-sm text-gray-700 mb-4">
+            <p className="font-semibold mb-1">URL configurée :</p>
+            <p className="break-all text-xs">
+              {IPTV_CONFIG.defaultPlaylistUrl}
+            </p>
+          </div>
+          <button
+            onClick={handleReload}
+            className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+          >
+            <RefreshCw className="w-5 h-5" />
+            Réessayer
+          </button>
+        </div>
       </div>
     );
   }
@@ -228,13 +278,12 @@ function App() {
                     : showHistory
                     ? "Historique"
                     : selectedGroup === "Toutes"
-                    ? "Toutes les chaînes"
+                    ? IPTV_CONFIG.playlistName
                     : selectedGroup}
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
                   {totalItems} chaîne{totalItems > 1 ? "s" : ""}
-                  {paginationType === "infinite" &&
-                    hasMore &&
+                  {hasMore &&
                     ` • ${displayedItems.length} affichée${
                       displayedItems.length > 1 ? "s" : ""
                     }`}
@@ -242,15 +291,11 @@ function App() {
               </div>
 
               <button
-                onClick={() => {
-                  setChannels([]);
-                  setGroups([]);
-                  setFavorites([]);
-                  localStorage.clear();
-                }}
-                className="text-sm text-red-600 hover:text-red-700"
+                onClick={handleReload}
+                className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition-colors"
               >
-                Charger une nouvelle playlist
+                <RefreshCw className="w-4 h-4" />
+                Recharger
               </button>
             </div>
 
@@ -283,7 +328,6 @@ function App() {
               <Loader className="w-12 h-12 animate-spin text-blue-600" />
             </div>
           ) : showHistory ? (
-            // Affichage historique
             <div className="max-w-7xl mx-auto">
               {history.length === 0 ? (
                 <p className="text-center text-gray-500 py-12">
@@ -321,40 +365,20 @@ function App() {
               )}
             </div>
           ) : (
-            // Affichage grille chaînes avec pagination
             <div className="max-w-7xl mx-auto">
-              {paginationType === "infinite" ? (
-                // Infinite Scroll
-                <InfiniteScroll
-                  onLoadMore={handleLoadMore}
-                  hasMore={hasMore}
-                  loading={loadingMore}
-                >
-                  <ChannelList
-                    channels={displayedItems}
-                    onChannelClick={handleChannelClick}
-                    onToggleFavorite={handleToggleFavorite}
-                    favorites={favorites}
-                    viewMode={viewMode}
-                  />
-                </InfiniteScroll>
-              ) : (
-                // Pagination classique
-                <>
-                  <ChannelList
-                    channels={displayedItems}
-                    onChannelClick={handleChannelClick}
-                    onToggleFavorite={handleToggleFavorite}
-                    favorites={favorites}
-                    viewMode={viewMode}
-                  />
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={goToPage}
-                  />
-                </>
-              )}
+              <InfiniteScroll
+                onLoadMore={handleLoadMore}
+                hasMore={hasMore}
+                loading={loadingMore}
+              >
+                <ChannelList
+                  channels={displayedItems}
+                  onChannelClick={handleChannelClick}
+                  onToggleFavorite={handleToggleFavorite}
+                  favorites={favorites}
+                  viewMode={viewMode}
+                />
+              </InfiniteScroll>
             </div>
           )}
         </main>
@@ -366,16 +390,6 @@ function App() {
           channel={currentChannel}
           onClose={() => setCurrentChannel(null)}
         />
-      )}
-
-      {/* Message d'erreur global */}
-      {error && (
-        <div className="fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg">
-          {error}
-          <button onClick={() => setError("")} className="ml-4 font-bold">
-            ×
-          </button>
-        </div>
       )}
     </div>
   );

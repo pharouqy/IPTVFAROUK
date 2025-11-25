@@ -1,14 +1,14 @@
-import { Home, Star, Clock, Grid, Download } from 'lucide-react';
+import { Home, Star, Clock, Grid, Download } from "lucide-react";
 
-const Sidebar = ({ 
-  groups, 
-  selectedGroup, 
+const Sidebar = ({
+  groups,
+  selectedGroup,
   onGroupSelect,
   showFavorites,
   onShowFavorites,
   showHistory,
   onShowHistory,
-  onExport
+  onExport,
 }) => {
   return (
     <div className="w-64 bg-white shadow-lg h-screen overflow-y-auto">
@@ -19,14 +19,14 @@ const Sidebar = ({
         <nav className="space-y-2 mb-6">
           <button
             onClick={() => {
-              onGroupSelect('Toutes');
+              onGroupSelect("Toutes");
               onShowFavorites(false);
               onShowHistory(false);
             }}
             className={`w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 ${
-              !showFavorites && !showHistory && selectedGroup === 'Toutes'
-                ? 'bg-blue-100 text-blue-600'
-                : 'hover:bg-gray-100'
+              !showFavorites && !showHistory && selectedGroup === "Toutes"
+                ? "bg-blue-100 text-blue-600"
+                : "hover:bg-gray-100"
             }`}
           >
             <Home className="w-5 h-5" />
@@ -39,9 +39,7 @@ const Sidebar = ({
               onShowHistory(false);
             }}
             className={`w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 ${
-              showFavorites
-                ? 'bg-blue-100 text-blue-600'
-                : 'hover:bg-gray-100'
+              showFavorites ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"
             }`}
           >
             <Star className="w-5 h-5" />
@@ -54,9 +52,7 @@ const Sidebar = ({
               onShowFavorites(false);
             }}
             className={`w-full text-left px-4 py-2 rounded-lg flex items-center gap-3 ${
-              showHistory
-                ? 'bg-blue-100 text-blue-600'
-                : 'hover:bg-gray-100'
+              showHistory ? "bg-blue-100 text-blue-600" : "hover:bg-gray-100"
             }`}
           >
             <Clock className="w-5 h-5" />
@@ -82,8 +78,8 @@ const Sidebar = ({
                   }}
                   className={`w-full text-left px-4 py-2 rounded-lg text-sm ${
                     selectedGroup === group && !showFavorites && !showHistory
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'hover:bg-gray-50 text-gray-700'
+                      ? "bg-blue-50 text-blue-600"
+                      : "hover:bg-gray-50 text-gray-700"
                   }`}
                 >
                   {group}
@@ -94,7 +90,7 @@ const Sidebar = ({
         )}
 
         {/* Export */}
-        {groups.length > 0 && (
+        {/*{groups.length > 0 && (
           <button
             onClick={onExport}
             className="w-full mt-6 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center gap-2"
@@ -102,7 +98,7 @@ const Sidebar = ({
             <Download className="w-4 h-4" />
             Exporter M3U
           </button>
-        )}
+        )}*/}
       </div>
     </div>
   );

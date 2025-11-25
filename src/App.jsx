@@ -216,7 +216,7 @@ function App() {
           </h2>
           <p className="text-gray-600 mb-4">{IPTV_CONFIG.playlistName}</p>
           <div className="bg-blue-50 rounded-lg p-3 text-sm text-gray-700">
-            <p className="break-all">{IPTV_CONFIG.defaultPlaylistUrl}</p>
+            <p className="break-all hidden">{IPTV_CONFIG.defaultPlaylistUrl}</p>
           </div>
         </div>
       </div>

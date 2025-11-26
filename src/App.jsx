@@ -376,7 +376,19 @@ function App() {
                             const channel = channels.find(
                               (ch) => ch.id === item.channelId
                             );
-                            if (channel) handleChannelClick(channel);
+
+                            if (channel) {
+                              handleChannelClick(channel);
+                            } else {
+                              // Si la chaîne n'est plus présente dans la liste (ou id différent),
+                              // on la relit directement à partir des infos stockées dans l'historique
+                              setCurrentChannel({
+                                id: item.channelId ?? `history-${item.id}`,
+                                name: item.channelName,
+                                url: item.channelUrl,
+                                group: "Historique",
+                              });
+                            }
                           }}
                           className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
                         >

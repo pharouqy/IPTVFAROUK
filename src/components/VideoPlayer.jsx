@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-import { X, AlertCircle, ExternalLink, RefreshCw } from "lucide-react";
+import {
+  X,
+  AlertCircle,
+  ExternalLink,
+  RefreshCw,
+  Maximize2,
+  Minimize2,
+} from "lucide-react";
 
 const VideoPlayer = ({ channel, onClose }) => {
   const videoRef = useRef(null);
@@ -11,9 +18,23 @@ const VideoPlayer = ({ channel, onClose }) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     setIsReady(true);
+  }, []);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!containerRef.current) return;
+      const isFs = document.fullscreenElement === containerRef.current;
+      setIsFullscreen(isFs);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -181,6 +202,21 @@ const VideoPlayer = ({ channel, onClose }) => {
     window.open(channel.url, "_blank");
   };
 
+  const toggleFullscreen = () => {
+    if (!containerRef.current) return;
+
+    const elem = containerRef.current;
+
+    if (document.fullscreenElement === elem) {
+      document.exitFullscreen?.();
+    } else if (!document.fullscreenElement) {
+      elem.requestFullscreen?.();
+    } else {
+      // Si un autre élément est déjà en plein écran, on le quitte d'abord
+      document.exitFullscreen?.();
+    }
+  };
+
   if (!channel) return null;
 
   return (
@@ -206,12 +242,29 @@ const VideoPlayer = ({ channel, onClose }) => {
                   <p className="text-xs text-gray-400">{channel.group}</p>
                 </div>
               </div>
-              <button
-                onClick={onClose}
-                className="text-white hover:text-red-400 p-2 hover:bg-white/10 rounded-lg transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={toggleFullscreen}
+                  className="text-white hover:text-blue-300 p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  aria-label={
+                    isFullscreen
+                      ? "Quitter le mode plein écran"
+                      : "Passer en plein écran"
+                  }
+                >
+                  {isFullscreen ? (
+                    <Minimize2 className="w-5 h-5" />
+                  ) : (
+                    <Maximize2 className="w-5 h-5" />
+                  )}
+                </button>
+                <button
+                  onClick={onClose}
+                  className="text-white hover:text-red-400 p-2 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {/* Message de chargement */}

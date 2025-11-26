@@ -298,3 +298,88 @@ kbd {
   border: 1px solid #4b5563;
   border-radius: 4px;
 }
+
+/* ===== RESPONSIVE & TOUCH IMPROVEMENTS ===== */
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Touch improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Augmenter les zones tactiles sur mobile */
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Désactiver le hover sur touch */
+  *:hover {
+    background-color: inherit !important;
+  }
+}
+
+/* Prevent double-tap zoom on buttons */
+button {
+  touch-action: manipulation;
+}
+
+/* Safe area pour les notches iPhone */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+}
+
+/* Scrollbar personnalisée pour desktop */
+@media (min-width: 1024px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+/* Prevent horizontal scroll */
+body {
+  overflow-x: hidden;
+}
+
+/* Améliorer la lisibilité sur petits écrans */
+@media (max-width: 640px) {
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Animation pour le prompt d'installation */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}

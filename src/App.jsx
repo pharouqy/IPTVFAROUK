@@ -23,6 +23,7 @@ import {
 } from "./services/storage";
 import { IPTV_CONFIG } from "./config/iptv";
 import { Loader, RefreshCw, AlertCircle } from "lucide-react";
+import InstallPrompt from "./components/InstallPrompt";
 
 function App() {
   // États principaux
@@ -252,8 +253,8 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* Sidebar avec menu burger mobile */}
       <Sidebar
         groups={groups}
         selectedGroup={selectedGroup}
@@ -266,13 +267,13 @@ function App() {
       />
 
       {/* Contenu principal */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
         {/* Header */}
-        <header className="bg-white shadow-sm">
-          <div className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">
+        <header className="bg-white shadow-sm flex-shrink-0">
+          <div className="p-3 md:p-4">
+            <div className="flex items-center justify-between mb-3 md:mb-4 ml-16 lg:ml-0">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg md:text-2xl font-bold text-gray-800 truncate">
                   {showFavorites
                     ? "Mes Favoris"
                     : showHistory
@@ -281,7 +282,7 @@ function App() {
                     ? IPTV_CONFIG.playlistName
                     : selectedGroup}
                 </h2>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-xs md:text-sm text-gray-500 mt-1">
                   {totalItems} chaîne{totalItems > 1 ? "s" : ""}
                   {hasMore &&
                     ` • ${displayedItems.length} affichée${
@@ -292,59 +293,63 @@ function App() {
 
               <button
                 onClick={handleReload}
-                className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition-colors"
+                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 md:px-4 py-2 rounded-lg transition-colors flex-shrink-0"
               >
-                <RefreshCw className="w-4 h-4" />
-                Recharger
+                <RefreshCw className="w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Recharger</span>
               </button>
             </div>
 
             {/* Barre de recherche */}
             {!showHistory && (
-              <SearchBar
-                value={searchQuery}
-                onChange={setSearchQuery}
-                onClear={() => setSearchQuery("")}
-              />
+              <div className="ml-16 lg:ml-0">
+                <SearchBar
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  onClear={() => setSearchQuery("")}
+                />
+              </div>
             )}
           </div>
 
           {/* Contrôles de pagination */}
           {!showHistory && filteredChannels.length > 0 && (
-            <PaginationControls
-              viewMode={viewMode}
-              onViewModeChange={setViewMode}
-              itemsPerPage={itemsPerPage}
-              onItemsPerPageChange={setItemsPerPage}
-              totalItems={totalItems}
-            />
+            <div className="ml-16 lg:ml-0">
+              <PaginationControls
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+                itemsPerPage={itemsPerPage}
+                onItemsPerPageChange={setItemsPerPage}
+                totalItems={totalItems}
+              />
+            </div>
           )}
         </header>
 
         {/* Liste des chaînes */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-3 md:p-6">
           {loading ? (
             <div className="flex items-center justify-center h-full">
-              <Loader className="w-12 h-12 animate-spin text-blue-600" />
+              <Loader className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600" />
             </div>
           ) : showHistory ? (
             <div className="max-w-7xl mx-auto">
               {history.length === 0 ? (
-                <p className="text-center text-gray-500 py-12">
+                <p className="text-center text-gray-500 py-12 text-sm md:text-base">
                   Aucun historique de visionnage
                 </p>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {history.map((item) => (
                     <div
                       key={item.id}
-                      className="bg-white p-4 rounded-lg shadow flex items-center justify-between hover:shadow-md transition-shadow"
+                      className="bg-white p-3 md:p-4 rounded-lg shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-md transition-shadow"
                     >
-                      <div>
-                        <h3 className="font-semibold text-gray-800">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-800 text-sm md:text-base truncate">
                           {item.channelName}
                         </h3>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-xs md:text-sm text-gray-500">
                           {new Date(item.watchedAt).toLocaleString("fr-FR")}
                         </p>
                       </div>
@@ -355,7 +360,7 @@ function App() {
                           );
                           if (channel) handleChannelClick(channel);
                         }}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
                       >
                         Relire
                       </button>
@@ -391,6 +396,7 @@ function App() {
           onClose={() => setCurrentChannel(null)}
         />
       )}
+      <InstallPrompt />
     </div>
   );
 }

@@ -9,7 +9,9 @@ const Sidebar = ({
   onShowFavorites,
   showHistory,
   onShowHistory,
-  onExport
+  onExport,
+  darkMode,
+  toggleDarkMode
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,7 +44,7 @@ const Sidebar = ({
           fixed lg:relative
           inset-y-0 left-0
           w-72 lg:w-64
-          bg-white shadow-lg
+          bg-white dark:bg-gray-800 shadow-lg
           h-screen overflow-y-auto
           transform transition-transform duration-300 ease-in-out
           z-40
@@ -130,7 +132,7 @@ const Sidebar = ({
                         : 'hover:bg-gray-50 text-gray-700'
                     }`}
                   >
-                    {group}
+                    {group.replace(/;/g, ' ❤️ ')}
                   </button>
                 ))}
               </div>
@@ -150,6 +152,16 @@ const Sidebar = ({
               Exporter M3U
             </button>
           )}*/}
+
+          {/* exemple : bouton toggle (accessible depuis la sidebar aussi) */}
+          <div className="px-4 py-2">
+            <button
+              onClick={toggleDarkMode}
+              className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-sm dark:text-gray-200 text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              {darkMode ? "Thème clair" : "Thème sombre"}
+            </button>
+          </div>
         </div>
       </div>
     </>

@@ -5,6 +5,7 @@ const ChannelList = ({
   onChannelClick,
   onToggleFavorite,
   favorites = [],
+  darkMode,
 }) => {
   if (!channels || channels.length === 0) {
     return (
@@ -30,7 +31,7 @@ const ChannelList = ({
         return (
           <div
             key={channel.id}
-            className={`bg-white rounded-lg shadow hover:shadow-lg transition-all p-3 md:p-4 flex flex-col ${
+            className={`bg-white dark:bg-gray-800 p-3 rounded-lg shadow dark:shadow-none border border-transparent dark:border-gray-700 hover:shadow-md transition-shadow ${
               !hasValidUrl ? "opacity-60" : ""
             }`}
           >
@@ -61,7 +62,7 @@ const ChannelList = ({
 
             {/* Info */}
             <div className="flex-1 min-h-0">
-              <h3 className="font-semibold text-gray-800 mb-1 line-clamp-2 text-sm md:text-base">
+              <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-1 line-clamp-2 text-sm md:text-base">
                 {channel.name}
               </h3>
               <p className="text-xs md:text-sm text-gray-500 mb-2 truncate">

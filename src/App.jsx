@@ -41,6 +41,13 @@ function App() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
   const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
   // Options de pagination
   const [itemsPerPage, setItemsPerPage] = useState(24);
@@ -253,151 +260,168 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      {/* Sidebar avec menu burger mobile */}
-      <Sidebar
-        groups={groups}
-        selectedGroup={selectedGroup}
-        onGroupSelect={setSelectedGroup}
-        showFavorites={showFavorites}
-        onShowFavorites={setShowFavorites}
-        showHistory={showHistory}
-        onShowHistory={setShowHistory}
-        onExport={handleExport}
-      />
+    <>
+      {/* Header/boutons alignés à droite */}
+      <div className="flex h-screen bg-gray-50 overflow-hidden">
+        {/* Sidebar avec menu burger mobile */}
+        <Sidebar
+          groups={groups}
+          selectedGroup={selectedGroup}
+          onGroupSelect={setSelectedGroup}
+          showFavorites={showFavorites}
+          onShowFavorites={setShowFavorites}
+          showHistory={showHistory}
+          onShowHistory={setShowHistory}
+          onExport={handleExport}
+        />
 
-      {/* Contenu principal */}
-      <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
-        {/* Header */}
-        <header className="bg-white shadow-sm flex-shrink-0">
-          <div className="p-3 md:p-4">
-            <div className="flex items-center justify-between mb-3 md:mb-4 ml-16 lg:ml-0">
-              <div className="flex-1 min-w-0">
-                <h2 className="text-lg md:text-2xl font-bold text-gray-800 truncate">
-                  {showFavorites
-                    ? "Mes Favoris"
-                    : showHistory
-                    ? "Historique"
-                    : selectedGroup === "Toutes"
-                    ? IPTV_CONFIG.playlistName
-                    : selectedGroup}
-                </h2>
-                <p className="text-xs md:text-sm text-gray-500 mt-1">
-                  {totalItems} chaîne{totalItems > 1 ? "s" : ""}
-                  {hasMore &&
-                    ` • ${displayedItems.length} affichée${
-                      displayedItems.length > 1 ? "s" : ""
-                    }`}
-                </p>
+        {/* Contenu principal */}
+        <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
+          {/* Header */}
+          <header className="bg-white shadow-sm flex-shrink-0">
+            <div className="p-3 md:p-4">
+              <div className="flex items-center justify-between mb-3 md:mb-4 ml-16 lg:ml-0">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg md:text-2xl font-bold text-gray-800 truncate">
+                    {showFavorites
+                      ? "Mes Favoris"
+                      : showHistory
+                      ? "Historique"
+                      : selectedGroup === "Toutes"
+                      ? IPTV_CONFIG.playlistName
+                      : selectedGroup}
+                  </h2>
+                  <p className="text-xs md:text-sm text-gray-500 mt-1">
+                    {totalItems} chaîne{totalItems > 1 ? "s" : ""}
+                    {hasMore &&
+                      ` • ${displayedItems.length} affichée${
+                        displayedItems.length > 1 ? "s" : ""
+                      }`}
+                  </p>
+                </div>
+                {/* BOUTONS CÔTÉ À CÔTÉ */}
+                <div className="flex gap-2 items-center">
+                  <button
+                    onClick={toggleTheme}
+                    className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors text-xs md:text-sm"
+                    aria-label={theme === "light" ? "Activer le mode sombre" : "Activer le mode clair"}
+                  >
+                    {theme === "light" ? "🌙 Sombre" : "☀️ Clair"}
+                  </button>
+                  <button
+                    onClick={handleReload}
+                    className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 md:px-4 py-2 rounded-lg transition-colors flex-shrink-0"
+                  >
+                    <RefreshCw className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="hidden sm:inline">Recharger</span>
+                  </button>
+                </div>
               </div>
 
-              <button
-                onClick={handleReload}
-                className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 md:px-4 py-2 rounded-lg transition-colors flex-shrink-0"
-              >
-                <RefreshCw className="w-3 h-3 md:w-4 md:h-4" />
-                <span className="hidden sm:inline">Recharger</span>
-              </button>
-            </div>
-
-            {/* Barre de recherche */}
-            {!showHistory && (
-              <div className="ml-16 lg:ml-0">
-                <SearchBar
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  onClear={() => setSearchQuery("")}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Contrôles de pagination */}
-          {!showHistory && filteredChannels.length > 0 && (
-            <div className="ml-16 lg:ml-0">
-              <PaginationControls
-                viewMode={viewMode}
-                onViewModeChange={setViewMode}
-                itemsPerPage={itemsPerPage}
-                onItemsPerPageChange={setItemsPerPage}
-                totalItems={totalItems}
-              />
-            </div>
-          )}
-        </header>
-
-        {/* Liste des chaînes */}
-        <main className="flex-1 overflow-y-auto p-3 md:p-6">
-          {loading ? (
-            <div className="flex items-center justify-center h-full">
-              <Loader className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600" />
-            </div>
-          ) : showHistory ? (
-            <div className="max-w-7xl mx-auto">
-              {history.length === 0 ? (
-                <p className="text-center text-gray-500 py-12 text-sm md:text-base">
-                  Aucun historique de visionnage
-                </p>
-              ) : (
-                <div className="space-y-2 md:space-y-3">
-                  {history.map((item) => (
-                    <div
-                      key={item.id}
-                      className="bg-white p-3 md:p-4 rounded-lg shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-800 text-sm md:text-base truncate">
-                          {item.channelName}
-                        </h3>
-                        <p className="text-xs md:text-sm text-gray-500">
-                          {new Date(item.watchedAt).toLocaleString("fr-FR")}
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => {
-                          const channel = channels.find(
-                            (ch) => ch.id === item.channelId
-                          );
-                          if (channel) handleChannelClick(channel);
-                        }}
-                        className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
-                      >
-                        Relire
-                      </button>
-                    </div>
-                  ))}
+              {/* Barre de recherche */}
+              {!showHistory && (
+                <div className="ml-16 lg:ml-0">
+                  <SearchBar
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    onClear={() => setSearchQuery("")}
+                  />
                 </div>
               )}
             </div>
-          ) : (
-            <div className="max-w-7xl mx-auto">
-              <InfiniteScroll
-                onLoadMore={handleLoadMore}
-                hasMore={hasMore}
-                loading={loadingMore}
-              >
-                <ChannelList
-                  channels={displayedItems}
-                  onChannelClick={handleChannelClick}
-                  onToggleFavorite={handleToggleFavorite}
-                  favorites={favorites}
-                  viewMode={viewMode}
-                />
-              </InfiniteScroll>
-            </div>
-          )}
-        </main>
-      </div>
 
-      {/* Lecteur vidéo */}
-      {currentChannel && (
-        <VideoPlayer
-          channel={currentChannel}
-          onClose={() => setCurrentChannel(null)}
-        />
-      )}
-      <InstallPrompt />
-    </div>
+            {/* Contrôles de pagination */}
+            {!showHistory && filteredChannels.length > 0 && (
+              <div className="ml-16 lg:ml-0">
+                <PaginationControls
+                  viewMode={viewMode}
+                  onViewModeChange={setViewMode}
+                  itemsPerPage={itemsPerPage}
+                  onItemsPerPageChange={setItemsPerPage}
+                  totalItems={totalItems}
+                />
+              </div>
+            )}
+          </header>
+
+          {/* Liste des chaînes */}
+          <main className="flex-1 overflow-y-auto p-3 md:p-6">
+            {loading ? (
+              <div className="flex items-center justify-center h-full">
+                <Loader className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600" />
+              </div>
+            ) : showHistory ? (
+              <div className="max-w-7xl mx-auto">
+                {history.length === 0 ? (
+                  <p className="text-center text-gray-500 py-12 text-sm md:text-base">
+                    Aucun historique de visionnage
+                  </p>
+                ) : (
+                  <div className="space-y-2 md:space-y-3">
+                    {history.map((item) => (
+                      <div
+                        key={item.id}
+                        className="bg-white p-3 md:p-4 rounded-lg shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-gray-800 text-sm md:text-base truncate">
+                            {item.channelName}
+                          </h3>
+                          <p className="text-xs md:text-sm text-gray-500">
+                            {new Date(item.watchedAt).toLocaleString("fr-FR")}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            const channel = channels.find(
+                              (ch) => ch.id === item.channelId
+                            );
+                            if (channel) handleChannelClick(channel);
+                          }}
+                          className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
+                        >
+                          Relire
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="max-w-7xl mx-auto">
+                <InfiniteScroll
+                  onLoadMore={handleLoadMore}
+                  hasMore={hasMore}
+                  loading={loadingMore}
+                >
+                  <ChannelList
+                    channels={displayedItems}
+                    onChannelClick={handleChannelClick}
+                    onToggleFavorite={handleToggleFavorite}
+                    favorites={favorites}
+                    viewMode={viewMode}
+                  />
+                </InfiniteScroll>
+              </div>
+            )}
+          </main>
+          <p className="text-center text-xs text-gray-400 py-2">
+            IPTVFarouk - © {new Date().getFullYear()}. Tous droits réservés.
+            <br />
+            Développé par<a href="https://github.com/pharouqy" target="_blank" rel="noopener noreferrer"> Farouk Younsi</a> with ❤️.
+          </p>
+        </div>
+
+        {/* Lecteur vidéo */}
+        {currentChannel && (
+          <VideoPlayer
+            channel={currentChannel}
+            onClose={() => setCurrentChannel(null)}
+          />
+        )}
+        <InstallPrompt />
+      </div>
+    </>
   );
 }
 

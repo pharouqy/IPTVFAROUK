@@ -6,6 +6,7 @@ const PaginationControls = ({
   itemsPerPage,
   onItemsPerPageChange,
   totalItems,
+  darkMode,
 }) => {
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-white px-3 md:px-4 py-2 md:py-3 border-b border-gray-200 gap-3 sm:gap-0">
@@ -13,25 +14,29 @@ const PaginationControls = ({
       <div className="hidden md:flex items-center gap-2">
         <span className="text-xs md:text-sm text-gray-600">Vue:</span>
         <button
+          type="button"
           onClick={() => onViewModeChange("grid")}
           className={`p-2 rounded transition-colors ${
             viewMode === "grid"
               ? "bg-blue-100 text-blue-600"
               : "text-gray-600 hover:bg-gray-100"
           }`}
+          aria-pressed={viewMode === "grid"}
         >
           <Grid className="w-4 h-4 md:w-5 md:h-5" />
         </button>
-        <button
+        {/*<button
+          type="button"
           onClick={() => onViewModeChange("list")}
           className={`p-2 rounded transition-colors ${
             viewMode === "list"
               ? "bg-blue-100 text-blue-600"
               : "text-gray-600 hover:bg-gray-100"
           }`}
+          aria-pressed={viewMode === "list"}
         >
           <List className="w-4 h-4 md:w-5 md:h-5" />
-        </button>
+        </button>*/}
       </div>
 
       {/* Items par page */}

@@ -22,6 +22,36 @@ const VideoPlayer = ({ channel, onClose }) => {
     const videoElement = videoRef.current;
     if (!videoElement.parentElement) return;
 
+    const IS_MOBILE = window.innerWidth < 768;
+    let controlBarConfig;
+
+    if (IS_MOBILE) {
+      controlBarConfig = {
+        playToggle: true,
+        volumePanel: { inline: false },
+        currentTimeDisplay: true,
+        progressControl: true,
+        fullscreenToggle: true,
+        // tout le reste à false pour alléger
+        timeDivider: false,
+        durationDisplay: false,
+        remainingTimeDisplay: false,
+        chaptersButton: false,
+        subtitlesButton: false,
+        subsCapsButton: false,
+        audioTrackButton: false,
+        pictureInPictureToggle: false,
+        playbackRateMenuButton: false,
+        liveDisplay: false,
+        seekToLive: false,
+        pipButton: false,
+        downloadButton: false,
+        settingsMenuButton: false,
+      };
+    } else {
+      controlBarConfig = undefined; // laisser la config par défaut desktop
+    }
+
     console.log("🎬 Initialisation:", channel.name);
     setIsLoading(true);
     setError(null);
@@ -34,11 +64,7 @@ const VideoPlayer = ({ channel, onClose }) => {
       responsive: true,
       fluid: true,
       aspectRatio: "16:9",
-      controlBar: {
-        volumePanel: {
-          inline: false,
-        },
-      },
+      controlBar: controlBarConfig,
       html5: {
         vhs: {
           overrideNative: true,
@@ -158,102 +184,106 @@ const VideoPlayer = ({ channel, onClose }) => {
   if (!channel) return null;
 
   return (
-    <div className="fixed inset-0 bg-black z-50 flex flex-col">
-      {/* Header */}
-      <div className="flex-shrink-0 bg-gradient-to-b from-black via-black/90 to-transparent p-4 z-30">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {channel.logo && (
-              <img
-                src={channel.logo}
-                alt=""
-                className="w-10 h-10 object-contain rounded bg-white/10 p-1"
-                onError={(e) => (e.target.style.display = "none")}
-              />
-            )}
-            <div>
-              <h3 className="font-semibold text-white text-sm">
-                {channel.name}
-              </h3>
-              <p className="text-xs text-gray-400">{channel.group}</p>
+    <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+      <div className="w-full max-w-5xl mx-4">
+        <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-2xl border border-transparent dark:border-gray-700">
+          {/* Header */}
+          <div className="flex-shrink-0 bg-gradient-to-b from-black via-black/90 to-transparent p-4 z-30">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {channel.logo && (
+                  <img
+                    src={channel.logo}
+                    alt=""
+                    className="w-10 h-10 object-contain rounded bg-white/10 p-1"
+                    onError={(e) => (e.target.style.display = "none")}
+                  />
+                )}
+                <div>
+                  <h3 className="font-semibold text-white text-sm">
+                    {channel.name}
+                  </h3>
+                  <p className="text-xs text-gray-400">{channel.group}</p>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="text-white hover:text-red-400 p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
+
+            {/* Message de chargement */}
+            {isLoading && !error && (
+              <div className="mt-3 bg-blue-900/90 backdrop-blur border border-blue-500 text-white p-2 rounded-lg flex items-center gap-2 text-sm">
+                <RefreshCw className="w-4 h-4 animate-spin flex-shrink-0" />
+                <span>Chargement du stream...</span>
+              </div>
+            )}
+
+            {/* Message d'erreur */}
+            {error && (
+              <div className="mt-3 bg-red-900/90 backdrop-blur border border-red-500 text-white p-3 rounded-lg">
+                <div className="flex items-start gap-2 mb-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <p className="font-semibold text-xs">{error.message}</p>
+                    <p className="text-xs text-red-200 mt-1">{error.details}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={handleRetry}
+                    className="flex-1 bg-red-700 hover:bg-red-600 text-white px-2 py-1.5 rounded text-xs font-medium flex items-center justify-center gap-1"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    Réessayer
+                  </button>
+                  <button
+                    onClick={openInNewTab}
+                    className="flex-1 bg-white/10 hover:bg-white/20 text-white px-2 py-1.5 rounded text-xs font-medium flex items-center justify-center gap-1"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    Ouvrir
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-          <button
-            onClick={onClose}
-            className="text-white hover:text-red-400 p-2 hover:bg-white/10 rounded-lg transition-colors"
+
+          {/* Video Container - PAS de z-index ici */}
+          <div
+            ref={containerRef}
+            className="flex-1 flex items-center justify-center bg-black px-4 py-2"
           >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Message de chargement */}
-        {isLoading && !error && (
-          <div className="mt-3 bg-blue-900/90 backdrop-blur border border-blue-500 text-white p-2 rounded-lg flex items-center gap-2 text-sm">
-            <RefreshCw className="w-4 h-4 animate-spin flex-shrink-0" />
-            <span>Chargement du stream...</span>
-          </div>
-        )}
-
-        {/* Message d'erreur */}
-        {error && (
-          <div className="mt-3 bg-red-900/90 backdrop-blur border border-red-500 text-white p-3 rounded-lg">
-            <div className="flex items-start gap-2 mb-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-              <div className="flex-1">
-                <p className="font-semibold text-xs">{error.message}</p>
-                <p className="text-xs text-red-200 mt-1">{error.details}</p>
+            <div className="w-full h-full max-w-7xl">
+              <div data-vjs-player className="w-full h-full">
+                <video
+                  ref={videoRef}
+                  className="video-js vjs-big-play-centered"
+                  playsInline
+                />
               </div>
             </div>
+          </div>
 
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={handleRetry}
-                className="flex-1 bg-red-700 hover:bg-red-600 text-white px-2 py-1.5 rounded text-xs font-medium flex items-center justify-center gap-1"
-              >
-                <RefreshCw className="w-3 h-3" />
-                Réessayer
-              </button>
-              <button
-                onClick={openInNewTab}
-                className="flex-1 bg-white/10 hover:bg-white/20 text-white px-2 py-1.5 rounded text-xs font-medium flex items-center justify-center gap-1"
-              >
-                <ExternalLink className="w-3 h-3" />
-                Ouvrir
-              </button>
+          {/* Footer */}
+          {/*<div className="flex-shrink-0 bg-gradient-to-t from-black via-black/90 to-transparent p-3 z-30">
+            <div className="flex flex-wrap gap-2 text-xs text-gray-400 justify-center mb-2">
+              {channel.country && <span>🌍 {channel.country}</span>}
+              {channel.language && <span>🗣️ {channel.language}</span>}
+              <span>
+                🔗 {getStreamType(channel.url).split("/")[1]?.toUpperCase()}
+              </span>
             </div>
-          </div>
-        )}
-      </div>
-
-      {/* Video Container - PAS de z-index ici */}
-      <div
-        ref={containerRef}
-        className="flex-1 flex items-center justify-center bg-black px-4 py-2"
-      >
-        <div className="w-full h-full max-w-7xl">
-          <div data-vjs-player className="w-full h-full">
-            <video
-              ref={videoRef}
-              className="video-js vjs-big-play-centered"
-              playsInline
-            />
-          </div>
+            <p className="text-center text-gray-500 text-xs">
+              <kbd className="px-2 py-1 bg-gray-800 rounded text-xs">ESC</kbd> pour
+              fermer
+            </p>
+          </div>*/}
         </div>
-      </div>
-
-      {/* Footer */}
-      <div className="flex-shrink-0 bg-gradient-to-t from-black via-black/90 to-transparent p-3 z-30">
-        <div className="flex flex-wrap gap-2 text-xs text-gray-400 justify-center mb-2">
-          {channel.country && <span>🌍 {channel.country}</span>}
-          {channel.language && <span>🗣️ {channel.language}</span>}
-          <span>
-            🔗 {getStreamType(channel.url).split("/")[1]?.toUpperCase()}
-          </span>
-        </div>
-        <p className="text-center text-gray-500 text-xs">
-          <kbd className="px-2 py-1 bg-gray-800 rounded text-xs">ESC</kbd> pour
-          fermer
-        </p>
       </div>
     </div>
   );

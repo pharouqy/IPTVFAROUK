@@ -3,13 +3,41 @@
 /* Styles pour Video.js */
 @import "video.js/dist/video-js.css";
 
+:root {
+  --background: #fff;
+  --text: #181818;
+  --primary: #007bff;
+  --card: #ffffff;
+  --muted: #6b7280;
+}
+
+[data-theme="dark"] {
+  --background: #181818;
+  --text: #eee;
+  --primary: #339cff;
+  --card: #0f1724;
+  --muted: #9ca3af;
+}
+
 body {
+  background: var(--background);
+  color: var(--text);
+  transition: background 0.2s, color 0.2s;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Thèmes — variables pour couleurs personnalisées */
+/* Utiles pour composants non encore convertis */
+.bg-layer {
+  background-color: var(--card);
+}
+.text-muted {
+  color: var(--muted);
 }
 
 /* ===== VIDEO PLAYER - CONTROLES VISIBLES ===== */
@@ -276,15 +304,43 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
   .video-js .vjs-control-bar {
-    height: 3em;
+    height: 3.5em;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    gap: 2px;
   }
-
+  .video-js .vjs-control, .video-js .vjs-button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 6px;
+    font-size: 1.3em;
+  }
   .video-js .vjs-button > .vjs-icon-placeholder:before {
-    font-size: 1.6em;
+    font-size: 1.7em;
+    line-height: 1.2;
   }
-
-  .video-js .vjs-big-play-button {
-    font-size: 2.5em;
+  .video-js .vjs-volume-panel {
+    min-width: 50px;
+    max-width: 100px;
+    flex: 1 1 55px;
+  }
+  .video-js .vjs-progress-control {
+    min-width: 50px;
+    max-width: 100vw;
+    flex: 2 2 70px;
+  }
+  .video-js .vjs-play-control .vjs-icon-placeholder:before {
+    font-size: 2.2em !important;
+  }
+  .video-js .vjs-menu-button-popup .vjs-menu {
+    left: 0 !important;
+    right: auto !important;
+    min-width: 120px;
+    font-size: 1em;
+  }
+  .video-js .vjs-play-progress,
+  .video-js .vjs-load-progress {
+    height: 0.85em;
   }
 }
 
@@ -383,3 +439,57 @@ body {
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }
+
+/* Déclinaisons couleurs utilitaires (adaptation pour dark mode) */
+.bg-white {
+  background: var(--card) !important;
+}
+.bg-blue-100 {
+  background: color-mix(
+    in srgb,
+    var(--primary) 20%,
+    var(--background)
+  ) !important;
+}
+.bg-gray-50 {
+  background: color-mix(in srgb, #75757530 8%, var(--background)) !important;
+}
+.bg-gray-100 {
+  background: color-mix(in srgb, #757575 12%, var(--background)) !important;
+}
+.bg-gray-200 {
+  background: color-mix(in srgb, #888 22%, var(--background)) !important;
+}
+.bg-gray-700 {
+  background: color-mix(in srgb, #333 60%, var(--background)) !important;
+}
+
+.text-gray-800,
+.text-gray-900 {
+  color: var(--text) !important;
+}
+.text-gray-500 {
+  color: color-mix(in srgb, var(--text) 60%, var(--background)) !important;
+}
+.text-gray-600 {
+  color: color-mix(in srgb, var(--text) 80%, var(--background)) !important;
+}
+.text-gray-400 {
+  color: color-mix(in srgb, var(--text) 25%, var(--background)) !important;
+}
+.text-gray-200 {
+  color: color-mix(in srgb, var(--text) 10%, var(--background)) !important;
+}
+
+.border-gray-100,
+.border-gray-200,
+.border-gray-300 {
+  border-color: color-mix(
+    in srgb,
+    var(--text) 10%,
+    var(--background)
+  ) !important;
+}
+
+/* Ajout fallback si color-mix indisponible dans certains navigateur
+   Adapter manuellement pour la compatibilité si besoin. */

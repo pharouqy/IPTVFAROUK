@@ -132,7 +132,7 @@ const Sidebar = ({
                         : 'hover:bg-gray-50 text-gray-700'
                     }`}
                   >
-                    {group.replace(/;/g, ' ❤️ ')}
+                    {group.replace(/;/g, ' 📺 ')}
                   </button>
                 ))}
               </div>

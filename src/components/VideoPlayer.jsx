@@ -50,8 +50,8 @@ const VideoPlayer = ({ channel, onClose }) => {
       controlBarConfig = {
         playToggle: true,
         volumePanel: { inline: false },
-        currentTimeDisplay: true,
-        progressControl: true,
+        currentTimeDisplay: false,
+        progressControl: false,
         fullscreenToggle: true,
         // tout le reste à false pour alléger
         timeDivider: false,

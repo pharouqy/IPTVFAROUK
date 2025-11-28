@@ -76,7 +76,7 @@ const Sidebar = ({
               <span>Toutes les chaînes</span>
             </button>
 
-            <button
+            {/*<button
               onClick={() => handleNavigation(() => {
                 onShowFavorites(true);
                 onShowHistory(false);
@@ -104,7 +104,7 @@ const Sidebar = ({
             >
               <Clock className="w-5 h-5" />
               <span>Historique</span>
-            </button>
+            </button>*/}
           </nav>
 
           {/* Catégories */}

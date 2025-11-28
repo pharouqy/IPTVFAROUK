@@ -1,7 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
 import { Play, Star, Image as ImageIcon } from "lucide-react";
-
-const FAVORITES_SESSION_KEY = "iptv-session-favorites";
 
 const ChannelList = ({
   channels,
@@ -10,55 +7,6 @@ const ChannelList = ({
   favorites = [],
   darkMode,
 }) => {
-  const [sessionFavorites, setSessionFavorites] = useState(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const stored = window.localStorage.getItem(FAVORITES_SESSION_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  useEffect(() => {
-    if (!favorites?.length) return;
-    setSessionFavorites((prev) => {
-      const merged = Array.from(new Set([...prev, ...favorites]));
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(
-          FAVORITES_SESSION_KEY,
-          JSON.stringify(merged)
-        );
-      }
-      return merged;
-    });
-  }, [favorites]);
-
-  const mergedFavorites = useMemo(() => {
-    if (!favorites?.length && sessionFavorites.length === 0) return [];
-    return Array.from(new Set([...(favorites || []), ...sessionFavorites]));
-  }, [favorites, sessionFavorites]);
-
-  const handleFavoriteClick = (channelId) => {
-    setSessionFavorites((prev) => {
-      let updated;
-      if (prev.includes(channelId)) {
-        updated = prev.filter((id) => id !== channelId);
-      } else {
-        updated = [...prev, channelId];
-      }
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(
-          FAVORITES_SESSION_KEY,
-          JSON.stringify(updated)
-        );
-      }
-      return updated;
-    });
-
-    onToggleFavorite(channelId);
-  };
-
   if (!channels || channels.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
@@ -77,7 +25,7 @@ const ChannelList = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
       {channels.map((channel) => {
-        const isFavorite = mergedFavorites.includes(channel.id);
+        const isFavorite = favorites.includes(channel.url);
         const hasValidUrl = isValidUrl(channel.url);
 
         return (
@@ -100,11 +48,11 @@ const ChannelList = ({
                   }}
                 />
               ) : null}
+
               <div className="hidden items-center justify-center w-full h-full">
                 <ImageIcon className="w-10 h-10 md:w-12 md:h-12 text-gray-300" />
               </div>
 
-              {/* Badge indisponible */}
               {!hasValidUrl && (
                 <div className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
                   Indisponible
@@ -138,8 +86,9 @@ const ChannelList = ({
                   {hasValidUrl ? "Lire" : "N/A"}
                 </span>
               </button>
+
               <button
-                onClick={() => handleFavoriteClick(channel.id)}
+                onClick={() => onToggleFavorite(channel.id)}
                 className={`px-2 md:px-3 py-2 rounded-lg border transition-colors ${
                   isFavorite
                     ? "bg-yellow-400 border-yellow-500 text-white"
@@ -161,3 +110,4 @@ const ChannelList = ({
 };
 
 export default ChannelList;
+

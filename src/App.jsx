@@ -22,7 +22,7 @@ import {
   getHistory,
 } from "./services/storage";
 import { IPTV_CONFIG } from "./config/iptv";
-import { Loader, RefreshCw, AlertCircle } from "lucide-react";
+import { Loader, RefreshCw, AlertCircle, Trash2 } from "lucide-react";
 import InstallPrompt from "./components/InstallPrompt";
 
 function App() {
@@ -41,7 +41,7 @@ function App() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
   const [initialLoadDone, setInitialLoadDone] = useState(false);
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -85,7 +85,7 @@ function App() {
     let result = channels;
 
     if (showFavorites) {
-      result = channels.filter((ch) => favorites.includes(ch.id));
+      result = channels.filter((ch) => favorites.includes(ch.url));
     } else if (selectedGroup !== "Toutes") {
       result = filterByGroup(channels, selectedGroup);
     }
@@ -187,14 +187,19 @@ function App() {
 
   // Toggle favori
   const handleToggleFavorite = async (channelId) => {
-    if (favorites.includes(channelId)) {
-      await removeFromFavorites(channelId);
+    const channel = channels.find(ch => ch.id === channelId);
+    if (!channel) return;
+    
+    if (favorites.includes(channel.url)) {
+      await removeFromFavorites(channel);
     } else {
-      await addToFavorites(channelId);
+      await addToFavorites(channel);
     }
     const updatedFavorites = await getFavorites();
     setFavorites(updatedFavorites);
   };
+
+
 
   // Exporter la playlist
   const handleExport = () => {
@@ -301,6 +306,7 @@ function App() {
                 </div>
                 {/* BOUTONS CÔTÉ À CÔTÉ */}
                 <div className="flex gap-2 items-center">
+
                   <button
                     onClick={toggleTheme}
                     className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors text-xs md:text-sm"

@@ -3,7 +3,6 @@ import { openDB } from "idb";
 const DB_NAME = "iptvPlayerDB";
 const DB_VERSION = 1;
 const CHANNELS_STORE = "channels";
-const FAVORITES_STORE = "favorites";
 const HISTORY_STORE = "history";
 
 /**
@@ -20,11 +19,6 @@ const initDB = async () => {
         });
         channelsStore.createIndex("name", "name", { unique: false });
         channelsStore.createIndex("group", "group", { unique: false });
-      }
-
-      // Store pour les favoris
-      if (!db.objectStoreNames.contains(FAVORITES_STORE)) {
-        db.createObjectStore(FAVORITES_STORE, { keyPath: "channelId" });
       }
 
       // Store pour l'historique
@@ -82,39 +76,41 @@ export const deleteAllChannels = async () => {
   }
 };
 
-// === GESTION DES FAVORIS ===
+// === GESTION DES FAVORIS (LocalStorage) ===
 
-export const addToFavorites = async (channelId) => {
-  try {
-    const db = await initDB();
-    await db.put(FAVORITES_STORE, {
-      channelId,
-      addedAt: new Date().toISOString(),
-    });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
-
-export const removeFromFavorites = async (channelId) => {
-  try {
-    const db = await initDB();
-    await db.delete(FAVORITES_STORE, channelId);
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
+const FAVORITES_KEY = "iptv_favorites";
 
 export const getFavorites = async () => {
   try {
-    const db = await initDB();
-    const favorites = await db.getAll(FAVORITES_STORE);
-    return favorites.map((fav) => fav.channelId);
+    const stored = localStorage.getItem(FAVORITES_KEY);
+    return stored ? JSON.parse(stored) : [];
   } catch (error) {
     console.error("Erreur récupération favoris:", error);
     return [];
+  }
+};
+
+export const addToFavorites = async (channel) => {
+  try {
+    const favorites = await getFavorites();
+    if (!favorites.includes(channel.url)) {
+      favorites.push(channel.url);
+      localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+    }
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
+export const removeFromFavorites = async (channel) => {
+  try {
+    const favorites = await getFavorites();
+    const newFavorites = favorites.filter((url) => url !== channel.url);
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavorites));
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
   }
 };
 

@@ -32,14 +32,23 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
   const effectiveId = adUnitId || AADS_CONFIG.bannerAdUnitId;
 
   return new Promise((resolve, reject) => {
-    console.log(`🪙 Tentative de chargement A-Ads: ${effectiveId}`);
-
+    // Check if ID is configured
     if (!effectiveId) {
       console.warn("⚠️ A-Ads adUnitId manquant, affichage du fallback");
+      console.info("💡 Configurez VITE_AADS_BANNER_ID dans votre fichier .env");
       createFallbackAd(containerId);
       reject(new Error("Missing A-Ads adUnitId"));
       return;
     }
+
+    // Warn if using default/example ID
+    if (effectiveId === "1234567") {
+      console.warn("⚠️ A-Ads utilise l'ID d'exemple par défaut (1234567)");
+      console.info("💡 Remplacez VITE_AADS_BANNER_ID dans .env avec votre vrai ID");
+      console.info("📖 Voir SETUP_ADS.md pour les instructions");
+    }
+
+    console.log(`🪙 Tentative de chargement A-Ads: ${effectiveId}`);
 
     const container = document.getElementById(containerId);
 
@@ -55,17 +64,15 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     // Créer le script A-Ads
     const script = document.createElement("script");
     script.async = true;
-    // conserve la logique existante de formation d'URL
     script.src = `https://ad.a-ads.com/${effectiveId}?size=${size}`;
     script.setAttribute("data-ad-network", "aads");
     script.type = "text/javascript";
-    // tenter d'améliorer compatibilités/cors
     script.crossOrigin = "anonymous";
     script.referrerPolicy = "no-referrer";
 
     // Timeout de 5 secondes
     const timeout = setTimeout(() => {
-      console.warn("⏱️ Timeout A-Ads (5s)");
+      console.warn("⏱️ Timeout A-Ads (5s) - Possible ad blocker ou problème réseau");
       // cleanup
       if (script.parentNode) script.parentNode.removeChild(script);
       // fallback automatique si activé
@@ -84,13 +91,25 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
       resolve();
     };
 
-    script.onerror = () => {
+    script.onerror = (error) => {
       clearTimeout(timeout);
-      console.error(`❌ Erreur chargement A-Ads: ${effectiveId}`);
+      
+      // Detect if it's likely an ad blocker
+      const isLikelyAdBlocker = 
+        error.type === 'error' && 
+        !navigator.onLine === false; // online but failed
+      
+      if (isLikelyAdBlocker) {
+        console.info("🛡️ A-Ads bloqué (probablement un ad blocker) - Affichage du fallback");
+        console.info("💡 C'est normal, ~50% des utilisateurs ont un ad blocker");
+      } else {
+        console.error(`❌ Erreur chargement A-Ads: ${effectiveId}`);
+      }
+      
       // fallback automatique si activé
       if (AADS_CONFIG.fallbackEnabled) {
         createFallbackAd(containerId);
-        markAadsShown("banner_fallback_error");
+        markAadsShown(isLikelyAdBlocker ? "banner_fallback_blocked" : "banner_fallback_error");
       }
       reject(new Error("Failed to load A-Ads script"));
     };
@@ -98,6 +117,7 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     container.appendChild(script);
   });
 };
+
 
 /**
  * Vérifier si A-Ads est disponible

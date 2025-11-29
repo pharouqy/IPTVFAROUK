@@ -146,6 +146,7 @@ export const getEnabledNetworks = () => {
  */
 export const validateConfig = () => {
   const errors = [];
+  const warnings = [];
 
   // Vérifier AdMaven
   if (ADS_CONFIG.admaven.enabled) {
@@ -156,10 +157,20 @@ export const validateConfig = () => {
 
   // Vérifier A-Ads
   if (ADS_CONFIG.aads.enabled) {
-    if (ADS_CONFIG.aads.bannerAdUnitId === "1234567") {
+    if (!ADS_CONFIG.aads.bannerAdUnitId) {
       errors.push(
-        "⚠️ A-Ads activé mais bannerAdUnitId est l'exemple par défaut"
+        "⚠️ A-Ads activé mais VITE_AADS_BANNER_ID n'est pas défini dans .env"
       );
+      errors.push("💡 Créez un fichier .env et ajoutez: VITE_AADS_BANNER_ID=votre_id");
+      errors.push("📖 Consultez SETUP_ADS.md pour les instructions détaillées");
+    } else if (ADS_CONFIG.aads.bannerAdUnitId === "1234567") {
+      warnings.push(
+        "⚠️ A-Ads utilise l'ID d'exemple (1234567) - Remplacez-le par votre vrai ID"
+      );
+      warnings.push("📖 Voir SETUP_ADS.md pour obtenir votre ID A-Ads");
+    } else {
+      // Valid ID configured
+      console.log(`✅ A-Ads configuré avec l'ID: ${ADS_CONFIG.aads.bannerAdUnitId}`);
     }
   }
 
@@ -173,7 +184,7 @@ export const validateConfig = () => {
     valid: errors.length === 0,
     errors,
     enabledNetworks: getEnabledNetworks(),
-    warnings: errors,
+    warnings,
   };
 };
 

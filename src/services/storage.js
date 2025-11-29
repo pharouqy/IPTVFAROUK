@@ -1,7 +1,7 @@
 import { openDB } from "idb";
 
 const DB_NAME = "iptvPlayerDB";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const CHANNELS_STORE = "channels";
 const HISTORY_STORE = "history";
 
@@ -10,7 +10,7 @@ const HISTORY_STORE = "history";
  */
 const initDB = async () => {
   return openDB(DB_NAME, DB_VERSION, {
-    upgrade(db) {
+    upgrade(db, oldVersion, newVersion, transaction) {
       // Store pour les chaînes
       if (!db.objectStoreNames.contains(CHANNELS_STORE)) {
         const channelsStore = db.createObjectStore(CHANNELS_STORE, {
@@ -28,6 +28,12 @@ const initDB = async () => {
           autoIncrement: true,
         });
         historyStore.createIndex("watchedAt", "watchedAt", { unique: false });
+      } else {
+        // Si le store existe déjà, on vérifie si l'index existe
+        const historyStore = transaction.objectStore(HISTORY_STORE);
+        if (!historyStore.indexNames.contains("watchedAt")) {
+          historyStore.createIndex("watchedAt", "watchedAt", { unique: false });
+        }
       }
     },
   });

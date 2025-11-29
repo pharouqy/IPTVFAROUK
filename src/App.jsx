@@ -200,6 +200,12 @@ function App() {
     await loadPlaylistFromUrl(IPTV_CONFIG.defaultPlaylistUrl);
   };
 
+  // Charger l'historique
+  const loadHistoryData = async () => {
+    const savedHistory = await getHistory();
+    setHistory(savedHistory);
+  };
+
   // Lire une chaîne
   // Lire une chaîne avec Pre-roll
   const handleChannelClick = async (channel) => {
@@ -347,9 +353,6 @@ function App() {
   return (
     <>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
-        {/* ... tout le reste du code ... */}
-        {/* Header/boutons alignés à droite */}
-        <div className="flex h-screen bg-gray-50 overflow-hidden">
           {/* Sidebar avec menu burger mobile */}
           <Sidebar
             groups={groups}
@@ -539,15 +542,6 @@ function App() {
               onClose={() => setCurrentChannel(null)}
             />
           )}
-          <InstallPrompt />
-          {/* Lecteur vidéo */}
-          {currentChannel && (
-            <VideoPlayer
-              channel={currentChannel}
-              onClose={() => setCurrentChannel(null)}
-            />
-          )}
-
           {/* Pre-roll publicitaire */}
           {showPreroll && (
             <AdPreroll
@@ -559,7 +553,7 @@ function App() {
           {/* Prompt d'installation PWA */}
           <InstallPrompt />
         </div>
-      </div>
+
     </>
   );
 }

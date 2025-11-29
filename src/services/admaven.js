@@ -2,27 +2,24 @@
  * Configuration et gestion des publicités AdMaven
  */
 
-
-
 export const ADMAVEN_CONFIG = {
-  // ⚠️ REMPLACEZ ces IDs par vos vrais IDs AdMaven
-  bannerAdUnitId:
-    import.meta.env.VITE_BANNER_AD_UNIT_ID || "YOUR_BANNER_AD_UNIT_ID",
-  popunderAdUnitId:
-    import.meta.env.VITE_POPUNDER_AD_UNIT_ID || "YOUR_POPUNDER_AD_UNIT_ID",
-  videoAdUnitId:
-    import.meta.env.VITE_VIDEO_AD_UNIT_ID || "YOUR_VIDEO_AD_UNIT_ID",
-
-  // Fréquence d'affichage
-  bannerRefreshInterval: 60000, // 60 secondes
-  popunderFrequency: 3, // Afficher après 3 actions
-  videoPrerollFrequency: 2, // Afficher après 2 streams
+  // ⚠️ REMPLACEZ par vos vrais IDs AdMaven une fois approuvé
+  bannerAdUnitId: import.meta.env.VITE_ADMAVEN_BANNER_ID || 'YOUR_ADMAVEN_BANNER_ID', // Ex: 'a1b2c3d4'
+  popunderAdUnitId: import.meta.env.VITE_ADMAVEN_POPUNDER_ID || 'YOUR_ADMAVEN_POPUNDER_ID',
+  videoAdUnitId: import.meta.env.VITE_ADMAVEN_VIDEO_ID || 'YOUR_ADMAVEN_VIDEO_ID',
+  interstitialAdUnitId: import.meta.env.VITE_ADMAVEN_INTERSTITIAL_ID || 'YOUR_ADMAVEN_INTERSTITIAL_ID',
+  
+  // Fréquence
+  bannerRefreshInterval: 60000,
+  popunderFrequency: 5,
+  videoPrerollFrequency: 2,
 };
 
 /**
  * Charger un script AdMaven
  */
-export const loadAdMavenAd = (adUnitId, containerId) => {
+{
+  /*export const loadAdMavenAd = (adUnitId, containerId) => {
   return new Promise((resolve, reject) => {
     const container = document.getElementById(containerId);
 
@@ -46,6 +43,56 @@ export const loadAdMavenAd = (adUnitId, containerId) => {
 
     script.onerror = () => {
       console.error(`❌ Erreur chargement AdMaven ${adUnitId}`);
+      reject(new Error("Failed to load AdMaven script"));
+    };
+
+    container.appendChild(script);
+  });
+};*/
+}
+
+/**
+ * Charger une publicité AdMaven
+ * @param {string} adUnitId - ID AdMaven
+ * @param {string} containerId - ID du container
+ * @returns {Promise}
+ */
+export const loadAdMavenAd = (adUnitId, containerId) => {
+  return new Promise((resolve, reject) => {
+    console.log(`🎯 Tentative de chargement AdMaven: ${adUnitId}`);
+
+    const container = document.getElementById(containerId);
+
+    if (!container) {
+      console.error(`❌ Container ${containerId} introuvable`);
+      reject(new Error(`Container ${containerId} not found`));
+      return;
+    }
+
+    // Nettoyer l'ancien contenu
+    container.innerHTML = "";
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.setAttribute("data-cfasync", "false");
+    script.src = `//thubanoa.com/${adUnitId}/invoke.js`;
+    script.setAttribute("data-ad-network", "admaven");
+
+    // Timeout de 5 secondes
+    const timeout = setTimeout(() => {
+      console.warn("⏱️ Timeout AdMaven (5s)");
+      reject(new Error("AdMaven load timeout"));
+    }, 5000);
+
+    script.onload = () => {
+      clearTimeout(timeout);
+      console.log(`✅ AdMaven chargé: ${adUnitId}`);
+      resolve();
+    };
+
+    script.onerror = () => {
+      clearTimeout(timeout);
+      console.error(`❌ Erreur chargement AdMaven: ${adUnitId}`);
       reject(new Error("Failed to load AdMaven script"));
     };
 

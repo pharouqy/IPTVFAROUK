@@ -14,7 +14,6 @@ export const parseM3U = async (source) => {
       typeof source === "string" &&
       (source.startsWith("http://") || source.startsWith("https://"))
     ) {
-      console.log("Chargement depuis URL:", source);
       const response = await fetch(source);
 
       if (!response.ok) {

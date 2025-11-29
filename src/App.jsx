@@ -127,7 +127,6 @@ function App() {
       setError("");
 
       console.log("🚀 Chargement de la playlist par défaut...");
-      console.log("📡 URL:", IPTV_CONFIG.defaultPlaylistUrl);
 
       // Vérifier si on a déjà des chaînes en cache
       const savedChannels = await getAllChannels();

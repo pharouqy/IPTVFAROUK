@@ -66,15 +66,6 @@ export const ADS_CONFIG = {
         action: "openPremiumModal",
       },
       {
-        id: "crypto",
-        emoji: "🪙",
-        title: "Soutenez-nous en crypto",
-        subtitle: "Bitcoin, Ethereum et autres acceptés",
-        gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-        buttonText: "Contribuer",
-        action: "openCryptoDonation",
-      },
-      {
         id: "share",
         emoji: "⭐",
         title: "Partagez avec vos amis",

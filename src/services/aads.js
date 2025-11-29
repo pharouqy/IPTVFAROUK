@@ -65,7 +65,7 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     const script = document.createElement("script");
     script.async = true;
     script.src = `https://ad.a-ads.com/${effectiveId}?size=${size}`;
-    script.setAttribute("data-ad-network", "aads");
+    script.setAttribute("data-aa", effectiveId);
     script.type = "text/javascript";
     script.crossOrigin = "anonymous";
     script.referrerPolicy = "no-referrer";

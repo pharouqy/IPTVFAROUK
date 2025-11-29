@@ -76,23 +76,28 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     `;
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameborder", "0");
+    iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+    iframe.setAttribute("allowfullscreen", "true");
+    iframe.setAttribute("referrerpolicy", "no-referrer");
+    //iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-top-navigation allow-downloads-without-user-activation");
+    iframe.setAttribute("crossorigin", "anonymous");
 
     // Timeout de 5 secondes
-    const timeout = setTimeout(() => {
+    {/*const timeout = setTimeout(() => {
       console.warn("⏱️ Timeout A-Ads (5s) - Possible ad blocker ou problème réseau");
       // cleanup
-      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+      //if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
       // fallback automatique si activé
       if (AADS_CONFIG.fallbackEnabled) {
         createFallbackAd(containerId);
         markAadsShown("banner_fallback_timeout");
       }
       reject(new Error("A-Ads load timeout"));
-    }, 5000);
+    }, 5000);*/}
 
     iframe.onload = () => {
-      clearTimeout(timeout);
-      console.log(`✅ A-Ads chargé: ${effectiveId}`);
+      //clearTimeout(timeout);
+      //console.log(`✅ A-Ads chargé: ${effectiveId}`);
       // on considère l'annonce affichée (statistiques)
       markAadsShown("banner");
       resolve();

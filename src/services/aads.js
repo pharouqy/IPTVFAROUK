@@ -6,7 +6,7 @@
 export const AADS_CONFIG = {
   // ⚠️ REMPLACEZ par votre vrai ID A-Ads
   // Pour l'obtenir : https://a-ads.com → Create Ad Unit
-  bannerAdUnitId: import.meta.env.VITE_AADS_BANNER_ID || "YOUR_AADS_BANNER_ID", // Ex: '7891234'
+  bannerAdUnitId: import.meta.env.VITE_AADS_BANNER_ID, // Ex: '7891234'
 
   sizes: {
     leaderboard: "728x90",
@@ -127,14 +127,6 @@ export const createFallbackAd = (containerId) => {
       gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       buttonText: "Découvrir",
       action: () => window.dispatchEvent(new CustomEvent("openPremiumModal")),
-    },
-    {
-      emoji: "🪙",
-      title: "Soutenez-nous en crypto",
-      subtitle: "Bitcoin, Ethereum et autres cryptos acceptés",
-      gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-      buttonText: "Contribuer",
-      action: () => alert("Fonctionnalité crypto bientôt disponible !"),
     },
     {
       emoji: "⭐",

@@ -13,10 +13,10 @@ export const ADS_CONFIG = {
 
     // IDs des unités publicitaires AdMaven
     // Récupérez-les depuis : https://publishers.admaven.com/
-    bannerAdUnitId: "YOUR_ADMAVEN_BANNER_ID",
-    videoAdUnitId: "YOUR_ADMAVEN_VIDEO_ID",
-    interstitialAdUnitId: "YOUR_ADMAVEN_INTERSTITIAL_ID",
-    popunderAdUnitId: "YOUR_ADMAVEN_POPUNDER_ID",
+    bannerAdUnitId: import.meta.env.VITE_ADMAVEN_BANNER_ID,
+    videoAdUnitId: import.meta.env.VITE_ADMAVEN_VIDEO_ID,
+    interstitialAdUnitId: import.meta.env.VITE_ADMAVEN_INTERSTITIAL_ID,
+    popunderAdUnitId: import.meta.env.VITE_ADMAVEN_POPUNDER_ID,
 
     // Fréquences d'affichage
     bannerRefreshInterval: 60000, // 60 secondes
@@ -33,7 +33,7 @@ export const ADS_CONFIG = {
 
     // IDs des unités publicitaires A-Ads
     // Créez un compte : https://a-ads.com → Create Ad Unit
-    bannerAdUnitId: "1234567", // ⬅️ REMPLACEZ par votre ID (7 chiffres)
+    bannerAdUnitId: import.meta.env.VITE_AADS_BANNER_ID, // ⬅️ REMPLACEZ par votre ID (7 chiffres)
 
     // Tailles disponibles
     sizes: {

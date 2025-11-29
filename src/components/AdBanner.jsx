@@ -15,7 +15,7 @@ const AdBanner = ({ position = "header", onClose }) => {
 
   useEffect(() => {
     // Logger la config au démarrage (dev only)
-    if (import.meta.env.MODE === "development") {
+    if (import.meta.env.VITE_MODE === "development") {
       logConfig();
     }
 

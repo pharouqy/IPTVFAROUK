@@ -373,6 +373,7 @@ function App() {
                 <AdBanner
                   position="header"
                   size="leaderboard"
+                  theme={theme}
                   onClose={() => console.log("Bannière fermée")}
                 />
               )}

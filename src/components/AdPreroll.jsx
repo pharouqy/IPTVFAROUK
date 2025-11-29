@@ -147,7 +147,7 @@ const AdPreroll = ({ onComplete, onSkip }) => {
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-white text-sm">
-            💡 <span className="text-yellow-400">Conseil :</span> Passez en mode Premium pour profiter sans publicité
+            💡 <span className="text-yellow-400">Conseil :</span> Les pubs sont des annonces publicitaires qui permettent de soutenir le développement du service.
           </p>
         </div>
       </div>

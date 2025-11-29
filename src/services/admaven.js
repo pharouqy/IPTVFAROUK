@@ -2,11 +2,13 @@
  * Configuration et gestion des publicités AdMaven
  */
 
+import { meta } from "eslint-plugin-react-hooks";
+
 export const ADMAVEN_CONFIG = {
   // ⚠️ REMPLACEZ ces IDs par vos vrais IDs AdMaven
-  bannerAdUnitId: "YOUR_BANNER_AD_UNIT_ID",
-  popunderAdUnitId: "YOUR_POPUNDER_AD_UNIT_ID",
-  videoAdUnitId: "YOUR_VIDEO_AD_UNIT_ID",
+  bannerAdUnitId: meta.env.VITE_BANNER_AD_UNIT_ID || "YOUR_BANNER_AD_UNIT_ID",
+  popunderAdUnitId: meta.env.VITE_POPUNDER_AD_UNIT_ID || "YOUR_POPUNDER_AD_UNIT_ID",
+  videoAdUnitId: meta.env.VITE_VIDEO_AD_UNIT_ID || "YOUR_VIDEO_AD_UNIT_ID",
 
   // Fréquence d'affichage
   bannerRefreshInterval: 60000, // 60 secondes

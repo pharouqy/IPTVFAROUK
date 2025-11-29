@@ -47,6 +47,7 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     script.async = true;
     script.src = `https://ad.a-ads.com/${adUnitId}?size=${size}`;
     script.setAttribute("data-ad-network", "aads");
+    script.type = "text/javascript";
 
     // Timeout de 5 secondes
     const timeout = setTimeout(() => {

@@ -28,6 +28,9 @@ import InstallPrompt from "./components/InstallPrompt";
 import AdBanner from "./components/AdBanner";
 import { hasPremiumSubscription } from "./services/admaven";
 
+import AdPreroll from "./components/AdPreroll";
+import { ADMAVEN_CONFIG, markAdShown } from "./services/admaven";
+
 function App() {
   // États principaux
   const [channels, setChannels] = useState([]);
@@ -45,6 +48,10 @@ function App() {
   const [error, setError] = useState("");
   const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [theme, setTheme] = useState("dark");
+
+  const [showPreroll, setShowPreroll] = useState(false);
+  const [prerollCompleted, setPrerollCompleted] = useState(false);
+  const [streamToPlay, setStreamToPlay] = useState(null);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -194,11 +201,70 @@ function App() {
   };
 
   // Lire une chaîne
+  // Lire une chaîne avec Pre-roll
   const handleChannelClick = async (channel) => {
-    setCurrentChannel(channel);
-    await addToHistory(channel);
-    const updatedHistory = await getHistory();
-    setHistory(updatedHistory);
+    // Vérifier si l'utilisateur est Premium
+    const isPremium = hasPremiumSubscription();
+
+    if (isPremium) {
+      // Pas de pub pour les Premium
+      console.log("💎 Premium - Lecture directe");
+      setCurrentChannel(channel);
+      await addToHistory(channel);
+      await loadHistoryData();
+      return;
+    }
+
+    // Vérifier la fréquence des pre-rolls
+    const prerollCount = parseInt(localStorage.getItem("preroll_count") || "0");
+    const shouldShowPreroll =
+      prerollCount % ADMAVEN_CONFIG.videoPrerollFrequency === 0;
+
+    if (shouldShowPreroll && !prerollCompleted) {
+      // Afficher le pre-roll
+      console.log("🎬 Affichage du pre-roll");
+      setStreamToPlay(channel);
+      setShowPreroll(true);
+
+      // Incrémenter le compteur
+      localStorage.setItem("preroll_count", (prerollCount + 1).toString());
+      markAdShown("video");
+    } else {
+      // Lecture directe
+      console.log("▶️ Lecture directe (pas de pre-roll)");
+      setCurrentChannel(channel);
+      await addToHistory(channel);
+      await loadHistoryData();
+
+      // Incrémenter le compteur pour la prochaine fois
+      localStorage.setItem("preroll_count", (prerollCount + 1).toString());
+    }
+  };
+
+  // Callback après le pre-roll
+  const handlePrerollComplete = async () => {
+    console.log("✅ Pre-roll terminé");
+    setShowPreroll(false);
+    setPrerollCompleted(true);
+
+    // Lancer la chaîne
+    if (streamToPlay) {
+      setCurrentChannel(streamToPlay);
+      await addToHistory(streamToPlay);
+      await loadHistoryData();
+      setStreamToPlay(null);
+    }
+
+    // Reset après 30 secondes
+    setTimeout(() => {
+      setPrerollCompleted(false);
+    }, 30000);
+  };
+
+  // Callback si l'utilisateur skip
+  const handlePrerollSkip = async () => {
+    console.log("⏭️ Pre-roll skippé");
+    await handlePrerollComplete();
   };
 
   // Toggle favori
@@ -280,198 +346,219 @@ function App() {
 
   return (
     <>
-      {/* Header/boutons alignés à droite */}
       <div className="flex h-screen bg-gray-50 overflow-hidden">
-        {/* Sidebar avec menu burger mobile */}
-        <Sidebar
-          groups={groups}
-          selectedGroup={selectedGroup}
-          onGroupSelect={setSelectedGroup}
-          showFavorites={showFavorites}
-          onShowFavorites={setShowFavorites}
-          showHistory={showHistory}
-          onShowHistory={setShowHistory}
-          onExport={handleExport}
-        />
+        {/* ... tout le reste du code ... */}
+        {/* Header/boutons alignés à droite */}
+        <div className="flex h-screen bg-gray-50 overflow-hidden">
+          {/* Sidebar avec menu burger mobile */}
+          <Sidebar
+            groups={groups}
+            selectedGroup={selectedGroup}
+            onGroupSelect={setSelectedGroup}
+            showFavorites={showFavorites}
+            onShowFavorites={setShowFavorites}
+            showHistory={showHistory}
+            onShowHistory={setShowHistory}
+            onExport={handleExport}
+          />
 
-        {/* Contenu principal */}
-        <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
-          {/* Header */}
-          <header className="bg-white shadow-sm flex-shrink-0">
-            {/* Bannière publicitaire */}
-            {showAds && (
-              <AdBanner
-                position="header"
-                size="leaderboard"
-                onClose={() => console.log("Bannière fermée")}
-              />
-            )}
-            <div className="p-3 md:p-4">
-              <div className="flex items-center justify-between mb-3 md:mb-4 ml-16 lg:ml-0">
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-lg md:text-2xl font-bold text-gray-800 truncate">
-                    {showFavorites
-                      ? "Mes Favoris"
-                      : showHistory
-                      ? "Historique"
-                      : selectedGroup === "Toutes"
-                      ? IPTV_CONFIG.playlistName
-                      : selectedGroup}
-                  </h2>
-                  <p className="text-xs md:text-sm text-gray-500 mt-1">
-                    {totalItems} chaîne{totalItems > 1 ? "s" : ""}
-                    {hasMore &&
-                      ` • ${displayedItems.length} affichée${
-                        displayedItems.length > 1 ? "s" : ""
-                      }`}
-                  </p>
-                </div>
-                {/* BOUTONS CÔTÉ À CÔTÉ */}
-                <div className="flex gap-2 items-center">
-                  <button
-                    onClick={toggleTheme}
-                    className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors text-xs md:text-sm"
-                    aria-label={
-                      theme === "light"
-                        ? "Activer le mode sombre"
-                        : "Activer le mode clair"
-                    }
-                  >
-                    {theme === "light" ? "🌙 Sombre" : "☀️ Clair"}
-                  </button>
-                  <button
-                    onClick={handleReload}
-                    className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 md:px-4 py-2 rounded-lg transition-colors flex-shrink-0"
-                  >
-                    <RefreshCw className="w-3 h-3 md:w-4 md:h-4" />
-                    <span className="hidden sm:inline">Recharger</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Barre de recherche */}
-              {!showHistory && (
-                <div className="ml-16 lg:ml-0">
-                  <SearchBar
-                    value={searchQuery}
-                    onChange={setSearchQuery}
-                    onClear={() => setSearchQuery("")}
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* Contrôles de pagination */}
-            {!showHistory && filteredChannels.length > 0 && (
-              <div className="ml-16 lg:ml-0">
-                <PaginationControls
-                  viewMode={viewMode}
-                  onViewModeChange={setViewMode}
-                  itemsPerPage={itemsPerPage}
-                  onItemsPerPageChange={setItemsPerPage}
-                  totalItems={totalItems}
+          {/* Contenu principal */}
+          <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
+            {/* Header */}
+            <header className="bg-white shadow-sm flex-shrink-0">
+              {/* Bannière publicitaire */}
+              {showAds && (
+                <AdBanner
+                  position="header"
+                  size="leaderboard"
+                  onClose={() => console.log("Bannière fermée")}
                 />
-              </div>
-            )}
-          </header>
+              )}
+              <div className="p-3 md:p-4">
+                <div className="flex items-center justify-between mb-3 md:mb-4 ml-16 lg:ml-0">
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-lg md:text-2xl font-bold text-gray-800 truncate">
+                      {showFavorites
+                        ? "Mes Favoris"
+                        : showHistory
+                        ? "Historique"
+                        : selectedGroup === "Toutes"
+                        ? IPTV_CONFIG.playlistName
+                        : selectedGroup}
+                    </h2>
+                    <p className="text-xs md:text-sm text-gray-500 mt-1">
+                      {totalItems} chaîne{totalItems > 1 ? "s" : ""}
+                      {hasMore &&
+                        ` • ${displayedItems.length} affichée${
+                          displayedItems.length > 1 ? "s" : ""
+                        }`}
+                    </p>
+                  </div>
+                  {/* BOUTONS CÔTÉ À CÔTÉ */}
+                  <div className="flex gap-2 items-center">
+                    <button
+                      onClick={toggleTheme}
+                      className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors text-xs md:text-sm"
+                      aria-label={
+                        theme === "light"
+                          ? "Activer le mode sombre"
+                          : "Activer le mode clair"
+                      }
+                    >
+                      {theme === "light" ? "🌙 Sombre" : "☀️ Clair"}
+                    </button>
+                    <button
+                      onClick={handleReload}
+                      className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 md:px-4 py-2 rounded-lg transition-colors flex-shrink-0"
+                    >
+                      <RefreshCw className="w-3 h-3 md:w-4 md:h-4" />
+                      <span className="hidden sm:inline">Recharger</span>
+                    </button>
+                  </div>
+                </div>
 
-          {/* Liste des chaînes */}
-          <main className="flex-1 overflow-y-auto p-3 md:p-6">
-            {loading ? (
-              <div className="flex items-center justify-center h-full">
-                <Loader className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600" />
-              </div>
-            ) : showHistory ? (
-              <div className="max-w-7xl mx-auto">
-                {history.length === 0 ? (
-                  <p className="text-center text-gray-500 py-12 text-sm md:text-base">
-                    Aucun historique de visionnage
-                  </p>
-                ) : (
-                  <div className="space-y-2 md:space-y-3">
-                    {history.map((item) => (
-                      <div
-                        key={item.id}
-                        className="bg-white p-3 md:p-4 rounded-lg shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-md transition-shadow"
-                      >
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-gray-800 text-sm md:text-base truncate">
-                            {item.channelName}
-                          </h3>
-                          <p className="text-xs md:text-sm text-gray-500">
-                            {new Date(item.watchedAt).toLocaleString("fr-FR")}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            const channel = channels.find(
-                              (ch) => ch.id === item.channelId
-                            );
-
-                            if (channel) {
-                              handleChannelClick(channel);
-                            } else {
-                              // Si la chaîne n'est plus présente dans la liste (ou id différent),
-                              // on la relit directement à partir des infos stockées dans l'historique
-                              setCurrentChannel({
-                                id: item.channelId ?? `history-${item.id}`,
-                                name: item.channelName,
-                                url: item.channelUrl,
-                                group: "Historique",
-                              });
-                            }
-                          }}
-                          className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
-                        >
-                          Relire
-                        </button>
-                      </div>
-                    ))}
+                {/* Barre de recherche */}
+                {!showHistory && (
+                  <div className="ml-16 lg:ml-0">
+                    <SearchBar
+                      value={searchQuery}
+                      onChange={setSearchQuery}
+                      onClear={() => setSearchQuery("")}
+                    />
                   </div>
                 )}
               </div>
-            ) : (
-              <div className="max-w-7xl mx-auto">
-                <InfiniteScroll
-                  onLoadMore={handleLoadMore}
-                  hasMore={hasMore}
-                  loading={loadingMore}
-                >
-                  <ChannelList
-                    channels={displayedItems}
-                    onChannelClick={handleChannelClick}
-                    onToggleFavorite={handleToggleFavorite}
-                    favorites={favorites}
-                    viewMode={viewMode}
-                  />
-                </InfiniteScroll>
-              </div>
-            )}
-          </main>
-          <p className="text-center text-xs text-gray-400 py-2">
-            IPTVFarouk - © {new Date().getFullYear()}. Tous droits réservés.
-            <br />
-            Développé par
-            <a
-              href="https://github.com/pharouqy"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {" "}
-              Farouk Younsi
-            </a>{" "}
-            with ❤️.
-          </p>
-        </div>
 
-        {/* Lecteur vidéo */}
-        {currentChannel && (
-          <VideoPlayer
-            channel={currentChannel}
-            onClose={() => setCurrentChannel(null)}
-          />
-        )}
-        <InstallPrompt />
+              {/* Contrôles de pagination */}
+              {!showHistory && filteredChannels.length > 0 && (
+                <div className="ml-16 lg:ml-0">
+                  <PaginationControls
+                    viewMode={viewMode}
+                    onViewModeChange={setViewMode}
+                    itemsPerPage={itemsPerPage}
+                    onItemsPerPageChange={setItemsPerPage}
+                    totalItems={totalItems}
+                  />
+                </div>
+              )}
+            </header>
+
+            {/* Liste des chaînes */}
+            <main className="flex-1 overflow-y-auto p-3 md:p-6">
+              {loading ? (
+                <div className="flex items-center justify-center h-full">
+                  <Loader className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600" />
+                </div>
+              ) : showHistory ? (
+                <div className="max-w-7xl mx-auto">
+                  {history.length === 0 ? (
+                    <p className="text-center text-gray-500 py-12 text-sm md:text-base">
+                      Aucun historique de visionnage
+                    </p>
+                  ) : (
+                    <div className="space-y-2 md:space-y-3">
+                      {history.map((item) => (
+                        <div
+                          key={item.id}
+                          className="bg-white p-3 md:p-4 rounded-lg shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-md transition-shadow"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-gray-800 text-sm md:text-base truncate">
+                              {item.channelName}
+                            </h3>
+                            <p className="text-xs md:text-sm text-gray-500">
+                              {new Date(item.watchedAt).toLocaleString("fr-FR")}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => {
+                              const channel = channels.find(
+                                (ch) => ch.id === item.channelId
+                              );
+
+                              if (channel) {
+                                handleChannelClick(channel);
+                              } else {
+                                // Si la chaîne n'est plus présente dans la liste (ou id différent),
+                                // on la relit directement à partir des infos stockées dans l'historique
+                                setCurrentChannel({
+                                  id: item.channelId ?? `history-${item.id}`,
+                                  name: item.channelName,
+                                  url: item.channelUrl,
+                                  group: "Historique",
+                                });
+                              }
+                            }}
+                            className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
+                          >
+                            Relire
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="max-w-7xl mx-auto">
+                  <InfiniteScroll
+                    onLoadMore={handleLoadMore}
+                    hasMore={hasMore}
+                    loading={loadingMore}
+                  >
+                    <ChannelList
+                      channels={displayedItems}
+                      onChannelClick={handleChannelClick}
+                      onToggleFavorite={handleToggleFavorite}
+                      favorites={favorites}
+                      viewMode={viewMode}
+                    />
+                  </InfiniteScroll>
+                </div>
+              )}
+            </main>
+            <p className="text-center text-xs text-gray-400 py-2">
+              IPTVFarouk - © {new Date().getFullYear()}. Tous droits réservés.
+              <br />
+              Développé par
+              <a
+                href="https://github.com/pharouqy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {" "}
+                Farouk Younsi
+              </a>{" "}
+              with ❤️.
+            </p>
+          </div>
+
+          {/* Lecteur vidéo */}
+          {currentChannel && (
+            <VideoPlayer
+              channel={currentChannel}
+              onClose={() => setCurrentChannel(null)}
+            />
+          )}
+          <InstallPrompt />
+          {/* Lecteur vidéo */}
+          {currentChannel && (
+            <VideoPlayer
+              channel={currentChannel}
+              onClose={() => setCurrentChannel(null)}
+            />
+          )}
+
+          {/* Pre-roll publicitaire */}
+          {showPreroll && (
+            <AdPreroll
+              onComplete={handlePrerollComplete}
+              onSkip={handlePrerollSkip}
+            />
+          )}
+
+          {/* Prompt d'installation PWA */}
+          <InstallPrompt />
+        </div>
       </div>
     </>
   );

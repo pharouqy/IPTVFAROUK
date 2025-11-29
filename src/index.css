@@ -309,7 +309,8 @@ body {
     overflow-x: auto;
     gap: 2px;
   }
-  .video-js .vjs-control, .video-js .vjs-button {
+  .video-js .vjs-control,
+  .video-js .vjs-button {
     min-width: 44px;
     min-height: 44px;
     padding: 0 6px;
@@ -493,3 +494,95 @@ body {
 
 /* Ajout fallback si color-mix indisponible dans certains navigateur
    Adapter manuellement pour la compatibilité si besoin. */
+
+/* ===== STYLES PUBLICITÉS ===== */
+
+/* Container de pub */
+#admaven-banner-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Empêcher le débordement */
+#admaven-ad-slot {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+#admaven-ad-slot iframe {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Animation de chargement */
+@keyframes pulse-ad {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.ad-loading {
+  animation: pulse-ad 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #admaven-banner-container {
+    padding: 0.5rem;
+  }
+}
+
+/* ===== FIX CENTRAGE BANNIÈRE PUBLICITAIRE ===== */
+
+#admaven-ad-slot {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+}
+
+#admaven-ad-slot > * {
+  margin: 0 auto !important;
+  display: block !important;
+}
+
+/* Si AdMaven utilise des iframes */
+#admaven-ad-slot iframe {
+  margin: 0 auto !important;
+  display: block !important;
+}
+
+/* Container AdMaven */
+#admaven-banner-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+}
+
+/* Forcer le centrage des enfants */
+.ad-banner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  #admaven-ad-slot {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  #admaven-ad-slot > * {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}

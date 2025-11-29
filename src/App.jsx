@@ -25,6 +25,9 @@ import { IPTV_CONFIG } from "./config/iptv";
 import { Loader, RefreshCw, AlertCircle, Trash2 } from "lucide-react";
 import InstallPrompt from "./components/InstallPrompt";
 
+import AdBanner from "./components/AdBanner";
+import { hasPremiumSubscription } from "./services/admaven";
+
 function App() {
   // États principaux
   const [channels, setChannels] = useState([]);
@@ -67,6 +70,19 @@ function App() {
   // Chargement initial automatique
   useEffect(() => {
     loadInitialPlaylist();
+  }, []);
+
+  const [showAds, setShowAds] = useState(true);
+
+  // Vérifier le statut Premium au chargement
+  useEffect(() => {
+    const isPremium = hasPremiumSubscription();
+    setShowAds(!isPremium);
+    console.log(
+      isPremium
+        ? "💎 Mode Premium - Pas de pub"
+        : "📺 Mode gratuit - Pubs activées"
+    );
   }, []);
 
   // Fermer le lecteur avec ESC
@@ -187,9 +203,9 @@ function App() {
 
   // Toggle favori
   const handleToggleFavorite = async (channelId) => {
-    const channel = channels.find(ch => ch.id === channelId);
+    const channel = channels.find((ch) => ch.id === channelId);
     if (!channel) return;
-    
+
     if (favorites.includes(channel.url)) {
       await removeFromFavorites(channel);
     } else {
@@ -198,8 +214,6 @@ function App() {
     const updatedFavorites = await getFavorites();
     setFavorites(updatedFavorites);
   };
-
-
 
   // Exporter la playlist
   const handleExport = () => {
@@ -284,6 +298,14 @@ function App() {
         <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
           {/* Header */}
           <header className="bg-white shadow-sm flex-shrink-0">
+            {/* Bannière publicitaire */}
+            {showAds && (
+              <AdBanner
+                position="header"
+                size="leaderboard"
+                onClose={() => console.log("Bannière fermée")}
+              />
+            )}
             <div className="p-3 md:p-4">
               <div className="flex items-center justify-between mb-3 md:mb-4 ml-16 lg:ml-0">
                 <div className="flex-1 min-w-0">
@@ -306,11 +328,14 @@ function App() {
                 </div>
                 {/* BOUTONS CÔTÉ À CÔTÉ */}
                 <div className="flex gap-2 items-center">
-
                   <button
                     onClick={toggleTheme}
                     className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors text-xs md:text-sm"
-                    aria-label={theme === "light" ? "Activer le mode sombre" : "Activer le mode clair"}
+                    aria-label={
+                      theme === "light"
+                        ? "Activer le mode sombre"
+                        : "Activer le mode clair"
+                    }
                   >
                     {theme === "light" ? "🌙 Sombre" : "☀️ Clair"}
                   </button>
@@ -426,7 +451,16 @@ function App() {
           <p className="text-center text-xs text-gray-400 py-2">
             IPTVFarouk - © {new Date().getFullYear()}. Tous droits réservés.
             <br />
-            Développé par<a href="https://github.com/pharouqy" target="_blank" rel="noopener noreferrer"> Farouk Younsi</a> with ❤️.
+            Développé par
+            <a
+              href="https://github.com/pharouqy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {" "}
+              Farouk Younsi
+            </a>{" "}
+            with ❤️.
           </p>
         </div>
 

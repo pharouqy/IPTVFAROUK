@@ -61,20 +61,27 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     // Nettoyer l'ancien contenu
     container.innerHTML = "";
 
-    // Créer le script A-Ads
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = `https://ad.a-ads.com/${effectiveId}?size=${size}`;
-    script.setAttribute("data-aa", effectiveId);
-    script.type = "text/javascript";
-    script.crossOrigin = "anonymous";
-    script.referrerPolicy = "no-referrer";
+    // Créer l'iframe A-Ads (A-Ads utilise des iframes, pas des scripts)
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("data-aa", effectiveId);
+    iframe.src = `https://ad.a-ads.com/${effectiveId}?size=${size}`;
+    iframe.style.cssText = `
+      border: 0;
+      padding: 0;
+      width: 728px;
+      height: 90px;
+      overflow: hidden;
+      display: block;
+      margin: auto;
+    `;
+    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("frameborder", "0");
 
     // Timeout de 5 secondes
     const timeout = setTimeout(() => {
       console.warn("⏱️ Timeout A-Ads (5s) - Possible ad blocker ou problème réseau");
       // cleanup
-      if (script.parentNode) script.parentNode.removeChild(script);
+      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
       // fallback automatique si activé
       if (AADS_CONFIG.fallbackEnabled) {
         createFallbackAd(containerId);
@@ -83,7 +90,7 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
       reject(new Error("A-Ads load timeout"));
     }, 5000);
 
-    script.onload = () => {
+    iframe.onload = () => {
       clearTimeout(timeout);
       console.log(`✅ A-Ads chargé: ${effectiveId}`);
       // on considère l'annonce affichée (statistiques)
@@ -91,7 +98,7 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
       resolve();
     };
 
-    script.onerror = (error) => {
+    iframe.onerror = (error) => {
       clearTimeout(timeout);
       
       // Detect if it's likely an ad blocker
@@ -111,10 +118,10 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
         createFallbackAd(containerId);
         markAadsShown(isLikelyAdBlocker ? "banner_fallback_blocked" : "banner_fallback_error");
       }
-      reject(new Error("Failed to load A-Ads script"));
+      reject(new Error("Failed to load A-Ads iframe"));
     };
 
-    container.appendChild(script);
+    container.appendChild(iframe);
   });
 };
 

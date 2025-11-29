@@ -28,8 +28,18 @@ export const AADS_CONFIG = {
  * @returns {Promise}
  */
 export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
+  // Use default config id if none provided
+  const effectiveId = adUnitId || AADS_CONFIG.bannerAdUnitId;
+
   return new Promise((resolve, reject) => {
-    console.log(`🪙 Tentative de chargement A-Ads: ${adUnitId}`);
+    console.log(`🪙 Tentative de chargement A-Ads: ${effectiveId}`);
+
+    if (!effectiveId) {
+      console.warn("⚠️ A-Ads adUnitId manquant, affichage du fallback");
+      createFallbackAd(containerId);
+      reject(new Error("Missing A-Ads adUnitId"));
+      return;
+    }
 
     const container = document.getElementById(containerId);
 
@@ -45,25 +55,43 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     // Créer le script A-Ads
     const script = document.createElement("script");
     script.async = true;
-    script.src = `https://ad.a-ads.com/${adUnitId}?size=${size}`;
+    // conserve la logique existante de formation d'URL
+    script.src = `https://ad.a-ads.com/${effectiveId}?size=${size}`;
     script.setAttribute("data-ad-network", "aads");
     script.type = "text/javascript";
+    // tenter d'améliorer compatibilités/cors
+    script.crossOrigin = "anonymous";
+    script.referrerPolicy = "no-referrer";
 
     // Timeout de 5 secondes
     const timeout = setTimeout(() => {
       console.warn("⏱️ Timeout A-Ads (5s)");
+      // cleanup
+      if (script.parentNode) script.parentNode.removeChild(script);
+      // fallback automatique si activé
+      if (AADS_CONFIG.fallbackEnabled) {
+        createFallbackAd(containerId);
+        markAadsShown("banner_fallback_timeout");
+      }
       reject(new Error("A-Ads load timeout"));
     }, 5000);
 
     script.onload = () => {
       clearTimeout(timeout);
-      console.log(`✅ A-Ads chargé: ${adUnitId}`);
+      console.log(`✅ A-Ads chargé: ${effectiveId}`);
+      // on considère l'annonce affichée (statistiques)
+      markAadsShown("banner");
       resolve();
     };
 
     script.onerror = () => {
       clearTimeout(timeout);
-      console.error(`❌ Erreur chargement A-Ads: ${adUnitId}`);
+      console.error(`❌ Erreur chargement A-Ads: ${effectiveId}`);
+      // fallback automatique si activé
+      if (AADS_CONFIG.fallbackEnabled) {
+        createFallbackAd(containerId);
+        markAadsShown("banner_fallback_error");
+      }
       reject(new Error("Failed to load A-Ads script"));
     };
 
@@ -75,17 +103,42 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
  * Vérifier si A-Ads est disponible
  * @returns {Promise<boolean>}
  */
-export const checkAadsAvailability = async () => {
-  try {
-    const response = await fetch("https://a-ads.com/check", {
-      method: "HEAD",
-      mode: "no-cors",
-    });
-    return true;
-  } catch (error) {
-    console.warn("⚠️ A-Ads semble indisponible");
-    return false;
-  }
+export const checkAadsAvailability = async (timeoutMs = 3000) => {
+  // Try a non-CORS approach using an Image ping (more reliable in browsers)
+  return new Promise((resolve) => {
+    try {
+      let finished = false;
+      const img = new Image();
+      const timer = setTimeout(() => {
+        if (finished) return;
+        finished = true;
+        img.src = ""; // abort
+        console.warn("⚠️ A-Ads availability check timeout");
+        resolve(false);
+      }, timeoutMs);
+
+      img.onload = () => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timer);
+        resolve(true);
+      };
+
+      img.onerror = () => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timer);
+        console.warn("⚠️ A-Ads semble indisponible (image error)");
+        resolve(false);
+      };
+
+      // test endpoint (simple resource on a-ads domain)
+      img.src = `https://ad.a-ads.com/ping?v=${Date.now()}`;
+    } catch (error) {
+      console.warn("⚠️ A-Ads semble indisponible", error);
+      resolve(false);
+    }
+  });
 };
 
 /**
@@ -159,9 +212,12 @@ export const createFallbackAd = (containerId) => {
 
   const randomAd = fallbackAds[Math.floor(Math.random() * fallbackAds.length)];
 
+  // Use a stable id to bind the click handler properly
+  const adId = `fallback-ad-${Date.now()}`;
+
   container.innerHTML = `
     <div 
-      id="fallback-ad-${Date.now()}"
+      id="${adId}"
       style="
         width: 100%;
         max-width: 728px;
@@ -270,8 +326,8 @@ export const createFallbackAd = (containerId) => {
     </style>
   `;
 
-  // Ajouter l'événement click
-  const adElement = container.querySelector(`#fallback-ad-${Date.now()}`);
+  // Ajouter l'événement click (recherche avec le même id)
+  const adElement = container.querySelector(`#${adId}`);
   if (adElement) {
     adElement.addEventListener("click", randomAd.action);
   }

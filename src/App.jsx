@@ -372,7 +372,7 @@ function App() {
             {/* Bouton de toggle du header - toujours visible */}
             <button
               onClick={() => setHeaderCollapsed(!headerCollapsed)}
-              className="absolute top-0 right-0 z-10 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-bl-lg transition-colors shadow-md"
+              className="absolute left-4 top-16 lg:left-auto lg:top-0 lg:right-64 z-10 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg lg:rounded-bl-lg lg:rounded-br-lg transition-colors shadow-md"
               aria-label={
                 headerCollapsed ? "Afficher le header" : "Masquer le header"
               }

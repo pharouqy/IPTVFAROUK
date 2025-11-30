@@ -191,59 +191,62 @@ const AdBanner = ({ position = "header", onClose, theme = "dark" }) => {
             {/* Pub injectée ici */}
           </div>
 
-          {/* Badge + Stats */}
-          {!isLoading && !loadError && networkUsed && (
-            <div className="mt-3 flex items-center gap-3 flex-wrap justify-center">
-              {/* Badge réseau */}
-              <div
-                className={`${badge.color} border px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-sm`}
-              >
-                <span>{badge.icon}</span>
-                <span>{badge.text}</span>
+          {/* Badge + Stats - Affichage en développement uniquement */}
+          {!isLoading &&
+            !loadError &&
+            networkUsed &&
+            process.env.NODE_ENV !== "production" && (
+              <div className="mt-3 flex items-center gap-3 flex-wrap justify-center">
+                {/* Badge réseau */}
+                <div
+                  className={`${badge.color} border px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-sm`}
+                >
+                  <span>{badge.icon}</span>
+                  <span>{badge.text}</span>
+                </div>
+
+                <div
+                  className={`w-1 h-1 rounded-full ${
+                    theme === "dark" ? "bg-gray-500" : "bg-gray-300"
+                  }`}
+                ></div>
+
+                {/* Mention */}
+                <div
+                  className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    theme === "dark"
+                      ? "bg-gray-700 text-gray-300"
+                      : "bg-gray-200 text-gray-600"
+                  }`}
+                >
+                  Publicité
+                </div>
+
+                {/* Stats (dev only) */}
+                {process.env.NODE_ENV === "development" && (
+                  <>
+                    <div
+                      className={`w-1 h-1 rounded-full ${
+                        theme === "dark" ? "bg-gray-500" : "bg-gray-300"
+                      }`}
+                    ></div>
+                    <button
+                      onClick={() => {
+                        const stats = getHybridStats();
+                        console.table(stats);
+                      }}
+                      className={`px-2 py-0.5 rounded text-xs transition-colors ${
+                        theme === "dark"
+                          ? "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                          : "bg-gray-100 hover:bg-gray-200 text-gray-600"
+                      }`}
+                    >
+                      📊 Logs
+                    </button>
+                  </>
+                )}
               </div>
-
-              <div
-                className={`w-1 h-1 rounded-full ${
-                  theme === "dark" ? "bg-gray-500" : "bg-gray-300"
-                }`}
-              ></div>
-
-              {/* Mention */}
-              <div
-                className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  theme === "dark"
-                    ? "bg-gray-700 text-gray-300"
-                    : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                Publicité
-              </div>
-
-              {/* Stats (dev only) */}
-              {process.env.NODE_ENV === "development" && (
-                <>
-                  <div
-                    className={`w-1 h-1 rounded-full ${
-                      theme === "dark" ? "bg-gray-500" : "bg-gray-300"
-                    }`}
-                  ></div>
-                  <button
-                    onClick={() => {
-                      const stats = getHybridStats();
-                      console.table(stats);
-                    }}
-                    className={`px-2 py-0.5 rounded text-xs transition-colors ${
-                      theme === "dark"
-                        ? "bg-gray-700 hover:bg-gray-600 text-gray-300"
-                        : "bg-gray-100 hover:bg-gray-200 text-gray-600"
-                    }`}
-                  >
-                    📊 Logs
-                  </button>
-                </>
-              )}
-            </div>
-          )}
+            )}
         </div>
       </div>
     </div>

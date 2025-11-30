@@ -17,7 +17,7 @@ export const ADMAVEN_CONFIG = {
   // Fréquence
   bannerRefreshInterval: 60000,
   popunderFrequency: 5,
-  videoPrerollFrequency: 2,
+  videoPrerollFrequency: 5,
 };
 
 /**

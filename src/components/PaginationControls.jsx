@@ -1,4 +1,5 @@
 import { Grid, List } from "lucide-react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const PaginationControls = ({
   viewMode,
@@ -8,11 +9,14 @@ const PaginationControls = ({
   totalItems,
   darkMode,
 }) => {
+  const { t, tp } = useLanguage();
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-white px-3 md:px-4 py-2 md:py-3 border-b border-gray-200 gap-3 sm:gap-0">
       {/* Vue mode - Masqué sur mobile */}
       <div className="hidden md:flex items-center gap-2">
-        <span className="text-xs md:text-sm text-gray-600">Vue:</span>
+        <span className="text-xs md:text-sm text-gray-600">
+          {t("pagination.view")}:
+        </span>
         <button
           type="button"
           onClick={() => onViewModeChange("grid")}
@@ -42,17 +46,17 @@ const PaginationControls = ({
       {/* Items par page */}
       <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto">
         <span className="text-xs md:text-sm text-gray-600 whitespace-nowrap">
-          {totalItems} chaîne{totalItems > 1 ? "s" : ""}
+          {totalItems} {tp("header.channels", totalItems)}
         </span>
         <select
           value={itemsPerPage}
           onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
           className="px-2 md:px-3 py-1 md:py-1.5 border border-gray-300 rounded-lg text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
         >
-          <option value={12}>12 / page</option>
-          <option value={24}>24 / page</option>
-          <option value={48}>48 / page</option>
-          <option value={96}>96 / page</option>
+          <option value={12}>12 / {t("pagination.page")}</option>
+          <option value={24}>24 / {t("pagination.page")}</option>
+          <option value={48}>48 / {t("pagination.page")}</option>
+          <option value={96}>96 / {t("pagination.page")}</option>
         </select>
       </div>
     </div>

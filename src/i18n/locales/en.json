@@ -1,0 +1,74 @@
+{
+  "app": {
+    "title": "IPTV Player",
+    "subtitle": "Playlist loaded automatically"
+  },
+  "sidebar": {
+    "allChannels": "All Channels",
+    "favorites": "Favorites",
+    "history": "History",
+    "categories": "Categories",
+    "lightTheme": "Light Theme",
+    "darkTheme": "Dark Theme"
+  },
+  "header": {
+    "myFavorites": "My Favorites",
+    "history": "History",
+    "channels": "channel",
+    "channels_plural": "channels",
+    "displayed": "displayed",
+    "displayed_plural": "displayed",
+    "reload": "Reload",
+    "hideHeader": "Hide header",
+    "showHeader": "Show header",
+    "darkMode": "Dark",
+    "lightMode": "Light"
+  },
+  "search": {
+    "placeholder": "Search for a channel...",
+    "clear": "Clear"
+  },
+  "channels": {
+    "play": "Play",
+    "notAvailable": "N/A",
+    "unavailable": "Unavailable",
+    "noChannels": "No channels to display"
+  },
+  "history": {
+    "empty": "No viewing history",
+    "rewatch": "Rewatch"
+  },
+  "loading": {
+    "playlist": "Loading playlist...",
+    "loading": "Loading..."
+  },
+  "error": {
+    "loadError": "Loading Error",
+    "cannotLoad": "Cannot load playlist",
+    "retry": "Retry",
+    "configuredUrl": "Configured URL:"
+  },
+  "player": {
+    "loading": "Loading stream...",
+    "retry": "Retry",
+    "open": "Open",
+    "exitFullscreen": "Exit fullscreen",
+    "enterFullscreen": "Enter fullscreen"
+  },
+  "footer": {
+    "copyright": "All rights reserved",
+    "developedBy": "Developed by"
+  },
+  "install": {
+    "title": "Install IPTV Player",
+    "description": "Install IPTV Player for quick access and better experience",
+    "install": "Install",
+    "later": "Later"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of"
+  }
+}

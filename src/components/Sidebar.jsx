@@ -1,9 +1,11 @@
-import { Home, Star, Clock, Grid, Download, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Home, Star, Clock, Grid, Download, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { useLanguage } from "../i18n/LanguageContext";
+import LanguageSelector from "./LanguageSelector";
 
-const Sidebar = ({ 
-  groups, 
-  selectedGroup, 
+const Sidebar = ({
+  groups,
+  selectedGroup,
   onGroupSelect,
   showFavorites,
   onShowFavorites,
@@ -11,8 +13,9 @@ const Sidebar = ({
   onShowHistory,
   onExport,
   darkMode,
-  toggleDarkMode
+  toggleDarkMode,
 }) => {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleNavigation = (callback) => {
@@ -22,6 +25,7 @@ const Sidebar = ({
 
   return (
     <>
+      {/* Bouton Menu Mobile */}
       {/* Bouton Menu Mobile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -48,63 +52,76 @@ const Sidebar = ({
           h-screen overflow-y-auto
           transform transition-transform duration-300 ease-in-out
           z-40
-          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
         <div className="p-4">
           {/* Header */}
           <div className="mb-6 pt-16 lg:pt-0">
-            <h1 className="text-2xl font-bold text-blue-600">IPTV Player</h1>
-            <p className="text-xs text-gray-500 mt-1">Playlist chargée automatiquement</p>
+            <h1 className="text-2xl font-bold text-blue-600">
+              {t("app.title")}
+            </h1>
+            <p className="text-xs text-gray-500 mt-1">{t("app.subtitle")}</p>
           </div>
 
           {/* Navigation principale */}
           <nav className="space-y-2 mb-6">
             <button
-              onClick={() => handleNavigation(() => {
-                onGroupSelect('Toutes');
-                onShowFavorites(false);
-                onShowHistory(false);
-              })}
+              onClick={() =>
+                handleNavigation(() => {
+                  onGroupSelect("Toutes");
+                  onShowFavorites(false);
+                  onShowHistory(false);
+                })
+              }
               className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${
-                !showFavorites && !showHistory && selectedGroup === 'Toutes'
-                  ? 'bg-blue-100 text-blue-600 font-medium'
-                  : 'hover:bg-gray-100 text-gray-700'
+                !showFavorites && !showHistory && selectedGroup === "Toutes"
+                  ? "bg-blue-100 text-blue-600 font-medium"
+                  : "hover:bg-gray-100 text-gray-700"
               }`}
             >
               <Home className="w-5 h-5" />
-              <span>Toutes les chaînes</span>
+              <span>{t("sidebar.allChannels")}</span>
             </button>
 
             <button
-              onClick={() => handleNavigation(() => {
-                onShowFavorites(true);
-                onShowHistory(false);
-              })}
+              onClick={() =>
+                handleNavigation(() => {
+                  onShowFavorites(true);
+                  onShowHistory(false);
+                })
+              }
               className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${
                 showFavorites
-                  ? 'bg-blue-100 text-blue-600 font-medium'
-                  : 'hover:bg-gray-100 text-gray-700'
+                  ? "bg-blue-100 text-blue-600 font-medium"
+                  : "hover:bg-gray-100 text-gray-700"
               }`}
             >
               <Star className="w-5 h-5" />
-              <span>Favoris</span>
+              <span>{t("sidebar.favorites")}</span>
             </button>
 
             <button
-              onClick={() => handleNavigation(() => {
-                onShowHistory(true);
-                onShowFavorites(false);
-              })}
+              onClick={() =>
+                handleNavigation(() => {
+                  onShowHistory(true);
+                  onShowFavorites(false);
+                })
+              }
               className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${
                 showHistory
-                  ? 'bg-blue-100 text-blue-600 font-medium'
-                  : 'hover:bg-gray-100 text-gray-700'
+                  ? "bg-blue-100 text-blue-600 font-medium"
+                  : "hover:bg-gray-100 text-gray-700"
               }`}
             >
               <Clock className="w-5 h-5" />
-              <span>Historique</span>
+              <span>{t("sidebar.history")}</span>
             </button>
+
+            {/* Sélecteur de langue intégré */}
+            <div className="px-4 py-2">
+              <LanguageSelector className="w-full justify-start" align="left" />
+            </div>
           </nav>
 
           {/* Catégories */}
@@ -112,7 +129,9 @@ const Sidebar = ({
             <>
               <div className="flex items-center gap-2 mb-3 text-gray-600">
                 <Grid className="w-4 h-4" />
-                <h2 className="font-semibold text-sm uppercase">Catégories</h2>
+                <h2 className="font-semibold text-sm uppercase">
+                  {t("sidebar.categories")}
+                </h2>
                 <span className="text-xs bg-gray-200 px-2 py-0.5 rounded-full">
                   {groups.length}
                 </span>
@@ -121,18 +140,20 @@ const Sidebar = ({
                 {groups.map((group) => (
                   <button
                     key={group}
-                    onClick={() => handleNavigation(() => {
-                      onGroupSelect(group);
-                      onShowFavorites(false);
-                      onShowHistory(false);
-                    })}
+                    onClick={() =>
+                      handleNavigation(() => {
+                        onGroupSelect(group);
+                        onShowFavorites(false);
+                        onShowHistory(false);
+                      })
+                    }
                     className={`w-full text-left px-4 py-2 rounded-lg text-sm transition-colors ${
                       selectedGroup === group && !showFavorites && !showHistory
-                        ? 'bg-blue-50 text-blue-600 font-medium'
-                        : 'hover:bg-gray-50 text-gray-700'
+                        ? "bg-blue-50 text-blue-600 font-medium"
+                        : "hover:bg-gray-50 text-gray-700"
                     }`}
                   >
-                    {group.replace(/;/g, ' 📺 ')}
+                    {group.replace(/;/g, " 📺 ")}
                   </button>
                 ))}
               </div>
@@ -159,7 +180,7 @@ const Sidebar = ({
               onClick={toggleDarkMode}
               className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-sm dark:text-gray-200 text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
             >
-              {darkMode ? "Thème clair" : "Thème sombre"}
+              {darkMode ? t("sidebar.lightTheme") : t("sidebar.darkTheme")}
             </button>
           </div>
         </div>

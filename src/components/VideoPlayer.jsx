@@ -9,8 +9,10 @@ import {
   Maximize2,
   Minimize2,
 } from "lucide-react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const VideoPlayer = ({ channel, onClose }) => {
+  const { t } = useLanguage();
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const containerRef = useRef(null);
@@ -109,8 +111,8 @@ const VideoPlayer = ({ channel, onClose }) => {
     const loadTimeout = setTimeout(() => {
       if (isLoading) {
         setError({
-          message: "Timeout de chargement",
-          details: "Le stream prend trop de temps à répondre",
+          message: t("player.timeout"),
+          details: t("player.timeoutDetails"),
         });
         setIsLoading(false);
       }
@@ -151,24 +153,27 @@ const VideoPlayer = ({ channel, onClose }) => {
       if (err) {
         const messages = {
           1: {
-            message: "Chargement abandonné",
-            details: "Le chargement a été interrompu",
+            message: t("player.errors.aborted"),
+            details: t("player.errors.abortedDetails"),
           },
           2: {
-            message: "Erreur réseau",
-            details: "Impossible de charger le stream",
+            message: t("player.errors.network"),
+            details: t("player.errors.networkDetails"),
           },
           3: {
-            message: "Erreur de décodage",
-            details: "Format vidéo incompatible",
+            message: t("player.errors.decode"),
+            details: t("player.errors.decodeDetails"),
           },
           4: {
-            message: "Stream non disponible",
-            details: "Le stream est inaccessible ou hors ligne",
+            message: t("player.errors.notSupported"),
+            details: t("player.errors.notSupportedDetails"),
           },
         };
         setError(
-          messages[err.code] || { message: "Erreur inconnue", details: "" }
+          messages[err.code] || {
+            message: t("player.errors.unknown"),
+            details: "",
+          }
         );
       }
     });
@@ -248,8 +253,8 @@ const VideoPlayer = ({ channel, onClose }) => {
                   className="text-white hover:text-blue-300 p-2 hover:bg-white/10 rounded-lg transition-colors"
                   aria-label={
                     isFullscreen
-                      ? "Quitter le mode plein écran"
-                      : "Passer en plein écran"
+                      ? t("player.exitFullscreen")
+                      : t("player.enterFullscreen")
                   }
                 >
                   {isFullscreen ? (
@@ -271,7 +276,7 @@ const VideoPlayer = ({ channel, onClose }) => {
             {isLoading && !error && (
               <div className="mt-3 bg-blue-900/90 backdrop-blur border border-blue-500 text-white p-2 rounded-lg flex items-center gap-2 text-sm">
                 <RefreshCw className="w-4 h-4 animate-spin flex-shrink-0" />
-                <span>Chargement du stream...</span>
+                <span>{t("player.loading")}</span>
               </div>
             )}
 
@@ -292,14 +297,14 @@ const VideoPlayer = ({ channel, onClose }) => {
                     className="flex-1 bg-red-700 hover:bg-red-600 text-white px-2 py-1.5 rounded text-xs font-medium flex items-center justify-center gap-1"
                   >
                     <RefreshCw className="w-3 h-3" />
-                    Réessayer
+                    {t("player.retry")}
                   </button>
                   <button
                     onClick={openInNewTab}
                     className="flex-1 bg-white/10 hover:bg-white/20 text-white px-2 py-1.5 rounded text-xs font-medium flex items-center justify-center gap-1"
                   >
                     <ExternalLink className="w-3 h-3" />
-                    Ouvrir
+                    {t("player.open")}
                   </button>
                 </div>
               </div>

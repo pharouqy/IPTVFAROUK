@@ -1,0 +1,74 @@
+{
+  "app": {
+    "title": "مشغل IPTV",
+    "subtitle": "تم تحميل قائمة التشغيل تلقائيًا"
+  },
+  "sidebar": {
+    "allChannels": "جميع القنوات",
+    "favorites": "المفضلة",
+    "history": "السجل",
+    "categories": "الفئات",
+    "lightTheme": "المظهر الفاتح",
+    "darkTheme": "المظهر الداكن"
+  },
+  "header": {
+    "myFavorites": "مفضلاتي",
+    "history": "السجل",
+    "channels": "قناة",
+    "channels_plural": "قنوات",
+    "displayed": "معروضة",
+    "displayed_plural": "معروضة",
+    "reload": "إعادة التحميل",
+    "hideHeader": "إخفاء الرأس",
+    "showHeader": "إظهار الرأس",
+    "darkMode": "داكن",
+    "lightMode": "فاتح"
+  },
+  "search": {
+    "placeholder": "ابحث عن قناة...",
+    "clear": "مسح"
+  },
+  "channels": {
+    "play": "تشغيل",
+    "notAvailable": "غير متاح",
+    "unavailable": "غير متوفر",
+    "noChannels": "لا توجد قنوات للعرض"
+  },
+  "history": {
+    "empty": "لا يوجد سجل مشاهدة",
+    "rewatch": "إعادة المشاهدة"
+  },
+  "loading": {
+    "playlist": "جاري تحميل قائمة التشغيل...",
+    "loading": "جاري التحميل..."
+  },
+  "error": {
+    "loadError": "خطأ في التحميل",
+    "cannotLoad": "تعذر تحميل قائمة التشغيل",
+    "retry": "إعادة المحاولة",
+    "configuredUrl": "عنوان URL المكوّن:"
+  },
+  "player": {
+    "loading": "جاري تحميل البث...",
+    "retry": "إعادة المحاولة",
+    "open": "فتح",
+    "exitFullscreen": "الخروج من وضع ملء الشاشة",
+    "enterFullscreen": "الدخول إلى وضع ملء الشاشة"
+  },
+  "footer": {
+    "copyright": "جميع الحقوق محفوظة",
+    "developedBy": "تم التطوير بواسطة"
+  },
+  "install": {
+    "title": "تثبيت مشغل IPTV",
+    "description": "قم بتثبيت مشغل IPTV للوصول السريع وتجربة أفضل",
+    "install": "تثبيت",
+    "later": "لاحقًا"
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة",
+    "of": "من"
+  }
+}

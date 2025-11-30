@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const InstallPrompt = ({ darkMode, ...props }) => {
+  const { t } = useLanguage();
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showPrompt, setShowPrompt] = useState(false);
 
@@ -67,10 +69,9 @@ const InstallPrompt = ({ darkMode, ...props }) => {
           </div>
 
           <div className="flex-1">
-            <h3 className="font-bold text-lg mb-1">Installer l'application</h3>
+            <h3 className="font-bold text-lg mb-1">{t("install.title")}</h3>
             <p className="text-sm text-blue-100 mb-3">
-              Installez IPTV Player pour un accès rapide et une meilleure
-              expérience
+              {t("install.description")}
             </p>
 
             <div className="flex gap-2">
@@ -78,7 +79,7 @@ const InstallPrompt = ({ darkMode, ...props }) => {
                 onClick={handleInstallClick}
                 className="flex-1 bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
               >
-                Installer
+                {t("install.install")}
               </button>
               <button
                 onClick={handleDismiss}

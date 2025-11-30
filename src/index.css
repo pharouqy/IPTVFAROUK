@@ -667,4 +667,267 @@ nav button svg {
   header button[aria-label*="header"] {
     top: 5rem !important; /* 80px au lieu de 64px - espace de 16px supplémentaire */
   }
+  .text-gray-600 {
+    color: color-mix(in srgb, var(--text) 80%, var(--background)) !important;
+  }
+  .text-gray-400 {
+    color: color-mix(in srgb, var(--text) 25%, var(--background)) !important;
+  }
+  .text-gray-200 {
+    color: color-mix(in srgb, var(--text) 10%, var(--background)) !important;
+  }
+
+  .border-gray-100,
+  .border-gray-200,
+  .border-gray-300 {
+    border-color: color-mix(
+      in srgb,
+      var(--text) 10%,
+      var(--background)
+    ) !important;
+  }
+
+  /* Ajout fallback si color-mix indisponible dans certains navigateur
+   Adapter manuellement pour la compatibilité si besoin. */
+
+  /* ===== STYLES PUBLICITÉS ===== */
+
+  /* Container de pub */
+  #admaven-banner-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Empêcher le débordement */
+  #admaven-ad-slot {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  #admaven-ad-slot iframe {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Animation de chargement */
+  @keyframes pulse-ad {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  .ad-loading {
+    animation: pulse-ad 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    #admaven-banner-container {
+      padding: 0.5rem;
+    }
+  }
+
+  /* ===== FIX CENTRAGE BANNIÈRE PUBLICITAIRE ===== */
+
+  #admaven-ad-slot {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  #admaven-ad-slot > * {
+    margin: 0 auto !important;
+    display: block !important;
+  }
+
+  /* Si AdMaven utilise des iframes */
+  #admaven-ad-slot iframe {
+    margin: 0 auto !important;
+    display: block !important;
+  }
+
+  /* Container AdMaven */
+  #admaven-banner-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  /* Forcer le centrage des enfants */
+  .ad-banner-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Responsive mobile */
+  @media (max-width: 768px) {
+    #admaven-ad-slot {
+      max-width: 100%;
+      padding: 0 1rem;
+    }
+
+    #admaven-ad-slot > * {
+      max-width: 100% !important;
+      width: 100% !important;
+    }
+  }
+
+  /* ===== CENTRAGE DES ICONES DANS LES BOUTONS (TOUTES DIMENSIONS) ===== */
+
+  /* Centrage des icônes Lucide React dans tous les boutons */
+  button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Centrage spécifique pour les icônes SVG */
+  button svg {
+    display: block !important;
+    margin: auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Pour les boutons avec texte et icône */
+  button > span {
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+
+  /* ===== BOUTON HAMBURGER RESPONSIVE ===== */
+
+  /* Cacher le bouton hamburger sur les grands écrans (desktop) */
+  @media (min-width: 1024px) {
+    button.lg\:hidden {
+      display: none !important;
+    }
+  }
+
+  /* ===== ALIGNEMENT SIDEBAR ===== */
+
+  /* Forcer l'alignement à gauche pour les boutons de la sidebar */
+  nav button,
+  .space-y-1 button {
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+
+  /* Icônes SVG dans les boutons de navigation - alignées à gauche */
+  nav button svg {
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Bouton de thème dans la sidebar */
+  .px-4.py-2 button {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  /* ===== LECTEUR VIDÉO - CACHER BIG PLAY BUTTON ===== */
+
+  /* Cacher le gros bouton play central du lecteur vidéo */
+  .video-js .vjs-big-play-button {
+    display: none !important;
+  }
+
+  /* ===== BOUTONS PLAY DES CHAÎNES ===== */
+
+  /* Centrer les boutons play des chaînes */
+  .grid button:has(.lucide-play) {
+    justify-content: center !important;
+  }
+
+  /* Icône play dans les boutons de chaînes - centrée */
+  .grid button:has(.lucide-play) svg {
+    margin: 0 !important;
+  }
+
+  /* ===== ESPACEMENT BOUTONS MOBILE (HAMBURGER + HEADER TOGGLE) ===== */
+
+  /* Ajouter un espace ergonomique entre le bouton hamburger et le bouton toggle header */
+  @media (max-width: 1024px) {
+    /* Le bouton toggle header est positionné avec top-16 (4rem = 64px) */
+    /* On ajoute un peu plus d'espace pour un look plus spacieux */
+    header button[aria-label*="header"] {
+      top: 5rem !important; /* 80px au lieu de 64px - espace de 16px supplémentaire */
+    }
+  }
+
+  /* ===== SUPPORT RTL (RIGHT-TO-LEFT) POUR L'ARABE ===== */
+
+  /* Ajustements globaux RTL - On garde uniquement l'alignement du texte */
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  [dir="rtl"] .text-left {
+    text-align: right !important;
+  }
+
+  [dir="rtl"] .text-right {
+    text-align: left !important;
+  }
+
+  /* Inverser les marges et paddings en RTL pour que le design reste cohérent */
+  [dir="rtl"] .ml-16 {
+    margin-left: 0 !important;
+    margin-right: 4rem !important;
+  }
+
+  [dir="rtl"] .mr-2 {
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+  }
+
+  /* Dropdown du sélecteur de langue en RTL - On le garde aligné correctement */
+  [dir="rtl"] .group .absolute.right-0 {
+    right: auto !important;
+    left: 0 !important;
+  }
+
+  /* 
+   FORCE SIDEBAR LEFT IN RTL - FINAL FIX
+   On utilise des sélecteurs très spécifiques pour écraser tout comportement RTL par défaut.
+   La sidebar doit rester à gauche (left: 0) et utiliser les transformations standard.
+*/
+
+  /* Cible la sidebar spécifiquement avec ses classes */
+  [dir="rtl"] .fixed.inset-y-0.left-0 {
+    left: 0 !important;
+    right: auto !important;
+    transform-origin: left !important;
+  }
+
+  /* En desktop aussi */
+  [dir="rtl"] .lg\:relative {
+    left: 0 !important;
+    right: auto !important;
+  }
+
+  /* Force la transformation vers la gauche pour cacher */
+  [dir="rtl"] .-translate-x-full {
+    transform: translateX(-100%) !important;
+  }
+
+  /* Force la transformation à 0 pour afficher */
+  [dir="rtl"] .translate-x-0 {
+    transform: translateX(0) !important;
+  }
+
+  /* S'assurer que le bouton hamburger reste à gauche */
+  /*[dir="rtl"] button.lg\:hidden {
+  left: 1rem !important;
+  right: auto !important;
+}*/
 }

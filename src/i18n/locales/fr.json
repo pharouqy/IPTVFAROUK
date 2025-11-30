@@ -1,0 +1,74 @@
+{
+  "app": {
+    "title": "IPTV Player",
+    "subtitle": "Playlist chargée automatiquement"
+  },
+  "sidebar": {
+    "allChannels": "Toutes les chaînes",
+    "favorites": "Favoris",
+    "history": "Historique",
+    "categories": "Catégories",
+    "lightTheme": "Thème clair",
+    "darkTheme": "Thème sombre"
+  },
+  "header": {
+    "myFavorites": "Mes Favoris",
+    "history": "Historique",
+    "channels": "chaîne",
+    "channels_plural": "chaînes",
+    "displayed": "affichée",
+    "displayed_plural": "affichées",
+    "reload": "Recharger",
+    "hideHeader": "Masquer le header",
+    "showHeader": "Afficher le header",
+    "darkMode": "Sombre",
+    "lightMode": "Clair"
+  },
+  "search": {
+    "placeholder": "Rechercher une chaîne...",
+    "clear": "Effacer"
+  },
+  "channels": {
+    "play": "Lire",
+    "notAvailable": "N/A",
+    "unavailable": "Indisponible",
+    "noChannels": "Aucune chaîne à afficher"
+  },
+  "history": {
+    "empty": "Aucun historique de visionnage",
+    "rewatch": "Relire"
+  },
+  "loading": {
+    "playlist": "Chargement de la playlist...",
+    "loading": "Chargement..."
+  },
+  "error": {
+    "loadError": "Erreur de chargement",
+    "cannotLoad": "Impossible de charger la playlist",
+    "retry": "Réessayer",
+    "configuredUrl": "URL configurée :"
+  },
+  "player": {
+    "loading": "Chargement du stream...",
+    "retry": "Réessayer",
+    "open": "Ouvrir",
+    "exitFullscreen": "Quitter le mode plein écran",
+    "enterFullscreen": "Passer en plein écran"
+  },
+  "footer": {
+    "copyright": "Tous droits réservés",
+    "developedBy": "Développé par"
+  },
+  "install": {
+    "title": "Installer IPTV Player",
+    "description": "Installez IPTV Player pour un accès rapide et une meilleure expérience",
+    "install": "Installer",
+    "later": "Plus tard"
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page",
+    "of": "sur"
+  }
+}

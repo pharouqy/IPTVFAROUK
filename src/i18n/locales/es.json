@@ -1,0 +1,74 @@
+{
+  "app": {
+    "title": "Reproductor IPTV",
+    "subtitle": "Lista de reproducción cargada automáticamente"
+  },
+  "sidebar": {
+    "allChannels": "Todos los canales",
+    "favorites": "Favoritos",
+    "history": "Historial",
+    "categories": "Categorías",
+    "lightTheme": "Tema claro",
+    "darkTheme": "Tema oscuro"
+  },
+  "header": {
+    "myFavorites": "Mis Favoritos",
+    "history": "Historial",
+    "channels": "canal",
+    "channels_plural": "canales",
+    "displayed": "mostrado",
+    "displayed_plural": "mostrados",
+    "reload": "Recargar",
+    "hideHeader": "Ocultar encabezado",
+    "showHeader": "Mostrar encabezado",
+    "darkMode": "Oscuro",
+    "lightMode": "Claro"
+  },
+  "search": {
+    "placeholder": "Buscar un canal...",
+    "clear": "Borrar"
+  },
+  "channels": {
+    "play": "Reproducir",
+    "notAvailable": "N/D",
+    "unavailable": "No disponible",
+    "noChannels": "No hay canales para mostrar"
+  },
+  "history": {
+    "empty": "Sin historial de visualización",
+    "rewatch": "Ver de nuevo"
+  },
+  "loading": {
+    "playlist": "Cargando lista de reproducción...",
+    "loading": "Cargando..."
+  },
+  "error": {
+    "loadError": "Error de carga",
+    "cannotLoad": "No se puede cargar la lista de reproducción",
+    "retry": "Reintentar",
+    "configuredUrl": "URL configurada:"
+  },
+  "player": {
+    "loading": "Cargando transmisión...",
+    "retry": "Reintentar",
+    "open": "Abrir",
+    "exitFullscreen": "Salir de pantalla completa",
+    "enterFullscreen": "Entrar en pantalla completa"
+  },
+  "footer": {
+    "copyright": "Todos los derechos reservados",
+    "developedBy": "Desarrollado por"
+  },
+  "install": {
+    "title": "Instalar Reproductor IPTV",
+    "description": "Instale el Reproductor IPTV para acceso rápido y mejor experiencia",
+    "install": "Instalar",
+    "later": "Más tarde"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página",
+    "of": "de"
+  }
+}

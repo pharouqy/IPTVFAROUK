@@ -1,4 +1,5 @@
 import { Play, Star, Image as ImageIcon } from "lucide-react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const ChannelList = ({
   channels,
@@ -7,10 +8,12 @@ const ChannelList = ({
   favorites = [],
   darkMode,
 }) => {
+  const { t } = useLanguage();
+
   if (!channels || channels.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
-        <p className="text-sm md:text-lg">Aucune chaîne à afficher</p>
+        <p className="text-sm md:text-lg">{t("channels.noChannels")}</p>
       </div>
     );
   }
@@ -55,7 +58,7 @@ const ChannelList = ({
 
               {!hasValidUrl && (
                 <div className="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-                  Indisponible
+                  {t("channels.unavailable")}
                 </div>
               )}
             </div>
@@ -83,7 +86,9 @@ const ChannelList = ({
               >
                 <Play className="w-3 h-3 md:w-4 md:h-4" />
                 <span className="hidden sm:inline">
-                  {hasValidUrl ? "Lire" : "N/A"}
+                  {hasValidUrl
+                    ? t("channels.play")
+                    : t("channels.notAvailable")}
                 </span>
               </button>
 
@@ -110,4 +115,3 @@ const ChannelList = ({
 };
 
 export default ChannelList;
-

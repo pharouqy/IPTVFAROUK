@@ -24,14 +24,18 @@ import {
 import { IPTV_CONFIG } from "./config/iptv";
 import { Loader, RefreshCw, AlertCircle, Trash2 } from "lucide-react";
 import InstallPrompt from "./components/InstallPrompt";
+import LanguageSelector from "./components/LanguageSelector";
 
 import AdBanner from "./components/AdBanner";
 import { hasPremiumSubscription } from "./services/admaven";
 
 import AdPreroll from "./components/AdPreroll";
 import { ADMAVEN_CONFIG, markAdShown } from "./services/admaven";
+import { useLanguage } from "./i18n/LanguageContext";
 
 function App() {
+  const { t, tp } = useLanguage();
+
   // États principaux
   const [channels, setChannels] = useState([]);
   const [filteredChannels, setFilteredChannels] = useState([]);
@@ -311,7 +315,7 @@ function App() {
         <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full text-center">
           <Loader className="w-16 h-16 animate-spin text-blue-600 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Chargement de la playlist...
+            {t("loading.playlist")}
           </h2>
           <p className="text-gray-600 mb-4">{IPTV_CONFIG.playlistName}</p>
           <div className="bg-blue-50 rounded-lg p-3 text-sm text-gray-700">
@@ -329,11 +333,11 @@ function App() {
         <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full">
           <AlertCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">
-            Erreur de chargement
+            {t("error.loadError")}
           </h2>
           <p className="text-gray-600 mb-4 text-center">{error}</p>
           <div className="bg-red-50 rounded-lg p-3 text-sm text-gray-700 mb-4">
-            <p className="font-semibold mb-1">URL configurée :</p>
+            <p className="font-semibold mb-1">{t("error.configuredUrl")}</p>
             <p className="break-all text-xs">
               {IPTV_CONFIG.defaultPlaylistUrl}
             </p>
@@ -343,7 +347,7 @@ function App() {
             className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
           >
             <RefreshCw className="w-5 h-5" />
-            Réessayer
+            {t("error.retry")}
           </button>
         </div>
       </div>
@@ -374,7 +378,9 @@ function App() {
               onClick={() => setHeaderCollapsed(!headerCollapsed)}
               className="absolute left-4 top-16 lg:left-auto lg:top-0 lg:right-64 z-10 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg lg:rounded-bl-lg lg:rounded-br-lg transition-colors shadow-md"
               aria-label={
-                headerCollapsed ? "Afficher le header" : "Masquer le header"
+                headerCollapsed
+                  ? t("header.showHeader")
+                  : t("header.hideHeader")
               }
             >
               <svg
@@ -413,23 +419,24 @@ function App() {
                 />
               )}
               <div className="p-2 md:p-3">
-                <div className="flex items-center justify-between mb-2 ml-16 lg:ml-0">
+                <div className="flex flex-row flex-wrap items-center justify-between gap-2 mb-2 ml-16 lg:ml-0">
                   <div className="flex-1 min-w-0">
                     <h2 className="text-base md:text-xl font-bold text-gray-800 truncate">
                       {showFavorites
-                        ? "Mes Favoris"
+                        ? t("header.myFavorites")
                         : showHistory
-                        ? "Historique"
+                        ? t("header.history")
                         : selectedGroup === "Toutes"
-                        ? IPTV_CONFIG.playlistName
+                        ? t("app.title")
                         : selectedGroup.replace(/;/g, " 😊 ")}
                     </h2>
                     <p className="text-xs text-gray-500 mt-0.5">
-                      {totalItems} chaîne{totalItems > 1 ? "s" : ""}
+                      {totalItems} {tp("header.channels", totalItems)}
                       {hasMore &&
-                        ` • ${displayedItems.length} affichée${
-                          displayedItems.length > 1 ? "s" : ""
-                        }`}
+                        ` • ${displayedItems.length} ${tp(
+                          "header.displayed",
+                          displayedItems.length
+                        )}`}
                     </p>
                   </div>
                   {/* BOUTONS CÔTÉ À CÔTÉ */}
@@ -439,18 +446,22 @@ function App() {
                       className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 px-2 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors text-xs md:text-sm"
                       aria-label={
                         theme === "light"
-                          ? "Activer le mode sombre"
-                          : "Activer le mode clair"
+                          ? t("sidebar.darkTheme")
+                          : t("sidebar.lightTheme")
                       }
                     >
-                      {theme === "light" ? "🌙 Sombre" : "☀️ Clair"}
+                      {theme === "light"
+                        ? `🌙 ${t("header.darkMode")}`
+                        : `☀️ ${t("header.lightMode")}`}
                     </button>
                     <button
                       onClick={handleReload}
                       className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 md:px-3 py-1.5 rounded-lg transition-colors flex-shrink-0"
                     >
                       <RefreshCw className="w-3 h-3 md:w-4 md:h-4" />
-                      <span className="hidden sm:inline">Recharger</span>
+                      <span className="hidden sm:inline">
+                        {t("header.reload")}
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -492,7 +503,7 @@ function App() {
               <div className="max-w-7xl mx-auto">
                 {history.length === 0 ? (
                   <p className="text-center text-gray-500 py-12 text-sm md:text-base">
-                    Aucun historique de visionnage
+                    {t("history.empty")}
                   </p>
                 ) : (
                   <div className="space-y-2 md:space-y-3">
@@ -530,7 +541,7 @@ function App() {
                           }}
                           className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
                         >
-                          Relire
+                          {t("history.rewatch")}
                         </button>
                       </div>
                     ))}
@@ -556,9 +567,9 @@ function App() {
             )}
           </main>
           <p className="text-center text-xs text-gray-400 py-2">
-            IPTVFarouk - © {new Date().getFullYear()}. Tous droits réservés.
+            IPTVFarouk - © {new Date().getFullYear()}. {t("footer.copyright")}
             <br />
-            Développé par
+            {t("footer.developedBy")}
             <a
               href="https://github.com/pharouqy"
               target="_blank"

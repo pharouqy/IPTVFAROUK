@@ -52,6 +52,7 @@ function App() {
   const [showPreroll, setShowPreroll] = useState(false);
   const [prerollCompleted, setPrerollCompleted] = useState(false);
   const [streamToPlay, setStreamToPlay] = useState(null);
+  const [headerCollapsed, setHeaderCollapsed] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -352,22 +353,56 @@ function App() {
   return (
     <>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
-          {/* Sidebar avec menu burger mobile */}
-          <Sidebar
-            groups={groups}
-            selectedGroup={selectedGroup}
-            onGroupSelect={setSelectedGroup}
-            showFavorites={showFavorites}
-            onShowFavorites={setShowFavorites}
-            showHistory={showHistory}
-            onShowHistory={setShowHistory}
-            onExport={handleExport}
-          />
+        {/* Sidebar avec menu burger mobile */}
+        <Sidebar
+          groups={groups}
+          selectedGroup={selectedGroup}
+          onGroupSelect={setSelectedGroup}
+          showFavorites={showFavorites}
+          onShowFavorites={setShowFavorites}
+          showHistory={showHistory}
+          onShowHistory={setShowHistory}
+          onExport={handleExport}
+        />
 
-          {/* Contenu principal */}
-          <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
-            {/* Header */}
-            <header className="bg-white shadow-sm flex-shrink-0">
+        {/* Contenu principal */}
+        <div className="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
+          {/* Header */}
+          <header className="bg-white shadow-sm flex-shrink-0 relative">
+            {/* Bouton de toggle du header - toujours visible */}
+            <button
+              onClick={() => setHeaderCollapsed(!headerCollapsed)}
+              className="absolute top-0 right-0 z-10 bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-bl-lg transition-colors shadow-md"
+              aria-label={
+                headerCollapsed ? "Afficher le header" : "Masquer le header"
+              }
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`w-4 h-4 transition-transform duration-300 ${
+                  headerCollapsed ? "rotate-180" : ""
+                }`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 15l7-7 7 7"
+                />
+              </svg>
+            </button>
+
+            {/* Contenu du header - rétractable */}
+            <div
+              className={`transition-all duration-300 overflow-hidden ${
+                headerCollapsed
+                  ? "max-h-0 opacity-0"
+                  : "max-h-[500px] opacity-100"
+              }`}
+            >
               {/* Bannière publicitaire */}
               {showAds && (
                 <AdBanner
@@ -377,10 +412,10 @@ function App() {
                   onClose={() => console.log("Bannière fermée")}
                 />
               )}
-              <div className="p-3 md:p-4">
-                <div className="flex items-center justify-between mb-3 md:mb-4 ml-16 lg:ml-0">
+              <div className="p-2 md:p-3">
+                <div className="flex items-center justify-between mb-2 ml-16 lg:ml-0">
                   <div className="flex-1 min-w-0">
-                    <h2 className="text-lg md:text-2xl font-bold text-gray-800 truncate">
+                    <h2 className="text-base md:text-xl font-bold text-gray-800 truncate">
                       {showFavorites
                         ? "Mes Favoris"
                         : showHistory
@@ -389,7 +424,7 @@ function App() {
                         ? IPTV_CONFIG.playlistName
                         : selectedGroup}
                     </h2>
-                    <p className="text-xs md:text-sm text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 mt-0.5">
                       {totalItems} chaîne{totalItems > 1 ? "s" : ""}
                       {hasMore &&
                         ` • ${displayedItems.length} affichée${
@@ -401,7 +436,7 @@ function App() {
                   <div className="flex gap-2 items-center">
                     <button
                       onClick={toggleTheme}
-                      className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors text-xs md:text-sm"
+                      className="flex items-center gap-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 px-2 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors text-xs md:text-sm"
                       aria-label={
                         theme === "light"
                           ? "Activer le mode sombre"
@@ -412,7 +447,7 @@ function App() {
                     </button>
                     <button
                       onClick={handleReload}
-                      className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 md:px-4 py-2 rounded-lg transition-colors flex-shrink-0"
+                      className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 md:px-3 py-1.5 rounded-lg transition-colors flex-shrink-0"
                     >
                       <RefreshCw className="w-3 h-3 md:w-4 md:h-4" />
                       <span className="hidden sm:inline">Recharger</span>
@@ -422,7 +457,7 @@ function App() {
 
                 {/* Barre de recherche */}
                 {!showHistory && (
-                  <div className="ml-16 lg:ml-0">
+                  <div className="ml-16 lg:ml-0 mb-2">
                     <SearchBar
                       value={searchQuery}
                       onChange={setSearchQuery}
@@ -434,7 +469,7 @@ function App() {
 
               {/* Contrôles de pagination */}
               {!showHistory && filteredChannels.length > 0 && (
-                <div className="ml-16 lg:ml-0">
+                <div className="ml-16 lg:ml-0 pb-2">
                   <PaginationControls
                     viewMode={viewMode}
                     onViewModeChange={setViewMode}
@@ -444,116 +479,116 @@ function App() {
                   />
                 </div>
               )}
-            </header>
+            </div>
+          </header>
 
-            {/* Liste des chaînes */}
-            <main className="flex-1 overflow-y-auto p-3 md:p-6">
-              {loading ? (
-                <div className="flex items-center justify-center h-full">
-                  <Loader className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600" />
-                </div>
-              ) : showHistory ? (
-                <div className="max-w-7xl mx-auto">
-                  {history.length === 0 ? (
-                    <p className="text-center text-gray-500 py-12 text-sm md:text-base">
-                      Aucun historique de visionnage
-                    </p>
-                  ) : (
-                    <div className="space-y-2 md:space-y-3">
-                      {history.map((item) => (
-                        <div
-                          key={item.id}
-                          className="bg-white p-3 md:p-4 rounded-lg shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-md transition-shadow"
-                        >
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-gray-800 text-sm md:text-base truncate">
-                              {item.channelName}
-                            </h3>
-                            <p className="text-xs md:text-sm text-gray-500">
-                              {new Date(item.watchedAt).toLocaleString("fr-FR")}
-                            </p>
-                          </div>
-                          <button
-                            onClick={() => {
-                              const channel = channels.find(
-                                (ch) => ch.id === item.channelId
-                              );
-
-                              if (channel) {
-                                handleChannelClick(channel);
-                              } else {
-                                // Si la chaîne n'est plus présente dans la liste (ou id différent),
-                                // on la relit directement à partir des infos stockées dans l'historique
-                                setCurrentChannel({
-                                  id: item.channelId ?? `history-${item.id}`,
-                                  name: item.channelName,
-                                  url: item.channelUrl,
-                                  group: "Historique",
-                                });
-                              }
-                            }}
-                            className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
-                          >
-                            Relire
-                          </button>
+          {/* Liste des chaînes */}
+          <main className="flex-1 overflow-y-auto p-3 md:p-6">
+            {loading ? (
+              <div className="flex items-center justify-center h-full">
+                <Loader className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600" />
+              </div>
+            ) : showHistory ? (
+              <div className="max-w-7xl mx-auto">
+                {history.length === 0 ? (
+                  <p className="text-center text-gray-500 py-12 text-sm md:text-base">
+                    Aucun historique de visionnage
+                  </p>
+                ) : (
+                  <div className="space-y-2 md:space-y-3">
+                    {history.map((item) => (
+                      <div
+                        key={item.id}
+                        className="bg-white p-3 md:p-4 rounded-lg shadow flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-gray-800 text-sm md:text-base truncate">
+                            {item.channelName}
+                          </h3>
+                          <p className="text-xs md:text-sm text-gray-500">
+                            {new Date(item.watchedAt).toLocaleString("fr-FR")}
+                          </p>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="max-w-7xl mx-auto">
-                  <InfiniteScroll
-                    onLoadMore={handleLoadMore}
-                    hasMore={hasMore}
-                    loading={loadingMore}
-                  >
-                    <ChannelList
-                      channels={displayedItems}
-                      onChannelClick={handleChannelClick}
-                      onToggleFavorite={handleToggleFavorite}
-                      favorites={favorites}
-                      viewMode={viewMode}
-                    />
-                  </InfiniteScroll>
-                </div>
-              )}
-            </main>
-            <p className="text-center text-xs text-gray-400 py-2">
-              IPTVFarouk - © {new Date().getFullYear()}. Tous droits réservés.
-              <br />
-              Développé par
-              <a
-                href="https://github.com/pharouqy"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {" "}
-                Farouk Younsi
-              </a>{" "}
-              with ❤️.
-            </p>
-          </div>
+                        <button
+                          onClick={() => {
+                            const channel = channels.find(
+                              (ch) => ch.id === item.channelId
+                            );
 
-          {/* Lecteur vidéo */}
-          {currentChannel && (
-            <VideoPlayer
-              channel={currentChannel}
-              onClose={() => setCurrentChannel(null)}
-            />
-          )}
-          {/* Pre-roll publicitaire */}
-          {showPreroll && (
-            <AdPreroll
-              onComplete={handlePrerollComplete}
-              onSkip={handlePrerollSkip}
-            />
-          )}
-
-          {/* Prompt d'installation PWA */}
-          <InstallPrompt />
+                            if (channel) {
+                              handleChannelClick(channel);
+                            } else {
+                              // Si la chaîne n'est plus présente dans la liste (ou id différent),
+                              // on la relit directement à partir des infos stockées dans l'historique
+                              setCurrentChannel({
+                                id: item.channelId ?? `history-${item.id}`,
+                                name: item.channelName,
+                                url: item.channelUrl,
+                                group: "Historique",
+                              });
+                            }
+                          }}
+                          className="px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm md:text-base whitespace-nowrap"
+                        >
+                          Relire
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="max-w-7xl mx-auto">
+                <InfiniteScroll
+                  onLoadMore={handleLoadMore}
+                  hasMore={hasMore}
+                  loading={loadingMore}
+                >
+                  <ChannelList
+                    channels={displayedItems}
+                    onChannelClick={handleChannelClick}
+                    onToggleFavorite={handleToggleFavorite}
+                    favorites={favorites}
+                    viewMode={viewMode}
+                  />
+                </InfiniteScroll>
+              </div>
+            )}
+          </main>
+          <p className="text-center text-xs text-gray-400 py-2">
+            IPTVFarouk - © {new Date().getFullYear()}. Tous droits réservés.
+            <br />
+            Développé par
+            <a
+              href="https://github.com/pharouqy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {" "}
+              Farouk Younsi
+            </a>{" "}
+            with ❤️.
+          </p>
         </div>
 
+        {/* Lecteur vidéo */}
+        {currentChannel && (
+          <VideoPlayer
+            channel={currentChannel}
+            onClose={() => setCurrentChannel(null)}
+          />
+        )}
+        {/* Pre-roll publicitaire */}
+        {showPreroll && (
+          <AdPreroll
+            onComplete={handlePrerollComplete}
+            onSkip={handlePrerollSkip}
+          />
+        )}
+
+        {/* Prompt d'installation PWA */}
+        <InstallPrompt />
+      </div>
     </>
   );
 }

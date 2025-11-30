@@ -4,7 +4,7 @@ export const IPTV_CONFIG = {
   defaultPlaylistUrl: import.meta.env.VITE_APP_IPTV_URL,
 
   // Nom de la playlist
-  playlistName: "Ma Playlist IPTV",
+  playlistName: "Playlist des chaines du monde",
 
   // Auto-chargement au démarrage
   autoLoad: true,

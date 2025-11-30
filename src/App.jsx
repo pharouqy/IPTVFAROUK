@@ -422,7 +422,7 @@ function App() {
                         ? "Historique"
                         : selectedGroup === "Toutes"
                         ? IPTV_CONFIG.playlistName
-                        : selectedGroup}
+                        : selectedGroup.replace(/;/g, " 😊 ")}
                     </h2>
                     <p className="text-xs text-gray-500 mt-0.5">
                       {totalItems} chaîne{totalItems > 1 ? "s" : ""}

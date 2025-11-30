@@ -44,7 +44,9 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     // Warn if using default/example ID
     if (effectiveId === "1234567") {
       console.warn("⚠️ A-Ads utilise l'ID d'exemple par défaut (1234567)");
-      console.info("💡 Remplacez VITE_AADS_BANNER_ID dans .env avec votre vrai ID");
+      console.info(
+        "💡 Remplacez VITE_AADS_BANNER_ID dans .env avec votre vrai ID"
+      );
       console.info("📖 Voir SETUP_ADS.md pour les instructions");
     }
 
@@ -76,15 +78,20 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     `;
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameborder", "0");
-    iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+    iframe.setAttribute(
+      "allow",
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    );
     iframe.setAttribute("allowfullscreen", "true");
     iframe.setAttribute("referrerpolicy", "no-referrer");
     //iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-top-navigation allow-downloads-without-user-activation");
     iframe.setAttribute("crossorigin", "anonymous");
 
-    // Timeout de 5 secondes
-    {/*const timeout = setTimeout(() => {
-      console.warn("⏱️ Timeout A-Ads (5s) - Possible ad blocker ou problème réseau");
+    // Timeout de 30 secondes
+    const timeout = setTimeout(() => {
+      console.warn(
+        "⏱️ Timeout A-Ads (5s) - Possible ad blocker ou problème réseau"
+      );
       // cleanup
       //if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
       // fallback automatique si activé
@@ -93,11 +100,11 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
         markAadsShown("banner_fallback_timeout");
       }
       reject(new Error("A-Ads load timeout"));
-    }, 5000);*/}
+    }, 30000);
 
     iframe.onload = () => {
-      //clearTimeout(timeout);
-      //console.log(`✅ A-Ads chargé: ${effectiveId}`);
+      clearTimeout(timeout);
+      console.log(`✅ A-Ads chargé: ${effectiveId}`);
       // on considère l'annonce affichée (statistiques)
       markAadsShown("banner");
       resolve();
@@ -105,23 +112,30 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
 
     iframe.onerror = (error) => {
       clearTimeout(timeout);
-      
+
       // Detect if it's likely an ad blocker
-      const isLikelyAdBlocker = 
-        error.type === 'error' && 
-        !navigator.onLine === false; // online but failed
-      
+      const isLikelyAdBlocker =
+        error.type === "error" && !navigator.onLine === false; // online but failed
+
       if (isLikelyAdBlocker) {
-        console.info("🛡️ A-Ads bloqué (probablement un ad blocker) - Affichage du fallback");
-        console.info("💡 C'est normal, ~50% des utilisateurs ont un ad blocker");
+        console.info(
+          "🛡️ A-Ads bloqué (probablement un ad blocker) - Affichage du fallback"
+        );
+        console.info(
+          "💡 C'est normal, ~50% des utilisateurs ont un ad blocker"
+        );
       } else {
         console.error(`❌ Erreur chargement A-Ads: ${effectiveId}`);
       }
-      
+
       // fallback automatique si activé
       if (AADS_CONFIG.fallbackEnabled) {
         createFallbackAd(containerId);
-        markAadsShown(isLikelyAdBlocker ? "banner_fallback_blocked" : "banner_fallback_error");
+        markAadsShown(
+          isLikelyAdBlocker
+            ? "banner_fallback_blocked"
+            : "banner_fallback_error"
+        );
       }
       reject(new Error("Failed to load A-Ads iframe"));
     };
@@ -129,7 +143,6 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
     container.appendChild(iframe);
   });
 };
-
 
 /**
  * Vérifier si A-Ads est disponible
@@ -208,11 +221,11 @@ export const createFallbackAd = (containerId) => {
   const fallbackAds = [
     {
       emoji: "💎",
-      title: "Passez Premium",
-      subtitle: "Profitez sans publicité pour 2€/mois",
+      title: "Contactez-nous",
+      subtitle: "Nous avons besoin de votre aide pour grandir",
       gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-      buttonText: "Découvrir",
-      action: () => window.dispatchEvent(new CustomEvent("openPremiumModal")),
+      buttonText: "Contact",
+      action: () => window.dispatchEvent(new CustomEvent("openContactModal")),
     },
     {
       emoji: "⭐",

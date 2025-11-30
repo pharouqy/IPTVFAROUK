@@ -4,11 +4,16 @@
 
 export const ADMAVEN_CONFIG = {
   // ⚠️ REMPLACEZ par vos vrais IDs AdMaven une fois approuvé
-  bannerAdUnitId: import.meta.env.VITE_ADMAVEN_BANNER_ID || 'YOUR_ADMAVEN_BANNER_ID', // Ex: 'a1b2c3d4'
-  popunderAdUnitId: import.meta.env.VITE_ADMAVEN_POPUNDER_ID || 'YOUR_ADMAVEN_POPUNDER_ID',
-  videoAdUnitId: import.meta.env.VITE_ADMAVEN_VIDEO_ID || 'YOUR_ADMAVEN_VIDEO_ID',
-  interstitialAdUnitId: import.meta.env.VITE_ADMAVEN_INTERSTITIAL_ID || 'YOUR_ADMAVEN_INTERSTITIAL_ID',
-  
+  bannerAdUnitId:
+    import.meta.env.VITE_ADMAVEN_BANNER_ID || "YOUR_ADMAVEN_BANNER_ID", // Ex: 'a1b2c3d4'
+  popunderAdUnitId:
+    import.meta.env.VITE_ADMAVEN_POPUNDER_ID || "YOUR_ADMAVEN_POPUNDER_ID",
+  videoAdUnitId:
+    import.meta.env.VITE_ADMAVEN_VIDEO_ID || "YOUR_ADMAVEN_VIDEO_ID",
+  interstitialAdUnitId:
+    import.meta.env.VITE_ADMAVEN_INTERSTITIAL_ID ||
+    "YOUR_ADMAVEN_INTERSTITIAL_ID",
+
   // Fréquence
   bannerRefreshInterval: 60000,
   popunderFrequency: 5,

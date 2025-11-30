@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { X, Play, Volume2, VolumeX } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { X, Play, Volume2, VolumeX } from "lucide-react";
 
 const AdPreroll = ({ onComplete, onSkip }) => {
   const [countdown, setCountdown] = useState(5); // Secondes avant "Skip"
@@ -24,7 +24,7 @@ const AdPreroll = ({ onComplete, onSkip }) => {
     // Auto-play de la vidéo
     if (videoRef.current) {
       videoRef.current.play().catch(() => {
-        console.log('Autoplay bloqué - nécessite interaction utilisateur');
+        console.log("Autoplay bloqué - nécessite interaction utilisateur");
       });
     }
 
@@ -32,12 +32,12 @@ const AdPreroll = ({ onComplete, onSkip }) => {
   }, []);
 
   const handleSkip = () => {
-    console.log('⏭️ Publicité passée');
+    console.log("⏭️ Publicité passée");
     if (onSkip) onSkip();
   };
 
   const handleVideoEnd = () => {
-    console.log('✅ Publicité terminée');
+    console.log("✅ Publicité terminée");
     if (onComplete) onComplete();
   };
 
@@ -70,7 +70,7 @@ const AdPreroll = ({ onComplete, onSkip }) => {
               Votre chaîne démarre ensuite
             </p>
           </div>
-          
+
           {canSkip ? (
             <button
               onClick={handleSkip}
@@ -147,7 +147,9 @@ const AdPreroll = ({ onComplete, onSkip }) => {
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-white text-sm">
-            💡 <span className="text-yellow-400">Conseil :</span> Les pubs sont des annonces publicitaires qui permettent de soutenir le développement du service.
+            💡 <span className="text-yellow-400">Conseil :</span> Les pubs sont
+            des annonces publicitaires qui permettent de soutenir le
+            développement du service.
           </p>
         </div>
       </div>

@@ -57,15 +57,6 @@ export const ADS_CONFIG = {
     enabled: true,
     variations: [
       {
-        id: "premium",
-        emoji: "💎",
-        title: "Passez Premium",
-        subtitle: "Profitez sans publicité pour 2€/mois",
-        gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        buttonText: "Découvrir",
-        action: "openPremiumModal",
-      },
-      {
         id: "share",
         emoji: "⭐",
         title: "Partagez avec vos amis",
@@ -152,7 +143,9 @@ export const validateConfig = () => {
       errors.push(
         "⚠️ A-Ads activé mais VITE_AADS_BANNER_ID n'est pas défini dans .env"
       );
-      errors.push("💡 Créez un fichier .env et ajoutez: VITE_AADS_BANNER_ID=votre_id");
+      errors.push(
+        "💡 Créez un fichier .env et ajoutez: VITE_AADS_BANNER_ID=votre_id"
+      );
       errors.push("📖 Consultez SETUP_ADS.md pour les instructions détaillées");
     } else if (ADS_CONFIG.aads.bannerAdUnitId === "1234567") {
       warnings.push(
@@ -161,7 +154,9 @@ export const validateConfig = () => {
       warnings.push("📖 Voir SETUP_ADS.md pour obtenir votre ID A-Ads");
     } else {
       // Valid ID configured
-      console.log(`✅ A-Ads configuré avec l'ID: ${ADS_CONFIG.aads.bannerAdUnitId}`);
+      console.log(
+        `✅ A-Ads configuré avec l'ID: ${ADS_CONFIG.aads.bannerAdUnitId}`
+      );
     }
   }
 

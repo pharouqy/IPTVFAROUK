@@ -24,7 +24,6 @@ export const AD_NETWORKS = {
  * @returns {Promise<string>} - Réseau utilisé
  */
 export const loadHybridBanner = async (containerId) => {
-  console.log("🚀 Démarrage chargement hybride v2.0");
 
   // Valider la configuration
   const validation = validateConfig();
@@ -34,11 +33,9 @@ export const loadHybridBanner = async (containerId) => {
 
   // Obtenir les réseaux activés
   const enabledNetworks = getEnabledNetworks();
-  console.log("📋 Réseaux activés:", enabledNetworks);
 
   // Parcourir les réseaux par ordre de priorité
   for (const network of enabledNetworks) {
-    console.log(`\n🔄 Tentative: ${network.toUpperCase()}`);
 
     try {
       switch (network) {
@@ -65,7 +62,6 @@ export const loadHybridBanner = async (containerId) => {
   }
 
   // Si tout échoue, forcer le fallback
-  console.log("🆘 Tous les réseaux ont échoué, fallback forcé");
   loadFallbackNetwork(containerId);
   return AD_NETWORKS.FALLBACK;
 };
@@ -85,7 +81,6 @@ const loadAdMavenNetwork = async (containerId) => {
   }
 
   await loadAdMavenAd(adUnitId, containerId);
-  console.log("✅ AdMaven chargé");
 };
 
 /**
@@ -104,7 +99,6 @@ const loadAadsNetwork = async (containerId) => {
 
   await loadAadsAd(adUnitId, ADS_CONFIG.aads.sizes.leaderboard, containerId);
   markAadsShown("banner");
-  console.log("✅ A-Ads chargé");
 };
 
 /**
@@ -117,7 +111,6 @@ const loadFallbackNetwork = (containerId) => {
 
   createFallbackAd(containerId);
   incrementFallbackUsage();
-  console.log("✅ Fallback chargé");
 };
 
 /**
@@ -132,13 +125,11 @@ export const recordAttempt = (network, success) => {
     const successKey = `${network}_success`;
     const successCount = parseInt(localStorage.getItem(successKey) || "0") + 1;
     localStorage.setItem(successKey, successCount.toString());
-    console.log(`📊 ${network}: ${successCount}/${attempts} succès`);
   } else {
     const failuresKey = `${network}_failures`;
     const failuresCount =
       parseInt(localStorage.getItem(failuresKey) || "0") + 1;
     localStorage.setItem(failuresKey, failuresCount.toString());
-    console.log(`📊 ${network}: ${failuresCount}/${attempts} échecs`);
   }
 };
 
@@ -190,7 +181,6 @@ export const resetAllStats = () => {
     localStorage.removeItem(`${network}_failures`);
   });
   localStorage.removeItem("fallback_used");
-  console.log("🔄 Stats réinitialisées");
 };
 
 /**

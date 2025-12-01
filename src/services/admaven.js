@@ -42,7 +42,6 @@ export const ADMAVEN_CONFIG = {
     script.src = `//thubanoa.com/${adUnitId}/invoke.js`;
 
     script.onload = () => {
-      console.log(`✅ AdMaven ${adUnitId} chargé`);
       resolve();
     };
 
@@ -64,7 +63,6 @@ export const ADMAVEN_CONFIG = {
  */
 export const loadAdMavenAd = (adUnitId, containerId) => {
   return new Promise((resolve, reject) => {
-    console.log(`🎯 Tentative de chargement AdMaven: ${adUnitId}`);
 
     const container = document.getElementById(containerId);
 
@@ -91,7 +89,6 @@ export const loadAdMavenAd = (adUnitId, containerId) => {
 
     script.onload = () => {
       clearTimeout(timeout);
-      console.log(`✅ AdMaven chargé: ${adUnitId}`);
       resolve();
     };
 
@@ -131,7 +128,6 @@ export const markAdShown = (adType) => {
   );
   localStorage.setItem(`admaven_${adType}_count`, (count + 1).toString());
 
-  console.log(`📊 ${adType} affiché ${count + 1} fois`);
 };
 
 /**
@@ -164,7 +160,6 @@ export const resetAdStats = () => {
   localStorage.removeItem("admaven_popunder_last_shown");
   localStorage.removeItem("admaven_video_count");
   localStorage.removeItem("admaven_video_last_shown");
-  console.log("🔄 Stats publicitaires réinitialisées");
 };
 
 /**

@@ -75,7 +75,6 @@ const VideoPlayer = ({ channel, onClose }) => {
       controlBarConfig = undefined; // laisser la config par défaut desktop
     }
 
-    console.log("🎬 Initialisation:", channel.name);
     setIsLoading(true);
     setError(null);
 

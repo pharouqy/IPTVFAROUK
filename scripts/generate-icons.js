@@ -15,10 +15,8 @@ async function generateIcons() {
         .png()
         .toFile(path.join(outputDir, `icon-${size}x${size}.png`));
 
-      console.log(`✅ Icône ${size}x${size} générée`);
     }
 
-    console.log("🎉 Toutes les icônes ont été générées !");
   } catch (error) {
     console.error("❌ Erreur:", error);
   }

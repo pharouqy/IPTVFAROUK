@@ -24,7 +24,6 @@ export const parseM3U = async (source) => {
     }
     // CAS 2 : Fichier local
     else if (source instanceof File) {
-      console.log("Lecture du fichier local:", source.name);
       content = await source.text();
     }
     // CAS 3 : Contenu texte direct
@@ -54,7 +53,6 @@ export const parseM3U = async (source) => {
       addedAt: new Date().toISOString(),
     }));
 
-    console.log(`✅ ${channels.length} chaînes chargées avec succès`);
 
     return {
       success: true,

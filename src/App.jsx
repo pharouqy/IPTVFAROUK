@@ -131,7 +131,6 @@ function App() {
       setLoading(true);
       setError("");
 
-      console.log("🚀 Chargement de la playlist par défaut...");
 
       // Vérifier si on a déjà des chaînes en cache
       const savedChannels = await getAllChannels();
@@ -140,7 +139,6 @@ function App() {
 
       if (savedChannels.length > 0 && !IPTV_CONFIG.autoLoad) {
         // Charger depuis le cache
-        console.log("💾 Chargement depuis le cache");
         setChannels(savedChannels);
         const uniqueGroups = [
           ...new Set(savedChannels.map((ch) => ch.group)),
@@ -190,7 +188,6 @@ function App() {
       setFavorites(savedFavorites);
       setHistory(savedHistory);
 
-      console.log(`✅ ${result.total} chaînes chargées avec succès`);
     } catch (err) {
       setError("Erreur lors du chargement de la playlist");
       console.error(err);
@@ -218,7 +215,6 @@ function App() {
 
     if (isPremium) {
       // Pas de pub pour les Premium
-      console.log("💎 Premium - Lecture directe");
       setCurrentChannel(channel);
       await addToHistory(channel);
       await loadHistoryData();
@@ -232,7 +228,6 @@ function App() {
 
     if (shouldShowPreroll && !prerollCompleted) {
       // Afficher le pre-roll
-      console.log("🎬 Affichage du pre-roll");
       setStreamToPlay(channel);
       setShowPreroll(true);
 
@@ -241,7 +236,6 @@ function App() {
       markAdShown("video");
     } else {
       // Lecture directe
-      console.log("▶️ Lecture directe (pas de pre-roll)");
       setCurrentChannel(channel);
       await addToHistory(channel);
       await loadHistoryData();
@@ -253,7 +247,6 @@ function App() {
 
   // Callback après le pre-roll
   const handlePrerollComplete = async () => {
-    console.log("✅ Pre-roll terminé");
     setShowPreroll(false);
     setPrerollCompleted(true);
 
@@ -273,7 +266,6 @@ function App() {
 
   // Callback si l'utilisateur skip
   const handlePrerollSkip = async () => {
-    console.log("⏭️ Pre-roll skippé");
     await handlePrerollComplete();
   };
 

@@ -32,7 +32,6 @@ const InstallPrompt = ({ darkMode, ...props }) => {
 
     // Attendre le choix de l'utilisateur
     const { outcome } = await deferredPrompt.userChoice;
-    console.log(`Installation: ${outcome}`);
 
     // Reset
     setDeferredPrompt(null);

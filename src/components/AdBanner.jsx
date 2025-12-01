@@ -42,7 +42,6 @@ const AdBanner = ({ position = "header", onClose, theme = "dark" }) => {
     try {
       const network = await loadHybridBanner("hybrid-banner-container");
       setNetworkUsed(network);
-      console.log(`✅ Bannière affichée via: ${network}`);
     } catch (error) {
       console.error("❌ Erreur fatale chargement bannière:", error);
       setLoadError(true);
@@ -58,8 +57,6 @@ const AdBanner = ({ position = "header", onClose, theme = "dark" }) => {
     if (onClose) {
       onClose();
     }
-
-    console.log("🚫 Bannière fermée (30 min)");
   };
 
   const getNetworkBadge = () => {

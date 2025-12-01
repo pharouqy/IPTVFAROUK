@@ -19,7 +19,7 @@ export const ADS_CONFIG = {
     popunderAdUnitId: import.meta.env.VITE_ADMAVEN_POPUNDER_ID,
 
     // Fréquences d'affichage
-    bannerRefreshInterval: 60000, // 60 secondes
+    bannerRefreshInterval: 5000, // 5 secondes
     videoPrerollFrequency: 10, // Tous les 2 streams
     interstitialFrequency: 5, // Tous les 5 changements de page
   },
@@ -152,11 +152,6 @@ export const validateConfig = () => {
         "⚠️ A-Ads utilise l'ID d'exemple (1234567) - Remplacez-le par votre vrai ID"
       );
       warnings.push("📖 Voir SETUP_ADS.md pour obtenir votre ID A-Ads");
-    } else {
-      // Valid ID configured
-      console.log(
-        `✅ A-Ads configuré avec l'ID: ${ADS_CONFIG.aads.bannerAdUnitId}`
-      );
     }
   }
 
@@ -180,34 +175,8 @@ export const validateConfig = () => {
 export const logConfig = () => {
   console.group("📊 Configuration Publicitaire");
 
-  console.log(
-    "🎯 AdMaven:",
-    ADS_CONFIG.admaven.enabled ? "✅ Activé" : "❌ Désactivé"
-  );
-  if (ADS_CONFIG.admaven.enabled) {
-    console.log("  - Banner ID:", ADS_CONFIG.admaven.bannerAdUnitId);
-  }
-
-  console.log(
-    "🪙 A-Ads:",
-    ADS_CONFIG.aads.enabled ? "✅ Activé" : "❌ Désactivé"
-  );
-  if (ADS_CONFIG.aads.enabled) {
-    console.log("  - Banner ID:", ADS_CONFIG.aads.bannerAdUnitId);
-  }
-
-  console.log(
-    "💎 Fallback:",
-    ADS_CONFIG.fallback.enabled ? "✅ Activé" : "❌ Désactivé"
-  );
-
-  console.log("📋 Ordre de priorité:", ADS_CONFIG.strategy.priority);
-  console.log("🎲 Réseaux activés:", getEnabledNetworks());
 
   const validation = validateConfig();
-  if (!validation.valid) {
-    console.warn("⚠️ Avertissements:", validation.warnings);
-  }
 
   console.groupEnd();
 };

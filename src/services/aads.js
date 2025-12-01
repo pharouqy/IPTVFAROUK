@@ -50,7 +50,6 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
       console.info("📖 Voir SETUP_ADS.md pour les instructions");
     }
 
-    console.log(`🪙 Tentative de chargement A-Ads: ${effectiveId}`);
 
     const container = document.getElementById(containerId);
 
@@ -104,7 +103,6 @@ export const loadAadsAd = (adUnitId, size = "728x90", containerId) => {
 
     iframe.onload = () => {
       clearTimeout(timeout);
-      console.log(`✅ A-Ads chargé: ${effectiveId}`);
       // on considère l'annonce affichée (statistiques)
       markAadsShown("banner");
       resolve();
@@ -196,7 +194,6 @@ export const markAadsShown = (adType) => {
   localStorage.setItem(key, count.toString());
   localStorage.setItem(`${key}_last`, Date.now().toString());
 
-  console.log(`📊 A-Ads ${adType} affiché ${count} fois`);
 };
 
 /**
@@ -377,7 +374,6 @@ export const createFallbackAd = (containerId) => {
     adElement.addEventListener("click", randomAd.action);
   }
 
-  console.log("🎨 Pub fallback créative affichée");
 };
 
 /**
@@ -386,5 +382,4 @@ export const createFallbackAd = (containerId) => {
 export const resetAadsStats = () => {
   localStorage.removeItem("aads_banner_shown");
   localStorage.removeItem("aads_banner_shown_last");
-  console.log("🔄 Stats A-Ads réinitialisées");
 };

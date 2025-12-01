@@ -21,23 +21,14 @@ const AdPreroll = ({ onComplete, onSkip }) => {
       });
     }, 1000);
 
-    // Auto-play de la vidéo
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {
-        console.log("Autoplay bloqué - nécessite interaction utilisateur");
-      });
-    }
-
     return () => clearInterval(timer);
   }, []);
 
   const handleSkip = () => {
-    console.log("⏭️ Publicité passée");
     if (onSkip) onSkip();
   };
 
   const handleVideoEnd = () => {
-    console.log("✅ Publicité terminée");
     if (onComplete) onComplete();
   };
 

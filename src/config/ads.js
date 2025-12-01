@@ -20,7 +20,7 @@ export const ADS_CONFIG = {
 
     // Fréquences d'affichage
     bannerRefreshInterval: 60000, // 60 secondes
-    videoPrerollFrequency: 2, // Tous les 2 streams
+    videoPrerollFrequency: 10, // Tous les 2 streams
     interstitialFrequency: 5, // Tous les 5 changements de page
   },
 
@@ -46,7 +46,7 @@ export const ADS_CONFIG = {
     },
 
     // Options
-    refreshInterval: 60000,
+    refreshInterval: 5000,
     fallbackEnabled: true,
   },
 

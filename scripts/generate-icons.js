@@ -4,7 +4,7 @@ import { promises as fs } from "fs";
 import path from "path";
 
 const sizes = [72, 96, 128, 144, 152, 167, 180, 192, 384, 512];
-const inputSvg = "./public/logo.svg"; // Votre logo SVG
+const inputSvg = "./public/iptvfarouk.svg"; // Votre logo SVG
 const outputDir = "./public";
 
 async function generateIcons() {

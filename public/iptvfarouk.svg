@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <color id="deep-twilight" value="#090446"/>
+    <color id="olive-wood" value="#786f52"/>
+    <color id="honey-bronze" value="#feb95f"/>
+    <color id="strawberry-red" value="#f71735"/>
+    <color id="rosewood" value="#c2095a"/>
+    
+    <filter id="soft-shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+      <feOffset in="blur" dx="0" dy="4" result="offsetBlur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="offsetBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect x="50" y="50" width="400" height="400" rx="80" ry="80" fill="#090446" />
+
+  <g transform="translate(250, 220) scale(1.1)" filter="url(#soft-shadow)">
+    <path d="M-80 -70 C -80 -70, 100 0, 100 0 C 100 0, -80 70, -80 70 C -100 40, -100 -40, -80 -70 Z" fill="#c2095a" opacity="0.9"/>
+    
+    <path d="M-65 -55 C -65 -55, 85 0, 85 0 C 85 0, -65 55, -65 55 C -85 30, -85 -30, -65 -55 Z" fill="#f71735"/>
+    
+    <path d="M-50 -40 C -50 -40, 70 0, 70 0 C 70 0, -50 40, -50 40 C -70 20, -70 -20, -50 -40 Z" fill="#feb95f"/>
+  </g>
+
+  <g transform="translate(350, 310) scale(0.7)" filter="url(#soft-shadow)">
+    <rect x="-45" y="-30" width="90" height="60" rx="10" ry="10" fill="#ffffff" stroke="#090446" stroke-width="3"/>
+    <rect x="-45" y="-30" width="45" height="60" fill="#006233"/>
+    <rect x="0" y="-30" width="45" height="60" fill="#ffffff"/>
+    <path d="M10 0 C 10 -10, 5 -18, -5 -18 C 5 -10, 5 10, -5 18 C 5 18, 10 10, 10 0 Z" fill="#f71735"/>
+    <polygon points="17,0 20,-3 23,-1 22,4 19,5" fill="#f71735" transform="translate(-3, -1) scale(1.2)"/>
+  </g>
+
+  <g font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="bold" text-anchor="middle">
+    <text x="250" y="380" font-size="42" fill="#ffffff" letter-spacing="2">IPTV</text>
+    <text x="250" y="425" font-size="42" fill="#feb95f" font-weight="800">FAROUK</text>
+  </g>
+</svg>

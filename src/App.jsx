@@ -368,7 +368,10 @@ function App() {
               <div className="p-2 md:p-3">
                 <div className="flex flex-row flex-wrap items-center justify-between gap-2 mb-2 ml-16 lg:ml-0">
                   <div className="flex-1 min-w-0">
-                    <h2 className="text-base md:text-xl font-bold text-gray-800 truncate">
+                    <h2
+                      className="text-base md:text-xl font-bold text-gray-800 truncate"
+                      id="main-content-title"
+                    >
                       {showFavorites
                         ? t("header.myFavorites")
                         : showHistory
@@ -404,8 +407,12 @@ function App() {
                     <button
                       onClick={handleReload}
                       className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 md:px-3 py-1.5 rounded-lg transition-colors flex-shrink-0"
+                      aria-label={t("header.reload") || "Recharger la playlist"}
                     >
-                      <RefreshCw className="w-3 h-3 md:w-4 md:h-4" />
+                      <RefreshCw
+                        className="w-3 h-3 md:w-4 md:h-4"
+                        aria-hidden="true"
+                      />
                       <span className="hidden sm:inline">
                         {t("header.reload")}
                       </span>
@@ -441,7 +448,10 @@ function App() {
           </header>
 
           {/* Liste des chaînes */}
-          <main className="flex-1 overflow-y-auto p-3 md:p-6">
+          <main
+            className="flex-1 overflow-y-auto p-3 md:p-6"
+            aria-labelledby="main-content-title"
+          >
             {loading ? (
               <div className="flex items-center justify-center h-full">
                 <Loader className="w-10 h-10 md:w-12 md:h-12 animate-spin text-blue-600" />

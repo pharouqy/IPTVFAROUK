@@ -265,8 +265,9 @@ const VideoPlayer = ({ channel, onClose }) => {
                 <button
                   onClick={onClose}
                   className="text-white hover:text-red-400 p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  aria-label={t("player.close") || "Fermer le lecteur"}
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-5 h-5" aria-hidden="true" />
                 </button>
               </div>
             </div>

@@ -30,8 +30,17 @@ const Sidebar = ({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="lg:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-3 rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
+        aria-label={
+          isOpen
+            ? t("sidebar.closeMenu") || "Fermer le menu"
+            : t("sidebar.openMenu") || "Ouvrir le menu"
+        }
       >
-        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        {isOpen ? (
+          <X className="w-6 h-6" aria-hidden="true" />
+        ) : (
+          <Menu className="w-6 h-6" aria-hidden="true" />
+        )}
       </button>
 
       {/* Overlay pour mobile */}
@@ -65,7 +74,10 @@ const Sidebar = ({
           </div>
 
           {/* Navigation principale */}
-          <nav className="space-y-2 mb-6">
+          <nav
+            className="space-y-2 mb-6"
+            aria-label={t("sidebar.mainNavigation") || "Navigation principale"}
+          >
             <button
               onClick={() =>
                 handleNavigation(() => {
@@ -79,8 +91,13 @@ const Sidebar = ({
                   ? "bg-blue-100 text-blue-600 font-medium"
                   : "hover:bg-gray-100 text-gray-700"
               }`}
+              aria-current={
+                !showFavorites && !showHistory && selectedGroup === "Toutes"
+                  ? "page"
+                  : undefined
+              }
             >
-              <Home className="w-5 h-5" />
+              <Home className="w-5 h-5" aria-hidden="true" />
               <span>{t("sidebar.allChannels")}</span>
             </button>
 
@@ -96,8 +113,9 @@ const Sidebar = ({
                   ? "bg-blue-100 text-blue-600 font-medium"
                   : "hover:bg-gray-100 text-gray-700"
               }`}
+              aria-current={showFavorites ? "page" : undefined}
             >
-              <Star className="w-5 h-5" />
+              <Star className="w-5 h-5" aria-hidden="true" />
               <span>{t("sidebar.favorites")}</span>
             </button>
 
@@ -113,8 +131,9 @@ const Sidebar = ({
                   ? "bg-blue-100 text-blue-600 font-medium"
                   : "hover:bg-gray-100 text-gray-700"
               }`}
+              aria-current={showHistory ? "page" : undefined}
             >
-              <Clock className="w-5 h-5" />
+              <Clock className="w-5 h-5" aria-hidden="true" />
               <span>{t("sidebar.history")}</span>
             </button>
 

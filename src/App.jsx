@@ -27,10 +27,7 @@ import InstallPrompt from "./components/InstallPrompt";
 import LanguageSelector from "./components/LanguageSelector";
 
 import AdBanner from "./components/AdBanner";
-import { hasPremiumSubscription } from "./services/admaven";
 
-import AdPreroll from "./components/AdPreroll";
-import { ADMAVEN_CONFIG, markAdShown } from "./services/admaven";
 import { useLanguage } from "./i18n/LanguageContext";
 
 function App() {
@@ -86,17 +83,6 @@ function App() {
 
   const [showAds, setShowAds] = useState(true);
 
-  // Vérifier le statut Premium au chargement
-  useEffect(() => {
-    const isPremium = hasPremiumSubscription();
-    setShowAds(!isPremium);
-    console.log(
-      isPremium
-        ? "💎 Mode Premium - Pas de pub"
-        : "📺 Mode gratuit - Pubs activées"
-    );
-  }, []);
-
   // Fermer le lecteur avec ESC
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -130,7 +116,6 @@ function App() {
     try {
       setLoading(true);
       setError("");
-
 
       // Vérifier si on a déjà des chaînes en cache
       const savedChannels = await getAllChannels();
@@ -187,7 +172,6 @@ function App() {
       const savedHistory = await getHistory();
       setFavorites(savedFavorites);
       setHistory(savedHistory);
-
     } catch (err) {
       setError("Erreur lors du chargement de la playlist");
       console.error(err);
@@ -210,39 +194,10 @@ function App() {
   // Lire une chaîne
   // Lire une chaîne avec Pre-roll
   const handleChannelClick = async (channel) => {
-    // Vérifier si l'utilisateur est Premium
-    const isPremium = hasPremiumSubscription();
-
-    if (isPremium) {
-      // Pas de pub pour les Premium
-      setCurrentChannel(channel);
-      await addToHistory(channel);
-      await loadHistoryData();
-      return;
-    }
-
-    // Vérifier la fréquence des pre-rolls
-    const prerollCount = parseInt(localStorage.getItem("preroll_count") || "0");
-    const shouldShowPreroll =
-      prerollCount % ADMAVEN_CONFIG.videoPrerollFrequency === 0;
-
-    if (shouldShowPreroll && !prerollCompleted) {
-      // Afficher le pre-roll
-      setStreamToPlay(channel);
-      setShowPreroll(true);
-
-      // Incrémenter le compteur
-      localStorage.setItem("preroll_count", (prerollCount + 1).toString());
-      markAdShown("video");
-    } else {
-      // Lecture directe
-      setCurrentChannel(channel);
-      await addToHistory(channel);
-      await loadHistoryData();
-
-      // Incrémenter le compteur pour la prochaine fois
-      localStorage.setItem("preroll_count", (prerollCount + 1).toString());
-    }
+    // Lecture directe
+    setCurrentChannel(channel);
+    await addToHistory(channel);
+    await loadHistoryData();
   };
 
   // Callback après le pre-roll

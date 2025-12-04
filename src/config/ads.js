@@ -1,182 +1,23 @@
 /**
- * Configuration centralisée des publicités
- * IMPORTANT : Remplacez les valeurs par vos vrais IDs
+ * Configuration centralisée des publicités (Google Ads)
  */
 
 export const ADS_CONFIG = {
   // ========================================
-  // ADMAVEN CONFIGURATION
+  // GOOGLE ADS CONFIGURATION
   // ========================================
-  admaven: {
-    // ⚠️ STATUT: Remplacez quand AdMaven approuve votre demande
-    enabled: false, // Mettre à true une fois approuvé
-
-    // IDs des unités publicitaires AdMaven
-    // Récupérez-les depuis : https://publishers.admaven.com/
-    bannerAdUnitId: import.meta.env.VITE_ADMAVEN_BANNER_ID,
-    videoAdUnitId: import.meta.env.VITE_ADMAVEN_VIDEO_ID,
-    interstitialAdUnitId: import.meta.env.VITE_ADMAVEN_INTERSTITIAL_ID,
-    popunderAdUnitId: import.meta.env.VITE_ADMAVEN_POPUNDER_ID,
-
-    // Fréquences d'affichage
-    bannerRefreshInterval: 5000, // 5 secondes
-    videoPrerollFrequency: 10, // Tous les 2 streams
-    interstitialFrequency: 5, // Tous les 5 changements de page
-  },
-
-  // ========================================
-  // A-ADS CONFIGURATION
-  // ========================================
-  aads: {
-    // ⚠️ STATUT: Activé par défaut (pas d'approbation requise)
-    enabled: true, // A-Ads fonctionne immédiatement
-
-    // IDs des unités publicitaires A-Ads
-    // Créez un compte : https://a-ads.com → Create Ad Unit
-    bannerAdUnitId: import.meta.env.VITE_AADS_BANNER_ID, // ⬅️ REMPLACEZ par votre ID (7 chiffres)
-
-    // Tailles disponibles
-    sizes: {
-      leaderboard: "728x90",
-      banner: "468x60",
-      square: "300x250",
-      mobile: "320x50",
-      rectangle: "300x100",
-      wideSkyscraper: "160x600",
-    },
-
-    // Options
-    refreshInterval: 5000,
-    fallbackEnabled: true,
-  },
-
-  // ========================================
-  // FALLBACK CONFIGURATION
-  // ========================================
-  fallback: {
+  google: {
     enabled: true,
-    variations: [
-      {
-        id: "share",
-        emoji: "⭐",
-        title: "Partagez avec vos amis",
-        subtitle: "Aidez-nous à grandir",
-        gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
-        buttonText: "Partager",
-        action: "share",
-      },
-      {
-        id: "advertise",
-        emoji: "🎯",
-        title: "Annoncez ici",
-        subtitle: "Milliers d'utilisateurs quotidiens",
-        gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-        buttonText: "Contact",
-        action: "contact",
-      },
-    ],
-  },
-
-  // ========================================
-  // STRATÉGIE DE CHARGEMENT
-  // ========================================
-  strategy: {
-    // Ordre de priorité des réseaux
-    priority: ["admaven", "aads", "fallback"],
-
-    // Timeout par réseau (ms)
-    timeout: 5000,
-
-    // Retry automatique
-    autoRetry: false,
-    maxRetries: 0,
+    clientId:
+      import.meta.env.VITE_GOOGLE_ADS_CLIENT_ID || "ca-pub-XXXXXXXXXXXXXXXX", // Remplacez par votre ID client
+    slots: {
+      banner: import.meta.env.VITE_GOOGLE_ADS_SLOT_BANNER || "XXXXXXXXXX",
+      sidebar: import.meta.env.VITE_GOOGLE_ADS_SLOT_SIDEBAR || "XXXXXXXXXX",
+    },
+    testMode: import.meta.env.VITE_MODE, // Mode test en développement
   },
 };
 
-/**
- * Obtenir la configuration d'un réseau spécifique
- * @param {string} network - 'admaven' | 'aads' | 'fallback'
- * @returns {Object}
- */
-export const getNetworkConfig = (network) => {
-  return ADS_CONFIG[network] || null;
-};
-
-/**
- * Vérifier si un réseau est activé
- * @param {string} network - 'admaven' | 'aads' | 'fallback'
- * @returns {boolean}
- */
-export const isNetworkEnabled = (network) => {
-  const config = getNetworkConfig(network);
-  return config ? config.enabled : false;
-};
-
-/**
- * Obtenir l'ordre de priorité des réseaux activés
- * @returns {Array<string>}
- */
-export const getEnabledNetworks = () => {
-  return ADS_CONFIG.strategy.priority.filter((network) =>
-    isNetworkEnabled(network)
-  );
-};
-
-/**
- * Valider la configuration
- * @returns {Object} - { valid: boolean, errors: Array }
- */
-export const validateConfig = () => {
-  const errors = [];
-  const warnings = [];
-
-  // Vérifier AdMaven
-  if (ADS_CONFIG.admaven.enabled) {
-    if (ADS_CONFIG.admaven.bannerAdUnitId === "YOUR_ADMAVEN_BANNER_ID") {
-      errors.push("⚠️ AdMaven activé mais bannerAdUnitId non configuré");
-    }
-  }
-
-  // Vérifier A-Ads
-  if (ADS_CONFIG.aads.enabled) {
-    if (!ADS_CONFIG.aads.bannerAdUnitId) {
-      errors.push(
-        "⚠️ A-Ads activé mais VITE_AADS_BANNER_ID n'est pas défini dans .env"
-      );
-      errors.push(
-        "💡 Créez un fichier .env et ajoutez: VITE_AADS_BANNER_ID=votre_id"
-      );
-      errors.push("📖 Consultez SETUP_ADS.md pour les instructions détaillées");
-    } else if (ADS_CONFIG.aads.bannerAdUnitId === "1234567") {
-      warnings.push(
-        "⚠️ A-Ads utilise l'ID d'exemple (1234567) - Remplacez-le par votre vrai ID"
-      );
-      warnings.push("📖 Voir SETUP_ADS.md pour obtenir votre ID A-Ads");
-    }
-  }
-
-  // Au moins un réseau doit être activé
-  const enabledCount = getEnabledNetworks().length;
-  if (enabledCount === 0) {
-    errors.push("❌ Aucun réseau publicitaire activé");
-  }
-
-  return {
-    valid: errors.length === 0,
-    errors,
-    enabledNetworks: getEnabledNetworks(),
-    warnings,
-  };
-};
-
-/**
- * Afficher la configuration dans la console
- */
 export const logConfig = () => {
-  console.group("📊 Configuration Publicitaire");
-
-
-  const validation = validateConfig();
-
-  console.groupEnd();
+  console.log("📊 Ads Config:", ADS_CONFIG);
 };

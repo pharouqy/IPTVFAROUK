@@ -931,3 +931,100 @@ nav button svg {
   right: auto !important;
 }*/
 }
+
+/* ===== ANIMATIONS POUR CONTROL BUTTONS ===== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* ===== DARK MODE UTILITIES ===== */
+
+/* Support pour les classes dark: de Tailwind */
+.dark .dark\:bg-gray-800 {
+  background-color: #1f2937;
+}
+
+.dark .dark\:bg-gray-700 {
+  background-color: #374151;
+}
+
+.dark .dark\:text-gray-200 {
+  color: #e5e7eb;
+}
+
+.dark .dark\:hover\:bg-gray-700:hover {
+  background-color: #374151;
+}
+
+/* Loading Screen Animations */
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes bounce-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
+}

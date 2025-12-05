@@ -30,7 +30,7 @@ import AdBanner from "./components/AdBanner";
 
 import { useLanguage } from "./i18n/LanguageContext";
 
-function App() {
+function App({ onLoadingChange }) {
   const { t, tp } = useLanguage();
 
   // États principaux
@@ -50,14 +50,21 @@ function App() {
   const [initialLoadDone, setInitialLoadDone] = useState(false);
   const [theme, setTheme] = useState("dark");
 
-  const [showPreroll, setShowPreroll] = useState(false);
-  const [prerollCompleted, setPrerollCompleted] = useState(false);
-  const [streamToPlay, setStreamToPlay] = useState(null);
-  const [headerCollapsed, setHeaderCollapsed] = useState(false);
+  // Notifier le parent des changements d'état de chargement
+  useEffect(() => {
+    if (onLoadingChange) {
+      onLoadingChange(loading, initialLoadDone);
+    }
+  }, [loading, initialLoadDone, onLoadingChange]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
+
+  const [showPreroll, setShowPreroll] = useState(false);
+  const [prerollCompleted, setPrerollCompleted] = useState(false);
+  const [streamToPlay, setStreamToPlay] = useState(null);
+  const [headerCollapsed, setHeaderCollapsed] = useState(false);
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
@@ -254,24 +261,6 @@ function App() {
       setLoadingMore(false);
     }, 500);
   };
-
-  // Affichage pendant le chargement initial
-  if (loading && !initialLoadDone) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full text-center">
-          <Loader className="w-16 h-16 animate-spin text-blue-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            {t("loading.playlist")}
-          </h2>
-          <p className="text-gray-600 mb-4">{IPTV_CONFIG.playlistName}</p>
-          <div className="bg-blue-50 rounded-lg p-3 text-sm text-gray-700">
-            <p className="break-all hidden">{IPTV_CONFIG.defaultPlaylistUrl}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // Affichage si erreur critique
   if (error && !initialLoadDone) {

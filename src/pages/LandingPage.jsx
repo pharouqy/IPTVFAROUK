@@ -1,16 +1,89 @@
 import { Link } from "react-router-dom";
 import { Play, Tv, Globe, Smartphone } from "lucide-react";
 import Footer from "../components/Footer";
+import ControlButtons from "../components/ControlButtons";
+import { useLanguage } from "../i18n/LanguageContext";
+import { useState, useEffect, useRef } from "react";
+
+// Hook personnalisé pour l'animation du compteur
+const useCountUp = (end, duration = 2000, shouldStart = false) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!shouldStart) return;
+
+    let startTime;
+    let animationFrame;
+
+    const animate = (currentTime) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+
+      // Fonction d'easing pour une animation plus naturelle
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      setCount(Math.floor(easeOutQuart * end));
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [end, duration, shouldStart]);
+
+  return count;
+};
 
 const LandingPage = () => {
+  const { t } = useLanguage();
+  const [startCounting, setStartCounting] = useState(false);
+  const statsRef = useRef(null);
+
+  // Observer pour détecter quand la section stats est visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !startCounting) {
+          setStartCounting(true);
+        }
+      },
+      { threshold: 0.3 } // Démarre quand 30% de la section est visible
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => {
+      if (statsRef.current) {
+        observer.unobserve(statsRef.current);
+      }
+    };
+  }, [startCounting]);
+
+  // Compteurs animés
+  const sportsCount = useCountUp(350, 2000, startCounting);
+  const entertainmentCount = useCountUp(600, 2500, startCounting);
+  const frenchCount = useCountUp(20, 1500, startCounting);
+  const arabicCount = useCountUp(100, 2000, startCounting);
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#090446] via-[#1a0d6e] to-[#090446]">
+      {/* Control Buttons (Theme + Language) */}
+      <ControlButtons />
+
       {/* Skip to main content - Accessibility */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-[#090446] focus:rounded-lg focus:shadow-lg"
       >
-        Aller au contenu principal
+        {t("landing.skipToContent")}
       </a>
 
       {/* Hero Section */}
@@ -21,7 +94,7 @@ const LandingPage = () => {
             <div className="flex justify-center mb-6">
               <img
                 src="/iptvfarouk.svg"
-                alt="Logo IPTV Farouk - Lecteur IPTV moderne et gratuit"
+                alt={t("landing.logoAlt")}
                 className="w-32 h-32 md:w-48 md:h-48 animate-pulse"
                 width="192"
                 height="192"
@@ -29,17 +102,18 @@ const LandingPage = () => {
               />
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-              Bienvenue sur <span className="text-[#feb95f]">IPTV Farouk</span>
+              {t("landing.title")}{" "}
+              <span className="text-[#feb95f]">{t("landing.appName")}</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 mb-8">
-              Votre lecteur IPTV gratuit pour regarder le monde entier
+              {t("landing.subtitle")}
             </p>
           </header>
 
           {/* Features Section */}
           <section aria-labelledby="features-heading">
             <h2 id="features-heading" className="sr-only">
-              Fonctionnalités principales
+              {t("landing.featuresHeading")}
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
               <article className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
@@ -48,10 +122,10 @@ const LandingPage = () => {
                   aria-hidden="true"
                 />
                 <h3 className="text-white font-semibold mb-2 text-lg">
-                  Chaînes TV
+                  {t("landing.features.channels.title")}
                 </h3>
                 <p className="text-gray-300 text-sm">
-                  Accédez à des milliers de chaînes du monde entier
+                  {t("landing.features.channels.description")}
                 </p>
               </article>
 
@@ -61,10 +135,10 @@ const LandingPage = () => {
                   aria-hidden="true"
                 />
                 <h3 className="text-white font-semibold mb-2 text-lg">
-                  Streaming HD
+                  {t("landing.features.streaming.title")}
                 </h3>
                 <p className="text-gray-300 text-sm">
-                  Qualité vidéo haute définition pour une expérience optimale
+                  {t("landing.features.streaming.description")}
                 </p>
               </article>
 
@@ -74,10 +148,10 @@ const LandingPage = () => {
                   aria-hidden="true"
                 />
                 <h3 className="text-white font-semibold mb-2 text-lg">
-                  Multi-langues
+                  {t("landing.features.multilang.title")}
                 </h3>
                 <p className="text-gray-300 text-sm">
-                  Interface disponible en français, anglais, arabe et espagnol
+                  {t("landing.features.multilang.description")}
                 </p>
               </article>
 
@@ -87,12 +161,64 @@ const LandingPage = () => {
                   aria-hidden="true"
                 />
                 <h3 className="text-white font-semibold mb-2 text-lg">
-                  Multi-appareils
+                  {t("landing.features.multidevice.title")}
                 </h3>
                 <p className="text-gray-300 text-sm">
-                  Compatible PC, tablette et smartphone
+                  {t("landing.features.multidevice.description")}
                 </p>
               </article>
+            </div>
+          </section>
+
+          {/* Stats Section */}
+          <section
+            ref={statsRef}
+            className="mb-16"
+            aria-labelledby="stats-heading"
+          >
+            <h2 id="stats-heading" className="sr-only">
+              Channel Statistics
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {/* Sports */}
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105 border border-white/10">
+                <div className="text-4xl md:text-5xl font-bold text-[#feb95f] mb-2">
+                  +{sportsCount}
+                </div>
+                <div className="text-gray-300 text-sm md:text-base font-medium">
+                  {t("landing.stats.sports.label")}
+                </div>
+              </div>
+
+              {/* Entertainment */}
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105 border border-white/10">
+                <div className="text-4xl md:text-5xl font-bold text-[#f71735] mb-2">
+                  +{entertainmentCount}
+                </div>
+                <div className="text-gray-300 text-sm md:text-base font-medium">
+                  {t("landing.stats.entertainment.label")}
+                </div>
+              </div>
+
+              {/* French TNT */}
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105 border border-white/10">
+                <div className="text-4xl md:text-5xl font-bold text-[#c2095a] mb-2">
+                  +{frenchCount}
+                </div>
+                <div className="text-gray-300 text-sm md:text-base font-medium">
+                  {t("landing.stats.french.label")}
+                </div>
+              </div>
+
+              {/* Arabic */}
+              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 text-center hover:bg-white/20 transition-all duration-300 transform hover:scale-105 border border-white/10">
+                <div className="text-4xl md:text-5xl font-bold text-[#feb95f] mb-2">
+                  +{arabicCount}
+                </div>
+                <div className="text-gray-300 text-sm md:text-base font-medium">
+                  {t("landing.stats.arabic.label")}
+                </div>
+              </div>
             </div>
           </section>
 
@@ -101,10 +227,10 @@ const LandingPage = () => {
             <Link
               to="/app"
               className="inline-flex items-center gap-3 bg-gradient-to-r from-[#f71735] to-[#c2095a] hover:from-[#c2095a] hover:to-[#f71735] text-white font-bold text-lg px-8 py-4 rounded-full shadow-2xl transform hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#feb95f] focus:ring-opacity-50"
-              aria-label="Accéder à l'interface de lecture IPTV"
+              aria-label={t("landing.ctaAriaLabel")}
             >
               <Play className="w-6 h-6" aria-hidden="true" />
-              Accéder à l'interface IPTV
+              {t("landing.ctaButton")}
             </Link>
           </div>
 
@@ -118,14 +244,11 @@ const LandingPage = () => {
               id="disclaimer-heading"
               className="text-[#feb95f] font-semibold mb-3 text-center text-lg"
             >
-              <span aria-label="Attention">⚠️</span> Avertissement Important
+              <span aria-label="Attention">⚠️</span>{" "}
+              {t("landing.disclaimerHeading")}
             </h2>
             <p className="text-gray-300 text-sm text-center leading-relaxed">
-              Cette application est un lecteur IPTV qui permet de lire des
-              playlists M3U. Nous ne fournissons, n'hébergeons ni ne distribuons
-              aucun contenu. Les utilisateurs sont responsables du contenu
-              qu'ils choisissent de visionner et doivent s'assurer qu'ils
-              disposent des droits nécessaires pour accéder aux flux.
+              {t("landing.disclaimer")}
             </p>
           </aside>
         </div>

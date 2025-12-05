@@ -40,7 +40,8 @@
   },
   "loading": {
     "playlist": "Loading playlist...",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "channels": "Loading channels..."
   },
   "error": {
     "loadError": "Loading Error",
@@ -69,6 +70,234 @@
     "previous": "Previous",
     "next": "Next",
     "page": "Page",
-    "of": "of"
+    "of": "of",
+    "view": "View"
+  },
+  "landing": {
+    "skipToContent": "Skip to main content",
+    "logoAlt": "IPTV Farouk Logo - Modern and free IPTV player",
+    "title": "Welcome to",
+    "appName": "IPTV Farouk",
+    "subtitle": "Your free IPTV application to watch the world",
+    "featuresHeading": "Main Features",
+    "features": {
+      "channels": {
+        "title": "TV Channels",
+        "description": "Access thousands of channels from around the world"
+      },
+      "streaming": {
+        "title": "HD Streaming",
+        "description": "High definition video quality for optimal experience"
+      },
+      "multilang": {
+        "title": "Multi-language",
+        "description": "Interface available in French, English, Arabic and Spanish"
+      },
+      "multidevice": {
+        "title": "Multi-device",
+        "description": "Compatible with PC, tablet and smartphone"
+      }
+    },
+    "stats": {
+      "sports": {
+        "count": "+350",
+        "label": "Sports Channels"
+      },
+      "entertainment": {
+        "count": "+600",
+        "label": "Entertainment Channels"
+      },
+      "french": {
+        "count": "+20",
+        "label": "French TNT Channels"
+      },
+      "arabic": {
+        "count": "+100",
+        "label": "Arabic Channels"
+      }
+    },
+    "ctaButton": "Access IPTV Interface",
+    "ctaAriaLabel": "Access IPTV playback interface",
+    "disclaimerHeading": "Important Warning",
+    "disclaimer": "This application is an IPTV player that allows you to play M3U playlists. We do not provide, host or distribute any content. Users are responsible for the content they choose to view and must ensure they have the necessary rights to access the streams."
+  },
+  "legal": {
+    "backToHome": "Back to home",
+    "lastUpdate": "Last update:",
+    "legalNotice": {
+      "title": "Legal Notice",
+      "publisher": {
+        "title": "1. Site Publisher",
+        "name": "Name:",
+        "developer": "Developer:",
+        "contact": "Contact:",
+        "github": "GitHub - pharouqy"
+      },
+      "hosting": {
+        "title": "2. Hosting",
+        "content": "This site is hosted by Vercel Inc.",
+        "address": "340 S Lemon Ave #4133, Walnut, CA 91789, USA",
+        "website": "Website:"
+      },
+      "ip": {
+        "title": "3. Intellectual Property",
+        "content": "All content on this site (structure, text, logos, images, etc.) is the exclusive property of IPTV Farouk, unless otherwise stated. Any reproduction, distribution, modification, adaptation, retransmission or publication of these elements is strictly prohibited without the express written consent of IPTV Farouk."
+      },
+      "service": {
+        "title": "4. Nature of Service",
+        "content": "IPTV Farouk is an IPTV stream player application (M3U player). We do not provide, host, or distribute any audiovisual content. The application only allows users to play their own M3U playlists."
+      },
+      "userResponsibility": {
+        "title": "5. User Responsibility",
+        "content": "The user is solely responsible for the content they choose to view through this application. They must ensure they have the necessary rights to access the IPTV streams they use. IPTV Farouk disclaims all responsibility regarding illegal use of copyrighted content."
+      },
+      "limitation": {
+        "title": "6. Limitation of Liability",
+        "content": "IPTV Farouk cannot be held responsible for direct or indirect damages that may result from access to the site or use of the service, including in case of interruption, malfunction, data loss or any other technical problem."
+      },
+      "law": {
+        "title": "7. Applicable Law",
+        "content": "This legal notice is governed by Algerian law. In case of dispute, Algerian courts will have sole jurisdiction."
+      }
+    },
+    "privacyPolicy": {
+      "title": "Privacy Policy",
+      "intro": {
+        "title": "1. Introduction",
+        "content": "This privacy policy aims to inform you about how IPTV Farouk collects, uses and protects your personal data in accordance with the General Data Protection Regulation (GDPR)."
+      },
+      "dataCollected": {
+        "title": "2. Data Collected",
+        "intro": "IPTV Farouk collects the following data:",
+        "navigation": "Navigation data: IP address, browser type, pages visited, visit duration (via Google Analytics)",
+        "localStorage": "Local storage data: user preferences, favorites, viewing history (stored locally in your browser)",
+        "ads": "Advertising data: interactions with advertisements (via Google Ads and advertising partners)"
+      },
+      "dataUsage": {
+        "title": "3. Data Usage",
+        "intro": "The collected data is used to:",
+        "improve": "Improve user experience and service operation",
+        "analyze": "Analyze traffic and site usage (Google Analytics)",
+        "personalize": "Personalize displayed advertisements (Google Ads)",
+        "security": "Ensure service security and stability"
+      },
+      "cookies": {
+        "title": "4. Cookies and Similar Technologies",
+        "intro": "Our site uses cookies for:",
+        "essential": "Essential cookies: necessary for site operation",
+        "analytics": "Analytics cookies: Google Analytics to measure audience",
+        "advertising": "Advertising cookies: Google Ads to display relevant advertisements",
+        "manage": "You can manage your cookie preferences in your browser settings."
+      },
+      "sharing": {
+        "title": "5. Data Sharing",
+        "intro": "Your data may be shared with:",
+        "analytics": "Google Analytics: for traffic analysis",
+        "ads": "Google Ads: for advertising delivery",
+        "hosting": "Vercel: our host (for technical operation)",
+        "noSell": "We never sell your personal data to third parties."
+      },
+      "rights": {
+        "title": "6. Your Rights (GDPR)",
+        "intro": "In accordance with GDPR, you have the following rights:",
+        "access": "Right of access: obtain a copy of your data",
+        "rectification": "Right of rectification: correct your inaccurate data",
+        "erasure": "Right to erasure: request deletion of your data",
+        "objection": "Right to object: object to the processing of your data",
+        "portability": "Right to portability: retrieve your data in a structured format",
+        "exercise": "To exercise these rights, contact us via",
+        "github": "GitHub"
+      },
+      "security": {
+        "title": "7. Data Security",
+        "content": "We implement appropriate technical and organizational security measures to protect your data against unauthorized access, loss, destruction or alteration. Data is stored locally in your browser (LocalStorage) and is not transmitted to our servers."
+      },
+      "retention": {
+        "title": "8. Data Retention",
+        "content": "Navigation data is kept for a maximum of 26 months (Google Analytics). Locally stored data (favorites, history) remains in your browser until you manually delete it."
+      },
+      "modifications": {
+        "title": "9. Policy Modifications",
+        "content": "We reserve the right to modify this privacy policy at any time. Modifications will be published on this page with a new update date."
+      },
+      "contact": {
+        "title": "10. Contact",
+        "content": "For any questions regarding this privacy policy, you can contact us via",
+        "github": "GitHub - pharouqy"
+      }
+    },
+    "termsOfService": {
+      "title": "Terms of Service",
+      "purpose": {
+        "title": "1. Purpose",
+        "content": "These Terms of Service (ToS) aim to define the terms and conditions of use of the IPTV Farouk service, as well as the rights and obligations of users."
+      },
+      "acceptance": {
+        "title": "2. Acceptance of Terms",
+        "content": "Using the IPTV Farouk service implies full acceptance of these ToS. If you do not accept these terms, please do not use this service."
+      },
+      "description": {
+        "title": "3. Service Description",
+        "intro": "IPTV Farouk is an IPTV stream player web application (M3U player). The service allows users to:",
+        "load": "Load and play M3U playlists",
+        "organize": "Organize and manage their favorite channels",
+        "history": "View viewing history",
+        "search": "Search and filter channels",
+        "important": "⚠️ Important: IPTV Farouk does not provide, host or distribute any audiovisual content. The application is only a player allowing to play M3U playlists provided by the user."
+      },
+      "userResponsibility": {
+        "title": "4. User Responsibilities",
+        "intro": "By using IPTV Farouk, you agree to:",
+        "legal": "Use the service only to view content for which you have legal access rights",
+        "copyright": "Not use the service to access copyrighted content without authorization",
+        "laws": "Respect all applicable laws and regulations in your country",
+        "illegal": "Not use the service for illegal or fraudulent purposes",
+        "security": "Not attempt to bypass the service's security measures"
+      },
+      "limitation": {
+        "title": "5. Limitation of Liability",
+        "intro": "IPTV Farouk disclaims all responsibility regarding:",
+        "content": "The content of IPTV streams accessible via the application",
+        "illegalUse": "Illegal use of the service by users",
+        "interruptions": "Service interruptions, bugs or technical malfunctions",
+        "dataLoss": "Loss of data or favorites stored locally",
+        "damages": "Direct or indirect damages resulting from use of the service"
+      },
+      "ip": {
+        "title": "6. Intellectual Property",
+        "content": "All elements of the IPTV Farouk service (source code, design, logo, etc.) are protected by copyright. Any unauthorized reproduction, modification or distribution is prohibited."
+      },
+      "privacy": {
+        "title": "7. Personal Data",
+        "content": "The processing of your personal data is governed by our",
+        "link": "Privacy Policy",
+        "acceptance": ". By using the service, you accept this policy."
+      },
+      "advertising": {
+        "title": "8. Advertising",
+        "content": "The IPTV Farouk service displays advertisements via Google Ads and other advertising partners. These advertisements help fund the free service. By using the service, you accept the display of these advertisements."
+      },
+      "availability": {
+        "title": "9. Service Availability",
+        "content": "IPTV Farouk strives to maintain the service accessible 24/7, but does not guarantee continuous availability. The service may be interrupted for maintenance, updates or for any other technical reason without notice."
+      },
+      "modifications": {
+        "title": "10. ToS Modifications",
+        "content": "IPTV Farouk reserves the right to modify these ToS at any time. Modifications will be published on this page with a new update date. It is your responsibility to regularly consult this page."
+      },
+      "termination": {
+        "title": "11. Termination",
+        "content": "IPTV Farouk reserves the right to suspend or terminate access to the service for any user who does not comply with these ToS, without notice and without compensation."
+      },
+      "law": {
+        "title": "12. Applicable Law and Jurisdiction",
+        "content": "These ToS are governed by Algerian law. In case of dispute, and after failure of any attempt at amicable settlement, Algerian courts will have sole jurisdiction."
+      },
+      "contact": {
+        "title": "13. Contact",
+        "content": "For any questions regarding these ToS, you can contact us via",
+        "github": "GitHub - pharouqy"
+      }
+    }
   }
 }

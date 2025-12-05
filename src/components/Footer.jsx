@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const Footer = () => {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-[#090446] text-white py-8 mt-auto">
       <div className="container mx-auto px-4">
@@ -8,10 +11,10 @@ const Footer = () => {
           {/* Copyright */}
           <div className="text-center md:text-left">
             <p className="text-sm">
-              IPTVFarouk - © {new Date().getFullYear()}. Tous droits réservés.
+              IPTVFarouk - © {new Date().getFullYear()}. {t("footer.copyright")}
             </p>
             <p className="text-xs text-gray-300 mt-1">
-              Développé par{" "}
+              {t("footer.developedBy")}{" "}
               <a
                 href="https://github.com/pharouqy"
                 target="_blank"
@@ -30,19 +33,19 @@ const Footer = () => {
               to="/mentions-legales"
               className="text-gray-300 hover:text-[#feb95f] transition-colors"
             >
-              Mentions Légales
+              {t("legal.legalNotice.title")}
             </Link>
             <Link
               to="/politique-confidentialite"
               className="text-gray-300 hover:text-[#feb95f] transition-colors"
             >
-              Politique de Confidentialité
+              {t("legal.privacyPolicy.title")}
             </Link>
             <Link
               to="/conditions-utilisation"
               className="text-gray-300 hover:text-[#feb95f] transition-colors"
             >
-              Conditions d'Utilisation
+              {t("legal.termsOfService.title")}
             </Link>
           </div>
         </div>

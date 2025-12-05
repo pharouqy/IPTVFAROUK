@@ -40,7 +40,8 @@
   },
   "loading": {
     "playlist": "Cargando lista de reproducción...",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "channels": "Cargando canales..."
   },
   "error": {
     "loadError": "Error de carga",
@@ -69,6 +70,234 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "page": "Página",
-    "of": "de"
+    "of": "de",
+    "view": "Vista"
+  },
+  "landing": {
+    "skipToContent": "Saltar al contenido principal",
+    "logoAlt": "Logo IPTV Farouk - Reproductor IPTV moderno y gratuito",
+    "title": "Bienvenido a",
+    "appName": "IPTV Farouk",
+    "subtitle": "Tu aplicación IPTV gratuita para ver el mundo entero",
+    "featuresHeading": "Características principales",
+    "features": {
+      "channels": {
+        "title": "Canales de TV",
+        "description": "Accede a miles de canales de todo el mundo"
+      },
+      "streaming": {
+        "title": "Streaming HD",
+        "description": "Calidad de video en alta definición para una experiencia óptima"
+      },
+      "multilang": {
+        "title": "Multi-idioma",
+        "description": "Interfaz disponible en francés, inglés, árabe y español"
+      },
+      "multidevice": {
+        "title": "Multi-dispositivo",
+        "description": "Compatible con PC, tableta y smartphone"
+      }
+    },
+    "stats": {
+      "sports": {
+        "count": "+350",
+        "label": "Canales Deportivos"
+      },
+      "entertainment": {
+        "count": "+600",
+        "label": "Canales de Entretenimiento"
+      },
+      "french": {
+        "count": "+20",
+        "label": "Canales Franceses TNT"
+      },
+      "arabic": {
+        "count": "+100",
+        "label": "Canales Árabes"
+      }
+    },
+    "ctaButton": "Acceder a la interfaz IPTV",
+    "ctaAriaLabel": "Acceder a la interfaz de reproducción IPTV",
+    "disclaimerHeading": "Advertencia Importante",
+    "disclaimer": "Esta aplicación es un reproductor IPTV que permite reproducir listas de reproducción M3U. No proporcionamos, alojamos ni distribuimos ningún contenido. Los usuarios son responsables del contenido que eligen ver y deben asegurarse de tener los derechos necesarios para acceder a las transmisiones."
+  },
+  "legal": {
+    "backToHome": "Volver al inicio",
+    "lastUpdate": "Última actualización:",
+    "legalNotice": {
+      "title": "Aviso Legal",
+      "publisher": {
+        "title": "1. Editor del sitio",
+        "name": "Nombre:",
+        "developer": "Desarrollador:",
+        "contact": "Contacto:",
+        "github": "GitHub - pharouqy"
+      },
+      "hosting": {
+        "title": "2. Alojamiento",
+        "content": "Este sitio está alojado por Vercel Inc.",
+        "address": "340 S Lemon Ave #4133, Walnut, CA 91789, USA",
+        "website": "Sitio web:"
+      },
+      "ip": {
+        "title": "3. Propiedad Intelectual",
+        "content": "Todo el contenido de este sitio (estructura, textos, logotipos, imágenes, etc.) es propiedad exclusiva de IPTV Farouk, salvo indicación contraria. Cualquier reproducción, distribución, modificación, adaptación, retransmisión o publicación de estos elementos está estrictamente prohibida sin el consentimiento expreso por escrito de IPTV Farouk."
+      },
+      "service": {
+        "title": "4. Naturaleza del Servicio",
+        "content": "IPTV Farouk es una aplicación de reproducción de transmisiones IPTV (reproductor M3U). No proporcionamos, alojamos ni distribuimos ningún contenido audiovisual. La aplicación solo permite a los usuarios reproducir sus propias listas de reproducción M3U."
+      },
+      "userResponsibility": {
+        "title": "5. Responsabilidad del Usuario",
+        "content": "El usuario es el único responsable del contenido que elige ver a través de esta aplicación. Debe asegurarse de tener los derechos necesarios para acceder a las transmisiones IPTV que utiliza. IPTV Farouk declina toda responsabilidad con respecto al uso ilegal de contenido protegido por derechos de autor."
+      },
+      "limitation": {
+        "title": "6. Limitación de Responsabilidad",
+        "content": "IPTV Farouk no puede ser responsable de daños directos o indirectos que puedan resultar del acceso al sitio o del uso del servicio, incluidos en caso de interrupción, mal funcionamiento, pérdida de datos o cualquier otro problema técnico."
+      },
+      "law": {
+        "title": "7. Ley Aplicable",
+        "content": "Este aviso legal se rige por la ley argelina. En caso de disputa, los tribunales argelinos tendrán jurisdicción exclusiva."
+      }
+    },
+    "privacyPolicy": {
+      "title": "Política de Privacidad",
+      "intro": {
+        "title": "1. Introducción",
+        "content": "Esta política de privacidad tiene como objetivo informarle sobre cómo IPTV Farouk recopila, utiliza y protege sus datos personales de acuerdo con el Reglamento General de Protección de Datos (RGPD)."
+      },
+      "dataCollected": {
+        "title": "2. Datos Recopilados",
+        "intro": "IPTV Farouk recopila los siguientes datos:",
+        "navigation": "Datos de navegación: dirección IP, tipo de navegador, páginas visitadas, duración de la visita (a través de Google Analytics)",
+        "localStorage": "Datos de almacenamiento local: preferencias del usuario, favoritos, historial de visualización (almacenados localmente en su navegador)",
+        "ads": "Datos publicitarios: interacciones con anuncios (a través de Google Ads y socios publicitarios)"
+      },
+      "dataUsage": {
+        "title": "3. Uso de Datos",
+        "intro": "Los datos recopilados se utilizan para:",
+        "improve": "Mejorar la experiencia del usuario y el funcionamiento del servicio",
+        "analyze": "Analizar el tráfico y el uso del sitio (Google Analytics)",
+        "personalize": "Personalizar los anuncios mostrados (Google Ads)",
+        "security": "Garantizar la seguridad y estabilidad del servicio"
+      },
+      "cookies": {
+        "title": "4. Cookies y Tecnologías Similares",
+        "intro": "Nuestro sitio utiliza cookies para:",
+        "essential": "Cookies esenciales: necesarias para el funcionamiento del sitio",
+        "analytics": "Cookies analíticas: Google Analytics para medir la audiencia",
+        "advertising": "Cookies publicitarias: Google Ads para mostrar anuncios relevantes",
+        "manage": "Puede gestionar sus preferencias de cookies en la configuración de su navegador."
+      },
+      "sharing": {
+        "title": "5. Compartir Datos",
+        "intro": "Sus datos pueden compartirse con:",
+        "analytics": "Google Analytics: para análisis de tráfico",
+        "ads": "Google Ads: para entrega de publicidad",
+        "hosting": "Vercel: nuestro proveedor de alojamiento (para funcionamiento técnico)",
+        "noSell": "Nunca vendemos sus datos personales a terceros."
+      },
+      "rights": {
+        "title": "6. Sus Derechos (RGPD)",
+        "intro": "De acuerdo con el RGPD, tiene los siguientes derechos:",
+        "access": "Derecho de acceso: obtener una copia de sus datos",
+        "rectification": "Derecho de rectificación: corregir sus datos inexactos",
+        "erasure": "Derecho de supresión: solicitar la eliminación de sus datos",
+        "objection": "Derecho de oposición: oponerse al tratamiento de sus datos",
+        "portability": "Derecho a la portabilidad: recuperar sus datos en un formato estructurado",
+        "exercise": "Para ejercer estos derechos, contáctenos a través de",
+        "github": "GitHub"
+      },
+      "security": {
+        "title": "7. Seguridad de Datos",
+        "content": "Implementamos medidas de seguridad técnicas y organizativas apropiadas para proteger sus datos contra acceso no autorizado, pérdida, destrucción o alteración. Los datos se almacenan localmente en su navegador (LocalStorage) y no se transmiten a nuestros servidores."
+      },
+      "retention": {
+        "title": "8. Retención de Datos",
+        "content": "Los datos de navegación se conservan durante un máximo de 26 meses (Google Analytics). Los datos almacenados localmente (favoritos, historial) permanecen en su navegador hasta que los elimine manualmente."
+      },
+      "modifications": {
+        "title": "9. Modificaciones de la Política",
+        "content": "Nos reservamos el derecho de modificar esta política de privacidad en cualquier momento. Las modificaciones se publicarán en esta página con una nueva fecha de actualización."
+      },
+      "contact": {
+        "title": "10. Contacto",
+        "content": "Para cualquier pregunta sobre esta política de privacidad, puede contactarnos a través de",
+        "github": "GitHub - pharouqy"
+      }
+    },
+    "termsOfService": {
+      "title": "Términos de Servicio",
+      "purpose": {
+        "title": "1. Objeto",
+        "content": "Estos Términos de Servicio (TdS) tienen como objetivo definir los términos y condiciones de uso del servicio IPTV Farouk, así como los derechos y obligaciones de los usuarios."
+      },
+      "acceptance": {
+        "title": "2. Aceptación de Términos",
+        "content": "El uso del servicio IPTV Farouk implica la aceptación total de estos TdS. Si no acepta estos términos, por favor no utilice este servicio."
+      },
+      "description": {
+        "title": "3. Descripción del Servicio",
+        "intro": "IPTV Farouk es una aplicación web de reproducción de transmisiones IPTV (reproductor M3U). El servicio permite a los usuarios:",
+        "load": "Cargar y reproducir listas de reproducción M3U",
+        "organize": "Organizar y gestionar sus canales favoritos",
+        "history": "Consultar el historial de visualización",
+        "search": "Buscar y filtrar canales",
+        "important": "⚠️ Importante: IPTV Farouk no proporciona, aloja ni distribuye ningún contenido audiovisual. La aplicación es solo un reproductor que permite reproducir listas de reproducción M3U proporcionadas por el usuario."
+      },
+      "userResponsibility": {
+        "title": "4. Responsabilidades del Usuario",
+        "intro": "Al usar IPTV Farouk, usted acepta:",
+        "legal": "Usar el servicio solo para ver contenido para el cual tiene derechos legales de acceso",
+        "copyright": "No usar el servicio para acceder a contenido protegido por derechos de autor sin autorización",
+        "laws": "Respetar todas las leyes y regulaciones aplicables en su país",
+        "illegal": "No usar el servicio con fines ilegales o fraudulentos",
+        "security": "No intentar eludir las medidas de seguridad del servicio"
+      },
+      "limitation": {
+        "title": "5. Limitación de Responsabilidad",
+        "intro": "IPTV Farouk declina toda responsabilidad con respecto a:",
+        "content": "El contenido de las transmisiones IPTV accesibles a través de la aplicación",
+        "illegalUse": "El uso ilegal del servicio por parte de los usuarios",
+        "interruptions": "Interrupciones del servicio, errores o mal funcionamiento técnico",
+        "dataLoss": "Pérdida de datos o favoritos almacenados localmente",
+        "damages": "Daños directos o indirectos resultantes del uso del servicio"
+      },
+      "ip": {
+        "title": "6. Propiedad Intelectual",
+        "content": "Todos los elementos del servicio IPTV Farouk (código fuente, diseño, logotipo, etc.) están protegidos por derechos de autor. Cualquier reproducción, modificación o distribución no autorizada está prohibida."
+      },
+      "privacy": {
+        "title": "7. Datos Personales",
+        "content": "El tratamiento de sus datos personales se rige por nuestra",
+        "link": "Política de Privacidad",
+        "acceptance": ". Al usar el servicio, acepta esta política."
+      },
+      "advertising": {
+        "title": "8. Publicidad",
+        "content": "El servicio IPTV Farouk muestra anuncios a través de Google Ads y otros socios publicitarios. Estos anuncios ayudan a financiar el servicio gratuito. Al usar el servicio, acepta la visualización de estos anuncios."
+      },
+      "availability": {
+        "title": "9. Disponibilidad del Servicio",
+        "content": "IPTV Farouk se esfuerza por mantener el servicio accesible 24/7, pero no garantiza disponibilidad continua. El servicio puede interrumpirse para mantenimiento, actualizaciones o por cualquier otra razón técnica sin previo aviso."
+      },
+      "modifications": {
+        "title": "10. Modificaciones de los TdS",
+        "content": "IPTV Farouk se reserva el derecho de modificar estos TdS en cualquier momento. Las modificaciones se publicarán en esta página con una nueva fecha de actualización. Es su responsabilidad consultar esta página regularmente."
+      },
+      "termination": {
+        "title": "11. Terminación",
+        "content": "IPTV Farouk se reserva el derecho de suspender o terminar el acceso al servicio a cualquier usuario que no cumpla con estos TdS, sin previo aviso y sin compensación."
+      },
+      "law": {
+        "title": "12. Ley Aplicable y Jurisdicción",
+        "content": "Estos TdS se rigen por la ley argelina. En caso de disputa, y después del fracaso de cualquier intento de resolución amistosa, los tribunales argelinos tendrán jurisdicción exclusiva."
+      },
+      "contact": {
+        "title": "13. Contacto",
+        "content": "Para cualquier pregunta sobre estos TdS, puede contactarnos a través de",
+        "github": "GitHub - pharouqy"
+      }
+    }
   }
 }

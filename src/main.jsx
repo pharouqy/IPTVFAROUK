@@ -9,22 +9,28 @@ import LegalNotice from "./pages/LegalNotice.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 import TermsOfService from "./pages/TermsOfService.jsx";
 import { LanguageProvider } from "./i18n/LanguageContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <LanguageProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/app" element={<AppWrapper />} />
-          <Route path="/mentions-legales" element={<LegalNotice />} />
-          <Route
-            path="/politique-confidentialite"
-            element={<PrivacyPolicy />}
-          />
-          <Route path="/conditions-utilisation" element={<TermsOfService />} />
-        </Routes>
-      </BrowserRouter>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/app" element={<AppWrapper />} />
+            <Route path="/mentions-legales" element={<LegalNotice />} />
+            <Route
+              path="/politique-confidentialite"
+              element={<PrivacyPolicy />}
+            />
+            <Route
+              path="/conditions-utilisation"
+              element={<TermsOfService />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </LanguageProvider>
+    </ThemeProvider>
   </StrictMode>
 );

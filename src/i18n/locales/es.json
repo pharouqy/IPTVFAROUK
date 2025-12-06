@@ -119,7 +119,7 @@
     "ctaButton": "Acceder a la interfaz IPTV",
     "ctaAriaLabel": "Acceder a la interfaz de reproducción IPTV",
     "disclaimerHeading": "Advertencia Importante",
-    "disclaimer": "Esta aplicación es un reproductor IPTV que permite reproducir listas de reproducción M3U. No proporcionamos, alojamos ni distribuimos ningún contenido. Los usuarios son responsables del contenido que eligen ver y deben asegurarse de tener los derechos necesarios para acceder a las transmisiones."
+    "disclaimer": "Esta aplicación es un reproductor IPTV. Proporcionamos una lista de reproducción de canales libres y gratuitos de todo el mundo."
   },
   "legal": {
     "backToHome": "Volver al inicio",
@@ -145,7 +145,7 @@
       },
       "service": {
         "title": "4. Naturaleza del Servicio",
-        "content": "IPTV Farouk es una aplicación de reproducción de transmisiones IPTV (reproductor M3U). No proporcionamos, alojamos ni distribuimos ningún contenido audiovisual. La aplicación solo permite a los usuarios reproducir sus propias listas de reproducción M3U."
+        "content": "IPTV Farouk es una aplicación de reproducción de flujos IPTV (reproductor M3U). Proporcionamos un archivo M3U que contiene canales libres y gratuitos de todo el mundo."
       },
       "userResponsibility": {
         "title": "5. Responsabilidad del Usuario",
@@ -243,7 +243,7 @@
         "organize": "Organizar y gestionar sus canales favoritos",
         "history": "Consultar el historial de visualización",
         "search": "Buscar y filtrar canales",
-        "important": "⚠️ Importante: IPTV Farouk no proporciona, aloja ni distribuye ningún contenido audiovisual. La aplicación es solo un reproductor que permite reproducir listas de reproducción M3U proporcionadas por el usuario."
+        "important": "⚠️ Importante: IPTV Farouk es un reproductor IPTV que proporciona acceso a canales libres y gratuitos a través de un archivo M3U incluido."
       },
       "userResponsibility": {
         "title": "4. Responsabilidades del Usuario",

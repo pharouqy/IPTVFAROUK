@@ -119,7 +119,7 @@
     "ctaButton": "Accéder à l'interface IPTV",
     "ctaAriaLabel": "Accéder à l'interface de lecture IPTV",
     "disclaimerHeading": "Avertissement Important",
-    "disclaimer": "Cette application est un lecteur IPTV qui permet de lire des playlists M3U. Nous ne fournissons, n'hébergeons ni ne distribuons aucun contenu. Les utilisateurs sont responsables du contenu qu'ils choisissent de visionner et doivent s'assurer qu'ils disposent des droits nécessaires pour accéder aux flux."
+    "disclaimer": "Cette application est un lecteur IPTV. Nous fournissons une playlist de chaînes libres et gratuites du monde entier."
   },
   "legal": {
     "backToHome": "Retour à l'accueil",
@@ -145,7 +145,7 @@
       },
       "service": {
         "title": "4. Nature du service",
-        "content": "IPTV Farouk est une application de lecture de flux IPTV (lecteur M3U). Nous ne fournissons, n'hébergeons, ni ne distribuons aucun contenu audiovisuel. L'application permet uniquement aux utilisateurs de lire leurs propres playlists M3U."
+        "content": "IPTV Farouk est une application de lecture de flux IPTV (lecteur M3U). Nous fournissons un fichier M3U contenant des chaînes libres et gratuites du monde entier."
       },
       "userResponsibility": {
         "title": "5. Responsabilité de l'utilisateur",
@@ -243,7 +243,7 @@
         "organize": "Organiser et gérer leurs chaînes favorites",
         "history": "Consulter l'historique de visionnage",
         "search": "Rechercher et filtrer les chaînes",
-        "important": "⚠️ Important : IPTV Farouk ne fournit, n'héberge ni ne distribue aucun contenu audiovisuel. L'application est uniquement un lecteur permettant de lire des playlists M3U fournies par l'utilisateur."
+        "important": "⚠️ Important : IPTV Farouk est un lecteur IPTV qui fournit un accès à des chaînes libres et gratuites via un fichier M3U inclus."
       },
       "userResponsibility": {
         "title": "4. Responsabilités de l'utilisateur",

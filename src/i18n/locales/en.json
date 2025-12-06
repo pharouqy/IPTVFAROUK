@@ -119,7 +119,7 @@
     "ctaButton": "Access IPTV Interface",
     "ctaAriaLabel": "Access IPTV playback interface",
     "disclaimerHeading": "Important Warning",
-    "disclaimer": "This application is an IPTV player that allows you to play M3U playlists. We do not provide, host or distribute any content. Users are responsible for the content they choose to view and must ensure they have the necessary rights to access the streams."
+    "disclaimer": "This application is an IPTV player. We provide a playlist of free and open channels from around the world."
   },
   "legal": {
     "backToHome": "Back to home",
@@ -145,7 +145,7 @@
       },
       "service": {
         "title": "4. Nature of Service",
-        "content": "IPTV Farouk is an IPTV stream player application (M3U player). We do not provide, host, or distribute any audiovisual content. The application only allows users to play their own M3U playlists."
+        "content": "IPTV Farouk is an IPTV stream player application (M3U player). We provide an M3U file containing free and open channels from around the world."
       },
       "userResponsibility": {
         "title": "5. User Responsibility",
@@ -243,7 +243,7 @@
         "organize": "Organize and manage their favorite channels",
         "history": "View viewing history",
         "search": "Search and filter channels",
-        "important": "⚠️ Important: IPTV Farouk does not provide, host or distribute any audiovisual content. The application is only a player allowing to play M3U playlists provided by the user."
+        "important": "⚠️ Important: IPTV Farouk is an IPTV player that provides access to free and open channels via an included M3U file."
       },
       "userResponsibility": {
         "title": "4. User Responsibilities",

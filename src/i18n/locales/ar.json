@@ -9,7 +9,8 @@
     "history": "السجل",
     "categories": "الفئات",
     "lightTheme": "المظهر الفاتح",
-    "darkTheme": "المظهر الداكن"
+    "darkTheme": "المظهر الداكن",
+    "countries": "البلدان"
   },
   "header": {
     "myFavorites": "مفضلاتي",
@@ -72,6 +73,21 @@
     "page": "صفحة",
     "of": "من",
     "view": "عرض"
+  },
+  "checker": {
+    "verify": "التحقق من القنوات",
+    "verifying": "جاري التحقق من القنوات...",
+    "cancel": "إلغاء",
+    "progress": "{{checked}}/{{total}} تم التحقق ({{percentage}}%)",
+    "complete": "اكتمل التحقق",
+    "live": "مباشر",
+    "offline": "غير متصل",
+    "unchecked": "لم يتم التحقق",
+    "onlineOnly": "المتصلة فقط",
+    "showAll": "جميع القنوات",
+    "found": "تم العثور على {{count}} قناة متصلة",
+    "statsOnline": "متصل",
+    "statsOffline": "غير متصل"
   },
   "landing": {
     "skipToContent": "الانتقال إلى المحتوى الرئيسي",

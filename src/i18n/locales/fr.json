@@ -9,7 +9,8 @@
     "history": "Historique",
     "categories": "Catégories",
     "lightTheme": "Thème clair",
-    "darkTheme": "Thème sombre"
+    "darkTheme": "Thème sombre",
+    "countries": "Pays"
   },
   "header": {
     "myFavorites": "Mes Favoris",
@@ -72,6 +73,21 @@
     "page": "Page",
     "of": "sur",
     "view": "Vue"
+  },
+  "checker": {
+    "verify": "Vérifier les chaînes",
+    "verifying": "Vérification en cours...",
+    "cancel": "Annuler",
+    "progress": "{{checked}}/{{total}} vérifiées ({{percentage}}%)",
+    "complete": "Vérification terminée",
+    "live": "EN DIRECT",
+    "offline": "HORS LIGNE",
+    "unchecked": "Non vérifié",
+    "onlineOnly": "En ligne uniquement",
+    "showAll": "Toutes les chaînes",
+    "found": "{{count}} chaînes en ligne trouvées",
+    "statsOnline": "en ligne",
+    "statsOffline": "hors ligne"
   },
   "landing": {
     "skipToContent": "Aller au contenu principal",

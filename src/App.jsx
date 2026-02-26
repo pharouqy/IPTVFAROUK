@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar";
 import InfiniteScroll from "./components/InfiniteScroll";
 import PaginationControls from "./components/PaginationControls";
 import { usePagination } from "./hooks/usePagination";
+import { useChannelChecker } from "./hooks/useChannelChecker";
 import {
   parseM3U,
   searchChannels,
@@ -22,7 +23,16 @@ import {
   getHistory,
 } from "./services/storage";
 import { IPTV_CONFIG } from "./config/iptv";
-import { Loader, RefreshCw, AlertCircle, Trash2 } from "lucide-react";
+import {
+  Loader,
+  RefreshCw,
+  AlertCircle,
+  Trash2,
+  ShieldCheck,
+  XCircle,
+  Wifi,
+  WifiOff,
+} from "lucide-react";
 import InstallPrompt from "./components/InstallPrompt";
 import LanguageSelector from "./components/LanguageSelector";
 
@@ -38,6 +48,8 @@ function App({ onLoadingChange }) {
   const [filteredChannels, setFilteredChannels] = useState([]);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState("Toutes");
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState("Tous");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentChannel, setCurrentChannel] = useState(null);
   const [favorites, setFavorites] = useState([]);
@@ -71,6 +83,19 @@ function App({ onLoadingChange }) {
   // Options de pagination
   const [itemsPerPage, setItemsPerPage] = useState(24);
   const [viewMode, setViewMode] = useState("grid");
+
+  // Hook de vérification des chaînes
+  const {
+    channelStatuses,
+    isChecking,
+    progress,
+    stats,
+    filterOnlineOnly,
+    setFilterOnlineOnly,
+    startCheck,
+    cancelCheck,
+    getFilteredChannels,
+  } = useChannelChecker();
 
   // Hook de pagination
   const {
@@ -111,12 +136,29 @@ function App({ onLoadingChange }) {
       result = filterByGroup(channels, selectedGroup);
     }
 
+    // Filtre par pays
+    if (selectedCountry !== "Tous") {
+      result = result.filter((ch) => ch.country === selectedCountry);
+    }
+
     if (searchQuery) {
       result = searchChannels(result, searchQuery);
     }
 
+    // Appliquer le filtre en ligne uniquement
+    result = getFilteredChannels(result);
+
     setFilteredChannels(result);
-  }, [channels, selectedGroup, searchQuery, showFavorites, favorites]);
+  }, [
+    channels,
+    selectedGroup,
+    selectedCountry,
+    searchQuery,
+    showFavorites,
+    favorites,
+    filterOnlineOnly,
+    channelStatuses,
+  ]);
 
   // Charger la playlist initiale
   const loadInitialPlaylist = async () => {
@@ -136,6 +178,10 @@ function App({ onLoadingChange }) {
           ...new Set(savedChannels.map((ch) => ch.group)),
         ].sort();
         setGroups(uniqueGroups);
+        const uniqueCountries = [
+          ...new Set(savedChannels.map((ch) => ch.country).filter(Boolean)),
+        ].sort();
+        setCountries(uniqueCountries);
         setFavorites(savedFavorites);
         setHistory(savedHistory);
         setInitialLoadDone(true);
@@ -170,7 +216,12 @@ function App({ onLoadingChange }) {
       // Mettre à jour l'état
       setChannels(result.channels);
       setGroups(result.groups);
+      const uniqueCountries = [
+        ...new Set(result.channels.map((ch) => ch.country).filter(Boolean)),
+      ].sort();
+      setCountries(uniqueCountries);
       setSelectedGroup("Toutes");
+      setSelectedCountry("Tous");
       setSearchQuery("");
       setInitialLoadDone(true);
 
@@ -297,7 +348,16 @@ function App({ onLoadingChange }) {
         <Sidebar
           groups={groups}
           selectedGroup={selectedGroup}
-          onGroupSelect={setSelectedGroup}
+          onGroupSelect={(group) => {
+            setSelectedGroup(group);
+            setSelectedCountry("Tous");
+          }}
+          countries={countries}
+          selectedCountry={selectedCountry}
+          onCountrySelect={(country) => {
+            setSelectedCountry(country);
+            setSelectedGroup("Toutes");
+          }}
           showFavorites={showFavorites}
           onShowFavorites={setShowFavorites}
           showHistory={showHistory}
@@ -364,17 +424,19 @@ function App({ onLoadingChange }) {
                       {showFavorites
                         ? t("header.myFavorites")
                         : showHistory
-                        ? t("header.history")
-                        : selectedGroup === "Toutes"
-                        ? t("app.title")
-                        : selectedGroup.replace(/;/g, " 😊 ")}
+                          ? t("header.history")
+                          : selectedCountry !== "Tous"
+                            ? `🌍 ${selectedCountry}`
+                            : selectedGroup === "Toutes"
+                              ? t("app.title")
+                              : selectedGroup.replace(/;/g, " 😊 ")}
                     </h2>
                     <p className="text-xs text-gray-500 mt-0.5">
                       {totalItems} {tp("header.channels", totalItems)}
                       {hasMore &&
                         ` • ${displayedItems.length} ${tp(
                           "header.displayed",
-                          displayedItems.length
+                          displayedItems.length,
                         )}`}
                     </p>
                   </div>
@@ -406,8 +468,93 @@ function App({ onLoadingChange }) {
                         {t("header.reload")}
                       </span>
                     </button>
+                    {/* Bouton vérifier les chaînes */}
+                    {!isChecking ? (
+                      <button
+                        onClick={() => startCheck(displayedItems)}
+                        disabled={channels.length === 0}
+                        className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 md:px-3 py-1.5 rounded-lg transition-colors flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label={t("checker.verify")}
+                      >
+                        <ShieldCheck
+                          className="w-3 h-3 md:w-4 md:h-4"
+                          aria-hidden="true"
+                        />
+                        <span className="hidden sm:inline">
+                          {t("checker.verify")}
+                        </span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={cancelCheck}
+                        className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2 md:px-3 py-1.5 rounded-lg transition-colors flex-shrink-0"
+                        aria-label={t("checker.cancel")}
+                      >
+                        <XCircle
+                          className="w-3 h-3 md:w-4 md:h-4"
+                          aria-hidden="true"
+                        />
+                        <span className="hidden sm:inline">
+                          {t("checker.cancel")}
+                        </span>
+                      </button>
+                    )}
                   </div>
                 </div>
+
+                {/* Barre de progression de vérification */}
+                {isChecking && (
+                  <div className="mx-2 md:mx-3 mb-2 ml-16 lg:ml-2">
+                    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="checker-progress-bar h-full rounded-full transition-all duration-300"
+                        style={{ width: `${progress.percentage}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {t("checker.verifying")} {progress.checked}/
+                      {progress.total} ({progress.percentage}%)
+                    </p>
+                  </div>
+                )}
+
+                {/* Résultats de la vérification */}
+                {!isChecking && stats.total > 0 && (
+                  <div className="mx-2 md:mx-3 mb-2 ml-16 lg:ml-2 flex flex-wrap items-center gap-2">
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <Wifi className="w-3 h-3 text-emerald-500" />
+                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                        {stats.online} {t("checker.statsOnline")}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <WifiOff className="w-3 h-3 text-red-500" />
+                      <span className="text-red-600 dark:text-red-400 font-medium">
+                        {stats.offline} {t("checker.statsOffline")}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setFilterOnlineOnly(!filterOnlineOnly)}
+                      className={`ml-auto flex items-center gap-1 text-xs px-2 py-1 rounded-full transition-colors ${
+                        filterOnlineOnly
+                          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
+                          : "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      {filterOnlineOnly ? (
+                        <>
+                          <Wifi className="w-3 h-3" />
+                          {t("checker.onlineOnly")}
+                        </>
+                      ) : (
+                        <>
+                          <ShieldCheck className="w-3 h-3" />
+                          {t("checker.showAll")}
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
 
                 {/* Barre de recherche */}
                 {!showHistory && (
@@ -469,7 +616,7 @@ function App({ onLoadingChange }) {
                         <button
                           onClick={() => {
                             const channel = channels.find(
-                              (ch) => ch.id === item.channelId
+                              (ch) => ch.id === item.channelId,
                             );
 
                             if (channel) {
@@ -507,6 +654,7 @@ function App({ onLoadingChange }) {
                     onToggleFavorite={handleToggleFavorite}
                     favorites={favorites}
                     viewMode={viewMode}
+                    channelStatuses={channelStatuses}
                   />
                 </InfiniteScroll>
               </div>

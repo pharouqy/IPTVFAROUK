@@ -9,7 +9,8 @@
     "history": "History",
     "categories": "Categories",
     "lightTheme": "Light Theme",
-    "darkTheme": "Dark Theme"
+    "darkTheme": "Dark Theme",
+    "countries": "Countries"
   },
   "header": {
     "myFavorites": "My Favorites",
@@ -72,6 +73,21 @@
     "page": "Page",
     "of": "of",
     "view": "View"
+  },
+  "checker": {
+    "verify": "Verify channels",
+    "verifying": "Checking channels...",
+    "cancel": "Cancel",
+    "progress": "{{checked}}/{{total}} checked ({{percentage}}%)",
+    "complete": "Verification complete",
+    "live": "LIVE",
+    "offline": "OFFLINE",
+    "unchecked": "Unchecked",
+    "onlineOnly": "Online only",
+    "showAll": "All channels",
+    "found": "{{count}} online channels found",
+    "statsOnline": "online",
+    "statsOffline": "offline"
   },
   "landing": {
     "skipToContent": "Skip to main content",

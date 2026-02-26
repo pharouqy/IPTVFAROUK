@@ -9,7 +9,8 @@
     "history": "Historial",
     "categories": "Categorías",
     "lightTheme": "Tema claro",
-    "darkTheme": "Tema oscuro"
+    "darkTheme": "Tema oscuro",
+    "countries": "Países"
   },
   "header": {
     "myFavorites": "Mis Favoritos",
@@ -72,6 +73,21 @@
     "page": "Página",
     "of": "de",
     "view": "Vista"
+  },
+  "checker": {
+    "verify": "Verificar canales",
+    "verifying": "Verificando canales...",
+    "cancel": "Cancelar",
+    "progress": "{{checked}}/{{total}} verificados ({{percentage}}%)",
+    "complete": "Verificación completada",
+    "live": "EN VIVO",
+    "offline": "FUERA DE LÍNEA",
+    "unchecked": "No verificado",
+    "onlineOnly": "Solo en línea",
+    "showAll": "Todos los canales",
+    "found": "{{count}} canales en línea encontrados",
+    "statsOnline": "en línea",
+    "statsOffline": "fuera de línea"
   },
   "landing": {
     "skipToContent": "Saltar al contenido principal",

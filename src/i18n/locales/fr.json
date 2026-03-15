@@ -20,6 +20,8 @@
     "displayed": "affichée",
     "displayed_plural": "affichées",
     "reload": "Recharger",
+    "source": "Source playlist",
+    "sourceLabel": "Source {{n}}",
     "hideHeader": "Masquer le header",
     "showHeader": "Afficher le header",
     "darkMode": "Sombre",

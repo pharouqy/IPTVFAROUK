@@ -48,8 +48,6 @@ function App({ onLoadingChange }) {
   const [filteredChannels, setFilteredChannels] = useState([]);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState("Toutes");
-  const [countries, setCountries] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState("Tous");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentChannel, setCurrentChannel] = useState(null);
   const [favorites, setFavorites] = useState([]);
@@ -115,6 +113,12 @@ function App({ onLoadingChange }) {
 
   const [showAds, setShowAds] = useState(true);
 
+  // Index de la source IPTV sélectionnée (parmi IPTV_CONFIG.playlistUrls)
+  const [selectedPlaylistIndex, setSelectedPlaylistIndex] = useState(0);
+  const currentPlaylistUrl =
+    IPTV_CONFIG.playlistUrls[selectedPlaylistIndex] ||
+    IPTV_CONFIG.defaultPlaylistUrl;
+
   // Fermer le lecteur avec ESC
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -136,11 +140,6 @@ function App({ onLoadingChange }) {
       result = filterByGroup(channels, selectedGroup);
     }
 
-    // Filtre par pays
-    if (selectedCountry !== "Tous") {
-      result = result.filter((ch) => ch.country === selectedCountry);
-    }
-
     if (searchQuery) {
       result = searchChannels(result, searchQuery);
     }
@@ -152,7 +151,6 @@ function App({ onLoadingChange }) {
   }, [
     channels,
     selectedGroup,
-    selectedCountry,
     searchQuery,
     showFavorites,
     favorites,
@@ -178,16 +176,15 @@ function App({ onLoadingChange }) {
           ...new Set(savedChannels.map((ch) => ch.group)),
         ].sort();
         setGroups(uniqueGroups);
-        const uniqueCountries = [
-          ...new Set(savedChannels.map((ch) => ch.country).filter(Boolean)),
-        ].sort();
-        setCountries(uniqueCountries);
         setFavorites(savedFavorites);
         setHistory(savedHistory);
         setInitialLoadDone(true);
       } else {
-        // Charger depuis l'URL
-        await loadPlaylistFromUrl(IPTV_CONFIG.defaultPlaylistUrl);
+        // Charger depuis l'URL (première du tableau ou celle par défaut)
+        const urlToLoad =
+          IPTV_CONFIG.playlistUrls[selectedPlaylistIndex] ||
+          IPTV_CONFIG.defaultPlaylistUrl;
+        if (urlToLoad) await loadPlaylistFromUrl(urlToLoad);
       }
     } catch (err) {
       console.error("❌ Erreur chargement initial:", err);
@@ -216,12 +213,7 @@ function App({ onLoadingChange }) {
       // Mettre à jour l'état
       setChannels(result.channels);
       setGroups(result.groups);
-      const uniqueCountries = [
-        ...new Set(result.channels.map((ch) => ch.country).filter(Boolean)),
-      ].sort();
-      setCountries(uniqueCountries);
       setSelectedGroup("Toutes");
-      setSelectedCountry("Tous");
       setSearchQuery("");
       setInitialLoadDone(true);
 
@@ -238,9 +230,17 @@ function App({ onLoadingChange }) {
     }
   };
 
-  // Recharger la playlist
+  // Recharger la playlist (source actuellement sélectionnée)
   const handleReload = async () => {
-    await loadPlaylistFromUrl(IPTV_CONFIG.defaultPlaylistUrl);
+    await loadPlaylistFromUrl(currentPlaylistUrl);
+  };
+
+  // Changer de source IPTV
+  const handlePlaylistSourceChange = async (index) => {
+    const url = IPTV_CONFIG.playlistUrls[index];
+    if (!url) return;
+    setSelectedPlaylistIndex(index);
+    await loadPlaylistFromUrl(url);
   };
 
   // Charger l'historique
@@ -325,9 +325,7 @@ function App({ onLoadingChange }) {
           <p className="text-gray-600 mb-4 text-center">{error}</p>
           <div className="bg-red-50 rounded-lg p-3 text-sm text-gray-700 mb-4">
             <p className="font-semibold mb-1">{t("error.configuredUrl")}</p>
-            <p className="break-all text-xs">
-              {IPTV_CONFIG.defaultPlaylistUrl}
-            </p>
+            <p className="break-all text-xs">{currentPlaylistUrl}</p>
           </div>
           <button
             onClick={handleReload}
@@ -348,16 +346,7 @@ function App({ onLoadingChange }) {
         <Sidebar
           groups={groups}
           selectedGroup={selectedGroup}
-          onGroupSelect={(group) => {
-            setSelectedGroup(group);
-            setSelectedCountry("Tous");
-          }}
-          countries={countries}
-          selectedCountry={selectedCountry}
-          onCountrySelect={(country) => {
-            setSelectedCountry(country);
-            setSelectedGroup("Toutes");
-          }}
+          onGroupSelect={(group) => setSelectedGroup(group)}
           showFavorites={showFavorites}
           onShowFavorites={setShowFavorites}
           showHistory={showHistory}
@@ -425,11 +414,9 @@ function App({ onLoadingChange }) {
                         ? t("header.myFavorites")
                         : showHistory
                           ? t("header.history")
-                          : selectedCountry !== "Tous"
-                            ? `🌍 ${selectedCountry}`
-                            : selectedGroup === "Toutes"
-                              ? t("app.title")
-                              : selectedGroup.replace(/;/g, " 😊 ")}
+                          : selectedGroup === "Toutes"
+                            ? t("app.title")
+                            : selectedGroup.replace(/;/g, " 😊 ")}
                     </h2>
                     <p className="text-xs text-gray-500 mt-0.5">
                       {totalItems} {tp("header.channels", totalItems)}
@@ -440,6 +427,27 @@ function App({ onLoadingChange }) {
                         )}`}
                     </p>
                   </div>
+                  {/* Sélecteur de source IPTV (si plusieurs URLs dans .env) */}
+                  {IPTV_CONFIG.playlistUrls.length > 1 && (
+                    <select
+                      value={selectedPlaylistIndex}
+                      onChange={(e) =>
+                        handlePlaylistSourceChange(
+                          Number(e.target.value)
+                        )
+                      }
+                      className="text-xs md:text-sm bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1.5 max-w-[140px] md:max-w-[200px] truncate"
+                      aria-label={t("header.source") || "Source playlist"}
+                      title={currentPlaylistUrl}
+                    >
+                      {IPTV_CONFIG.playlistUrls.map((url, i) => (
+                        <option key={url} value={i}>
+                          {t("header.sourceLabel", { n: i + 1 }) ||
+                            `Source ${i + 1}`}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                   {/* BOUTONS CÔTÉ À CÔTÉ */}
                   <div className="flex gap-2 items-center">
                     <button

@@ -20,6 +20,8 @@
     "displayed": "mostrado",
     "displayed_plural": "mostrados",
     "reload": "Recargar",
+    "source": "Fuente de lista",
+    "sourceLabel": "Fuente {{n}}",
     "hideHeader": "Ocultar encabezado",
     "showHeader": "Mostrar encabezado",
     "darkMode": "Oscuro",

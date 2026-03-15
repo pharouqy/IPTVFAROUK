@@ -20,6 +20,8 @@
     "displayed": "displayed",
     "displayed_plural": "displayed",
     "reload": "Reload",
+    "source": "Playlist source",
+    "sourceLabel": "Source {{n}}",
     "hideHeader": "Hide header",
     "showHeader": "Show header",
     "darkMode": "Dark",

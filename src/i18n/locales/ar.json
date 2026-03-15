@@ -20,6 +20,8 @@
     "displayed": "معروضة",
     "displayed_plural": "معروضة",
     "reload": "إعادة التحميل",
+    "source": "مصدر القائمة",
+    "sourceLabel": "المصدر {{n}}",
     "hideHeader": "إخفاء الرأس",
     "showHeader": "إظهار الرأس",
     "darkMode": "داكن",
